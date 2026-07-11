@@ -21,6 +21,7 @@ These are clean templates, not raw exports. They intentionally do not include pr
 - `content-factory-maintenance/automation.toml` - improve a prompt, skill, template, docs, or evaluation pipeline.
 - `memory-review/automation.toml` - review repo memory against current source truth and open safe correction PRs.
 - `loop-discovery/automation.toml` - inspect a codebase for evidence-backed loop candidates without writing files.
+- `agent-configuration-audit/automation.toml` - audit global and per-repository agent configuration without modifying files.
 - `memory-template/memory.md` - support file for Codex automation state, not a runnable automation.
 
 ## Placeholder Key
@@ -46,6 +47,12 @@ These are clean templates, not raw exports. They intentionally do not include pr
 - `[DEPENDENCY_DIR]` - dependency directory checked by bundle-size-watchdog.
 - `[ARTIFACT_PATH_1]`, `[ARTIFACT_PATH_2]` - build artifacts checked by bundle-size-watchdog.
 - `[MAX_DEPENDENCY_SIZE]`, `[MAX_PACKAGE_COUNT]`, `[MAX_ARTIFACT_SIZE]` - watchdog thresholds.
+- `[REPOSITORY_ROOT]` - parent directory containing repositories for a multi-repo audit.
+- `[PRIORITY_REPOSITORIES]` - repositories that receive a deep configuration review.
+- `[PREVIOUS_AUDIT_PATH]` - prior audit report used for coverage deltas and regression classification.
+- `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]` - effective global agent configuration roots.
+- `[MODEL_ROUTING_POLICY]`, `[LOCAL_VERIFICATION_POLICY]` - configured policies checked by agent-configuration-audit.
+- `[EXCLUDED_PATH_PATTERNS]` - explicit discovery exclusions for the multi-repo audit.
 
 ## Tool Fix Presets
 
