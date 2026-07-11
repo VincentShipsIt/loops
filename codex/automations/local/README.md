@@ -51,7 +51,8 @@ These are clean templates, not raw exports. They intentionally do not include pr
 - `[PRIORITY_REPOSITORIES]` - repositories that receive a deep configuration review.
 - `[PREVIOUS_AUDIT_PATH]` - prior audit report used for coverage deltas and regression classification.
 - `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]` - effective global agent configuration roots.
-- `[MODEL_ROUTING_POLICY]`, `[LOCAL_VERIFICATION_POLICY]` - configured policies checked by agent-configuration-audit.
+- `[MODEL_ROUTING_POLICY]` - explicit allowlisted model/effort/routing tuples, written positively rather than as a denylist.
+- `[LOCAL_VERIFICATION_POLICY]` - configured policy for local tests, typechecks, lint, builds, and hooks.
 - `[EXCLUDED_PATH_PATTERNS]` - explicit discovery exclusions for the multi-repo audit.
 
 ## Tool Fix Presets

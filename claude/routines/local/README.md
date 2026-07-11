@@ -33,7 +33,7 @@ github-issue-implementation, github-backlog-pickup, recent-commit-review, sentry
 pr-review, tool-fix-pass, dry-repo, nightly-e2e-expansion,
 docs-verification, bundle-size-watchdog, local-validation, memory-review.
 Pure hygiene tasks (board-hygiene, worktree-prune, repo-hygiene-cleanup) intentionally omit it.
-The read-only `agent-configuration-audit` task also omits it: configure Opus 4.8 at high effort in the app and do not use Max, Ultracode, workflows, agent teams, or subagents.
+For `agent-configuration-audit`, configure Opus 4.8 at high effort in the app and run the prompt in the current Claude session.
 
 ## Templates
 
@@ -105,7 +105,8 @@ Claude stores schedule settings in the app, not in these `SKILL.md` prompt files
 - `[GITHUB_REPO_1]`, `[GITHUB_REPO_2]` - `owner/repo` for multi-repo routines.
 - `[REPOSITORY_ROOT]`, `[PRIORITY_REPOSITORIES]`, `[PREVIOUS_AUDIT_PATH]` - multi-repo audit scope and baseline.
 - `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]` - global configuration roots.
-- `[MODEL_ROUTING_POLICY]`, `[LOCAL_VERIFICATION_POLICY]`, `[EXCLUDED_PATH_PATTERNS]` - policy inputs for agent-configuration-audit.
+- `[MODEL_ROUTING_POLICY]` - explicit allowlisted model/effort/routing tuples, written positively rather than as a denylist.
+- `[LOCAL_VERIFICATION_POLICY]`, `[EXCLUDED_PATH_PATTERNS]` - remaining policy inputs for agent-configuration-audit.
 
 ## Tool Fix Presets
 

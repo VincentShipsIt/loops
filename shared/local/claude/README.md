@@ -58,7 +58,7 @@ Routine-specific:
 - bundle-size-watchdog: `[DEPENDENCY_DIR]`, `[ARTIFACT_PATH_1]`, `[ARTIFACT_PATH_2]`, `[MAX_DEPENDENCY_SIZE]`, `[MAX_PACKAGE_COUNT]`, `[MAX_ARTIFACT_SIZE]`.
 - docs-verification: `[DOC_SCOPE]`, `[DOC_FILE_1]`, `[DOC_FILE_2]`, `[DOC_FILE_3]`, `[SOURCE_PATH_1]`, `[SOURCE_PATH_2]`, `[SOURCE_PATH_3]`.
 - memory-review: `[MEMORY_SCOPE]` - repo memory files or globs memory-review may edit, such as `AGENTS.md`, `CLAUDE.md`, or `.agents/memory/`.
-- agent-configuration-audit: `[REPOSITORY_ROOT]`, `[PRIORITY_REPOSITORIES]`, `[PREVIOUS_AUDIT_PATH]`, `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]`, `[MODEL_ROUTING_POLICY]`, `[LOCAL_VERIFICATION_POLICY]`, `[EXCLUDED_PATH_PATTERNS]`.
+- agent-configuration-audit: `[REPOSITORY_ROOT]`, `[PRIORITY_REPOSITORIES]`, `[PREVIOUS_AUDIT_PATH]`, `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]`, `[LOCAL_VERIFICATION_POLICY]`, `[EXCLUDED_PATH_PATTERNS]`; set `[MODEL_ROUTING_POLICY]` to explicit allowlisted model/effort/routing tuples written positively rather than as a denylist.
 
 The canonical local-repo-path token is `[REPO_PATH]` (not `[LOCAL_REPO_PATH]` or `[ABSOLUTE_REPO_PATH]`).
 The canonical tool-invocation token is `[TOOL_COMMAND]` (not `[TOOL_NAME]`).

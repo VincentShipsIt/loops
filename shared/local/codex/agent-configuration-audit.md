@@ -6,8 +6,8 @@ Recommended settings:
 - Execution environment: local
 - Model: GPT-5.6 Sol
 - Reasoning effort: high
+- Agent execution: current session
 - Write surface: read-only filesystem/repository inspection plus non-sensitive automation memory
-- Explicitly disabled: Max, Ultra, workflows, and subagents
 - Suggested schedule: monthly, and manually after major agent-tool or model-routing changes
 
 ## Loop Contract
@@ -41,6 +41,6 @@ Use the prompt from `../../../codex/automations/local/agent-configuration-audit/
 - `[PRIORITY_REPOSITORIES]` - comma-separated repository roots or names for deep review.
 - `[PREVIOUS_AUDIT_PATH]` - readable prior report, or a documented missing path when no baseline exists.
 - `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]` - effective global configuration roots.
-- `[MODEL_ROUTING_POLICY]` - durable routing policy to compare with current configuration and official behavior.
+- `[MODEL_ROUTING_POLICY]` - explicit allowlisted model/effort/routing tuples to compare with current configuration and official behavior, written positively rather than as a denylist.
 - `[LOCAL_VERIFICATION_POLICY]` - policy governing local tests, typechecks, lint, builds, and hooks.
 - `[EXCLUDED_PATH_PATTERNS]` - explicit archive, dependency, generated, cache, build, and worktree exclusions.

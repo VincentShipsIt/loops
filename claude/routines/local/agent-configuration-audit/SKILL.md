@@ -6,9 +6,10 @@ description: Read-only audit of global and per-repository agent configuration
 Audit agent configuration across active Git repositories under `[REPOSITORY_ROOT]` and the global configuration that affects them.
 
 Execution profile:
-- Configure the scheduled task to use Claude Opus 4.8 at high effort.
-- Do not use Max or Ultracode.
-- Do not launch dynamic workflows, agent teams, or subagents.
+- Required scheduled-task model: Claude Opus 4.8.
+- Required scheduled-task effort: high.
+- Before auditing, verify the active runtime reports Claude Opus 4.8 and high effort. Stop with a configuration mismatch if it does not.
+- Complete the audit in the current Claude session.
 - This is a read-only audit. Do not modify repositories or global configuration.
 
 Configured policy:
@@ -59,7 +60,7 @@ Current behavior and routing:
 - Compare effective routing with `[MODEL_ROUTING_POLICY]`.
 - Flag obsolete models, stale aliases, conflicting routing tables, deprecated environment variables, inaccurate subscription/API assumptions, and provider-specific guidance presented as universal.
 - Distinguish subscriptions from API, Bedrock, Agent Platform, Foundry, gateway, and other configured providers.
-- Max and Ultracode must not be configured or recommended by this loop. Flag their use according to `[MODEL_ROUTING_POLICY]`.
+- Treat `[MODEL_ROUTING_POLICY]` as an allowlist. Flag any model, effort, routing, or orchestration setting outside that policy.
 
 Safety and correctness checks:
 - Compare instructions that permit or require local tests, typechecks, lint gates, builds, or project hooks with `[LOCAL_VERIFICATION_POLICY]`. Flag conflicts with exact evidence.

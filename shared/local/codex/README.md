@@ -74,7 +74,8 @@ through the Codex app or Codex automation tools, then paste the relevant prompt.
 - `[LOOP_LIBRARY_REPO]` - `owner/repo` for the loops library used by loop-discovery.
 - `[REPOSITORY_ROOT]`, `[PRIORITY_REPOSITORIES]`, `[PREVIOUS_AUDIT_PATH]` - multi-repo audit scope and baseline.
 - `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]` - global configuration roots for agent-configuration-audit.
-- `[MODEL_ROUTING_POLICY]`, `[LOCAL_VERIFICATION_POLICY]`, `[EXCLUDED_PATH_PATTERNS]` - routing, verification, and discovery policy inputs for agent-configuration-audit.
+- `[MODEL_ROUTING_POLICY]` - explicit allowlisted model/effort/routing tuples, written positively rather than as a denylist.
+- `[LOCAL_VERIFICATION_POLICY]`, `[EXCLUDED_PATH_PATTERNS]` - verification and discovery policy inputs for agent-configuration-audit.
 
 ## Tool Fix Presets
 
