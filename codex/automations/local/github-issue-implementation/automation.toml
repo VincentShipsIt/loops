@@ -30,7 +30,7 @@ Implement and verify:
 - Review the final diff for correctness, security, regressions, unnecessary complexity, dead code, and unrelated changes.
 
 Publish for review:
-- Commit with the issue number, push the branch, and open a pull request against `[TRUNK]`.
+- Commit with the issue number, push the branch, and open a ready-for-review pull request against `[TRUNK]`. Never create a draft pull request.
 - Link the issue, summarize the implementation, and list verification results and residual blockers. Use `Closes #<number>` only when the issue is fully resolved.
 - Leave the project item `In Progress`. Do not change its project status again, describe or assume a later project transition, or merge the pull request.
 
