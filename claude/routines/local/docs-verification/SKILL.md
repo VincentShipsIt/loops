@@ -3,8 +3,6 @@ name: docs-verification
 description: Verify docs against source and open a correction PR
 ---
 
-ultracode
-
 Verify documentation for `[PROJECT]` against the current source of truth.
 
 Scope:

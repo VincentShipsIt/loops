@@ -6,6 +6,8 @@ This repo is agent-friendly first. Give it to Codex, Claude, or another coding a
 
 This repo is not an installed automation pack. Use it as a source of prompt bodies, schedules, guardrails, and setup patterns, then create the live loop inside Codex or Claude.
 
+Codex templates target `gpt-5.6-sol`. Implementation, review, and validation automations use `high` reasoning effort. The GitHub issue implementation workflow is authored once in `shared/local/codex/github-issue-implementation.prompt.md` and generated into the app-ready TOML.
+
 ## Copy-Paste Install Prompt
 
 Paste this into an agent with your target project open:

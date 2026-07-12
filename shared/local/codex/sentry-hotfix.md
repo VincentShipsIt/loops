@@ -4,7 +4,7 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: worktree
-- Reasoning effort: xhigh
+- Reasoning effort: high
 - Write surface: repo branch, pull request, Sentry issue status
 
 ## Prompt

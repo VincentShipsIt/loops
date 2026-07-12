@@ -2,7 +2,6 @@
 
 ## Prompt
 
-ultracode
 
 Make one small behavior-preserving simplification in `[PROJECT]` without deleting features.
 

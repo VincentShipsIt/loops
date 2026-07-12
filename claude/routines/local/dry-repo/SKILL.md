@@ -3,8 +3,6 @@ name: dry-repo
 description: Reduce duplication or complexity without changing behavior
 ---
 
-ultracode
-
 Make one small behavior-preserving simplification in `[PROJECT]` without deleting features.
 
 CPU-heavy validation policy:

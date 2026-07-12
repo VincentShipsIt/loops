@@ -3,8 +3,6 @@ name: sentry-hotfix
 description: Inspect unresolved Sentry errors and open safe fix PRs
 ---
 
-ultracode
-
 Check unresolved Sentry errors for `[PROJECT]` and implement safe code fixes when the evidence is clear.
 
 CPU-heavy validation policy:

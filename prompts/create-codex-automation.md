@@ -23,11 +23,13 @@ Automation requested:
 Steps:
 1. Read this repo's AGENTS.md, CLAUDE.md, README, package scripts, and existing automation docs.
 2. Choose the closest template from `codex/automations/local/`.
+   For GitHub issue implementation, render from `shared/local/codex/github-issue-implementation.prompt.md`; do not maintain a separate prompt variant.
 3. Fill every placeholder from verified repo facts.
 4. Keep the same intent contract as the matching Claude routine when one exists; only the Codex artifact shape should differ.
 5. Keep unknowns as [PLACEHOLDER] and list them under Required Setup.
 6. Preserve safety rules: one repo scope, duplicate checks, worktree gate for code-writing, no destructive actions, no secrets in output.
-7. Produce a complete automation.toml draft.
+7. Use `gpt-5.6-sol`. Use `high` reasoning effort for implementation, review, and validation; keep lower effort only for bounded metadata or reporting routines.
+8. Produce a complete automation.toml draft.
 
 Do not create or enable the live Codex automation unless explicitly asked. If Codex automation tools are available and the user asks to create it, start it PAUSED.
 

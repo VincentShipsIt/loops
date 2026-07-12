@@ -6,33 +6,9 @@ These are clean templates, not raw exports. They intentionally do not include pr
 
 Each directory contains a `SKILL.md` prompt body. When installed as a Claude Desktop scheduled task, Claude Desktop manages schedule, enabled state, model, folder, and permissions in the app.
 
-## Ultracode Trigger
+## Execution settings
 
-`ultracode` requests Claude Opus 4.8-level effort. The trigger is a **bare `ultracode` token on the first
-line of the prompt body**, immediately after the frontmatter — NOT the task name. Keep task names
-focused on the automation intent, not the execution effort.
-
-Correct shape:
-
-```text
----
-name: recent-commit-review
-description: Review recent trunk commits and open a fix PR
----
-
-ultracode
-
-Review new commits on `[GITHUB_REPO]` ...
-```
-
-Also set the task's model to **Claude Opus 4.8** in the app. The app model selection and the body token
-work together: the token drives the high-effort run.
-
-Templates that carry the trigger (code review + code building + validation):
-github-issue-implementation, github-backlog-pickup, recent-commit-review, sentry-hotfix,
-pr-review, tool-fix-pass, dry-repo, nightly-e2e-expansion,
-docs-verification, bundle-size-watchdog, local-validation, memory-review.
-Pure hygiene tasks (board-hygiene, worktree-prune, repo-hygiene-cleanup) intentionally omit it.
+Claude Desktop manages model and effort settings in the app. Keep those settings out of reusable prompt bodies.
 
 ## Templates
 
@@ -60,7 +36,7 @@ Claude stores schedule settings in the app, not in these `SKILL.md` prompt files
 
 | Task | Suggested cadence |
 | --- | --- |
-| `github-issue-implementation` | Every 4-6 business hours for active repos, or nightly for conservative repos. |
+| `github-issue-implementation` | Every two hours for active repositories, or nightly for conservative repositories. |
 | `github-backlog-pickup` | Nightly. |
 | `recent-commit-review` | Daily after `[TRUNK]` is usually quiet. |
 | `board-hygiene` | Daily or twice daily on active boards. |

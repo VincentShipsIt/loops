@@ -3,8 +3,6 @@ name: tool-fix-pass
 description: Run a project scanner or tool and open a safe fix PR
 ---
 
-ultracode
-
 Run one safe automated fix pass for `[PROJECT]` using `[TOOL_COMMAND]`.
 
 Scope:

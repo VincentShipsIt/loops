@@ -2,7 +2,6 @@
 
 ## Prompt
 
-ultracode
 
 Implement one ready, high-value GitHub issue in this repository, conservatively and without creating duplicate work.
 

@@ -3,8 +3,6 @@ name: pr-review
 description: Strict quality review of one open pull request
 ---
 
-ultracode
-
 Review one open pull request in `[GITHUB_REPO]`.
 
 Scope:

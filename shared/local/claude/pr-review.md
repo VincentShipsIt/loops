@@ -2,7 +2,6 @@
 
 ## Prompt
 
-ultracode
 
 Run a strict code quality review for this repository.
 

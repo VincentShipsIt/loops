@@ -8,14 +8,14 @@ Use them as copy-paste starting points for:
 - Claude Desktop local scheduled tasks
 - Claude `/loop` maintenance prompts
 
-Claude code review, code-building, and validation templates that need Claude Opus 4.8-level effort carry a bare `ultracode` token as the first body line immediately after the YAML frontmatter's closing `---`. Keep template names focused on intent; do not encode execution effort in the name.
+Claude model and effort settings are app-managed and stay outside reusable prompt bodies.
 
 ## Templates
 
 | Template | Best surface | Use when | Suggested cadence |
 | --- | --- | --- | --- |
 | `scheduled-task-base.md` | Desktop scheduled task | You need a safe local task wrapper | n/a |
-| `github-issue-implementation.md` | Desktop scheduled task | Ship one ready GitHub issue to PR | Every 4-6 business hours or nightly |
+| `github-issue-implementation.md` | Desktop scheduled task | Ship one ready GitHub issue to PR | Every two hours or nightly |
 | `recent-commit-review.md` | Desktop scheduled task | Review recent trunk commits and PR high-confidence fixes | Daily after trunk is quiet |
 | `github-backlog-pickup.md` | Desktop scheduled task | Fully autonomous issue pickup | Nightly |
 | `board-hygiene.md` | Desktop scheduled task | Keep GitHub boards clean | Daily or twice daily |

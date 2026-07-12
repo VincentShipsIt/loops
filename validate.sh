@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 # validate.sh - lint the loops template library.
-# Checks: SKILL.md frontmatter + name==dir, ultracode trigger on the code/review/validation set,
-# codex automation.toml required keys, and that every placeholder used is documented in a README.
+# Checks: SKILL.md frontmatter + name==dir, Codex model/effort policy,
+# generated prompt synchronization, and placeholder documentation coverage.
 set -uo pipefail
 cd "$(dirname "$0")"
 fail=0
 err(){ echo "FAIL: $*"; fail=1; }
-
-# Code review + build + validation tasks that MUST emit the bare ultracode trigger.
-ULTRA="github-issue-implementation github-backlog-pickup recent-commit-review sentry-hotfix pr-review tool-fix-pass dry-repo nightly-e2e-expansion docs-verification bundle-size-watchdog local-validation memory-review"
 
 # 1) Claude scheduled-task SKILL.md
 for f in claude/routines/local/*/SKILL.md; do
@@ -18,11 +15,6 @@ for f in claude/routines/local/*/SKILL.md; do
   grep -q '^description:' "$f" || err "$f: missing 'description:' frontmatter"
   name=$(awk -F': ' '/^name:/{sub(/^name: */,""); print; exit}' "$f" | tr -d '\r')
   [ "$name" = "$dir" ] || err "$f: name '$name' != dir '$dir'"
-  body_first=$(awk '/^---$/{d++; next} d>=2 && NF {print; exit}' "$f")
-  case " $ULTRA " in
-    *" $dir "*) [ "$body_first" = "ultracode" ] || err "$f: ultracode-set task but first body line is '$body_first' (want bare 'ultracode')" ;;
-    *) [ "$body_first" = "ultracode" ] && err "$f: non-ultracode-set task '$dir' must NOT start with bare 'ultracode'" ;;
-  esac
 done
 
 # 1b) Skill SKILL.md frontmatter + name==dir
@@ -35,16 +27,17 @@ for f in skills/*/SKILL.md; do
   [ "$name" = "$dir" ] || err "$f: name '$name' != dir '$dir'"
 done
 
-# 2) Codex automation.toml required keys + ultracode prohibition
+# 2) Codex automation.toml required keys + current model policy
 for f in codex/automations/local/*/automation.toml; do
   [ -e "$f" ] || continue
   for k in version id kind name prompt status rrule; do
     grep -qE "^$k[[:space:]]*=" "$f" || err "$f: missing required key '$k'"
   done
-  dir=$(basename "$(dirname "$f")")
-  case "$dir" in *ultracode*) err "$f: 'ultracode' must not appear in a Codex automation directory name" ;; esac
-  grep -qiE '^(id|name|kind)[[:space:]]*=.*ultracode' "$f" && err "$f: 'ultracode' must not appear in Codex id/name/kind"
+  grep -qE '^model[[:space:]]*=[[:space:]]*"gpt-5\.6-sol"' "$f" || err "$f: model must be gpt-5.6-sol"
+  grep -qE '^reasoning_effort[[:space:]]*=[[:space:]]*"(low|medium|high)"' "$f" || err "$f: unsupported or missing reasoning_effort"
 done
+
+python3 scripts/sync-codex-implementation-template.py --check || fail=1
 
 # 3) Placeholder documentation coverage (authored files only; upstream excluded)
 tmp_used=$(mktemp); tmp_doc=$(mktemp); tmp_used_files=$(mktemp); tmp_doc_files=$(mktemp)

@@ -3,8 +3,6 @@ name: github-issue-implementation
 description: Ship one ready GitHub issue to a pull request
 ---
 
-ultracode
-
 Implement one ready, high-value GitHub issue in `[PROJECT]`.
 
 CPU-heavy validation policy:

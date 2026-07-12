@@ -2,7 +2,6 @@
 
 ## Prompt
 
-ultracode
 
 Run a lightweight bundle/dependency size check for `[PROJECT]` at `[REPO_PATH]`.
 

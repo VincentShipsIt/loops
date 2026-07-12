@@ -2,7 +2,6 @@
 
 ## Prompt
 
-ultracode
 
 Review new commits on `[GITHUB_REPO]` `[TRUNK]` since the last successful review baseline SHA, or the last 24 hours when no baseline exists. Fix only high-confidence issues.
 
