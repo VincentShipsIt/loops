@@ -24,7 +24,7 @@ Claim before editing:
 
 Implement and verify:
 - Create a focused `[BRANCH_PREFIX]/<issue-number>-<slug>` branch from `origin/[TRUNK]`.
-- Read the issue body and comments, repository instructions, relevant architecture and documentation, and nearby code before editing. Repository-specific safety and domain rules in `AGENTS.md` are binding.
+- Read the issue body and comments, repository instructions, relevant architecture and documentation, and nearby code before editing. Repository-specific safety and domain rules in `AGENTS.md` are binding unless they conflict with this automation's explicit project or trunk contract.
 - Implement only the selected issue using existing patterns. Add or update focused tests.
 - Run the relevant formatter, lint, typecheck or build, unit, coverage, and user-facing checks discovered from repository instructions and scripts, proportional to the change. Record the exact command and blocker for any required check that cannot run.
 - Review the final diff for correctness, security, regressions, unnecessary complexity, dead code, and unrelated changes.
