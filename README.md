@@ -8,6 +8,8 @@ This repo is not an installed automation pack. Use it as a source of prompt bodi
 
 Codex templates target `gpt-5.6-sol`. Implementation, review, and validation automations use `high` reasoning effort. The GitHub issue implementation workflow is authored once in `shared/local/codex/github-issue-implementation.prompt.md` and generated into the app-ready TOML.
 
+Use `shared/github/pull-request-issue-link.md` in repository PR templates so fully resolving PRs consistently close their linked issue when merged. Configure each GitHub Project's `Item closed` workflow to move the closed issue to `Done`, and enable the repository's automatic merged-branch deletion setting.
+
 ## Copy-Paste Install Prompt
 
 Paste this into an agent with your target project open:
