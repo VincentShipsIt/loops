@@ -2,7 +2,6 @@
 
 ## Prompt
 
-ultracode
 
 Check unresolved Sentry errors for `[PROJECT]` and implement safe code fixes when the evidence is clear.
 

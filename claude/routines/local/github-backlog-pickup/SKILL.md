@@ -3,8 +3,6 @@ name: github-backlog-pickup
 description: Fully autonomous pickup of one eligible backlog issue
 ---
 
-ultracode
-
 Do not pause for input. Make reasonable decisions, document them in the issue or PR, and stop cleanly if blocked.
 
 Objective:

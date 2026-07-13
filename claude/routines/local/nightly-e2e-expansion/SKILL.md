@@ -3,8 +3,6 @@ name: nightly-e2e-expansion
 description: Add exactly one focused nightly e2e spec
 ---
 
-ultracode
-
 Add exactly one focused nightly e2e test for `[PROJECT]`.
 
 Scope:

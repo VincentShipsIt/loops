@@ -5,7 +5,6 @@ spec per run.
 
 ## Prompt
 
-ultracode
 
 Run high-effort autonomous mode. Use subagents or workflow orchestration for discovery, verification, and critique when available.
 

@@ -25,6 +25,8 @@ These are clean templates, not raw exports. They intentionally do not include pr
 
 ## Placeholder Key
 
+The issue-implementation prompt is authored once in `../../../shared/local/codex/github-issue-implementation.prompt.md`; run `python3 scripts/sync-codex-implementation-template.py` from the repository root after editing it. Codex templates use `gpt-5.6-sol`, with `high` reasoning effort for code-writing, review, and validation work.
+
 - `[AUTOMATION_ID]` - stable slug for the automation.
 - `[PROJECT]` - human-readable project name.
 - `[REPO_PATH]` - absolute repo path on the machine where the automation runs.

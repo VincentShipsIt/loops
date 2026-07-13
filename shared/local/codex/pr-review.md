@@ -4,7 +4,7 @@ Recommended settings:
 
 - Kind: cron or webhook/API trigger
 - Execution environment: worktree
-- Reasoning effort: xhigh
+- Reasoning effort: high
 - Write surface: PR review comments, plus same-branch commits only for automation-owned PR branches
 
 ## Prompt

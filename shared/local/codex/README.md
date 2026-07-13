@@ -3,6 +3,8 @@
 These shared templates are sanitized from local Codex app automations and normalized
 against the public examples in `../../../codex/upstream/`.
 
+`github-issue-implementation.prompt.md` is the canonical authored prompt for the implementation loop. The app-ready TOML is generated from it with `python3 scripts/sync-codex-implementation-template.py`.
+
 They are prompt templates, not live automation files. Create live automations
 through the Codex app or Codex automation tools, then paste the relevant prompt.
 
@@ -11,19 +13,19 @@ through the Codex app or Codex automation tools, then paste the relevant prompt.
 | Template | Use when | Recommended environment | Reasoning |
 | --- | --- | --- | --- |
 | `board-hygiene.md` | Keep GitHub issues/projects current | `local` | `low` |
-| `github-issue-implementation.md` | Ship exactly one ready GitHub issue | `worktree` | `xhigh` |
-| `recent-commit-review.md` | Review recent trunk commits and fix high-confidence issues | `worktree` | `xhigh` |
-| `sentry-hotfix.md` | Fix unresolved production errors safely | `worktree` | `xhigh` |
-| `pr-review.md` | Review one open PR and improve only automation-owned branches | `worktree` | `xhigh` |
-| `tool-fix-pass.md` | Run one configured scanner/tool and PR safe fixes | `worktree` | `xhigh` |
-| `dry-repo.md` | Make one behavior-preserving simplification | `worktree` | `xhigh` |
-| `local-validation.md` | Run read-only validation in the local checkout | `local` | `xhigh` |
-| `docs-verification.md` | Verify docs against source and PR corrections | `worktree` | `xhigh` |
+| `github-issue-implementation.md` | Ship exactly one ready GitHub issue | `worktree` | `high` |
+| `recent-commit-review.md` | Review recent trunk commits and fix high-confidence issues | `worktree` | `high` |
+| `sentry-hotfix.md` | Fix unresolved production errors safely | `worktree` | `high` |
+| `pr-review.md` | Review one open PR and improve only automation-owned branches | `worktree` | `high` |
+| `tool-fix-pass.md` | Run one configured scanner/tool and PR safe fixes | `worktree` | `high` |
+| `dry-repo.md` | Make one behavior-preserving simplification | `worktree` | `high` |
+| `local-validation.md` | Run read-only validation in the local checkout | `local` | `high` |
+| `docs-verification.md` | Verify docs against source and PR corrections | `worktree` | `high` |
 | `bundle-size-watchdog.md` | Report dependency and artifact size drift | `local` | `medium` |
-| `nightly-e2e-expansion.md` | Add exactly one focused nightly e2e spec | `worktree` | `xhigh` |
+| `nightly-e2e-expansion.md` | Add exactly one focused nightly e2e spec | `worktree` | `high` |
 | `worktree-prune.md` | Remove only clean, provably merged local worktrees when enabled | `local` | `medium` |
 | `content-factory-maintenance.md` | Improve a prompt, skill, template, docs, or evaluation pipeline | `worktree` | `low` or `medium` |
-| `memory-review.md` | Refresh repo memory against current source truth | `worktree` | `xhigh` |
+| `memory-review.md` | Refresh repo memory against current source truth | `worktree` | `high` |
 | `loop-discovery.md` | Find evidence-backed loop candidates in a target codebase | `local` | `medium` |
 
 ## Support Files

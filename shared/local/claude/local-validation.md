@@ -2,7 +2,6 @@
 
 ## Prompt
 
-ultracode
 
 Run scheduled local validation for `[PROJECT]`.
 

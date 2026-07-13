@@ -34,7 +34,7 @@ that exists, use `local-validation` and report missing environment as blocked.
 
 | Intent | Purpose | Suggested cadence | Current surfaces |
 | --- | --- | --- | --- |
-| `github-issue-implementation` | Select exactly one ready GitHub issue, implement it, verify it, and open a PR. | Every 4-6 business hours for active repos, or nightly for conservative repos. | Codex `github-issue-implementation`; Claude `github-issue-implementation`; Claude `github-backlog-pickup` as the higher-autonomy variant. |
+| `github-issue-implementation` | Claim exactly one `Backlog` issue, implement it, verify it, open a PR, and leave the item `In Progress`. | Every two hours for active repos, or nightly for conservative repos. | Codex `github-issue-implementation`; Claude `github-issue-implementation`; Claude `github-backlog-pickup` as the higher-autonomy variant. |
 | `recent-commit-review` | Review new trunk commits since a durable baseline and open a fix PR only for high-confidence issues. | Daily after the trunk branch is usually quiet. | Codex `recent-commit-review`; Claude `recent-commit-review`. |
 | `board-hygiene` | Audit GitHub board readiness for weekly execution and repair issue/board/milestone/priority metadata without creating duplicate issue/card work; answer Ready: yes/no. | Weekly, at the start of the work week. | Codex local `board-hygiene`; Claude local `board-hygiene`; Claude remote `board-hygiene`. |
 | `sentry-hotfix` | Inspect unresolved Sentry issues, avoid duplicate fix PRs, and open one safe verified fix PR. | Every 6 business hours, or event-triggered after new unresolved production errors. | Codex `sentry-hotfix`; Claude `sentry-hotfix`. |

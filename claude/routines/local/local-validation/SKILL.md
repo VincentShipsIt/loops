@@ -3,8 +3,6 @@ name: local-validation
 description: Scheduled local read-only validation for one repository
 ---
 
-ultracode
-
 Run scheduled local validation for `[PROJECT]`.
 
 Scope:

@@ -5,7 +5,6 @@ safe auto-patch tools, dead-code detectors, or lint/code-quality agents.
 
 ## Prompt
 
-ultracode
 
 Run `[TOOL_COMMAND]` in this repository and apply fixes for `[TOOL_FOCUS]`.
 

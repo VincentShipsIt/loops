@@ -1,61 +1,26 @@
 # Codex Automation: GitHub Issue Implementation
 
-Recommended settings:
+This wrapper documents the app settings for the canonical prompt in
+[`github-issue-implementation.prompt.md`](github-issue-implementation.prompt.md).
+The app-ready TOML is generated from that prompt so the workflow is authored once.
+
+## Recommended settings
 
 - Kind: cron
+- Cadence: every two hours
+- Model: `gpt-5.6-sol`
+- Reasoning effort: `high`
 - Execution environment: worktree
-- Reasoning effort: xhigh
-- Write surface: repo branch plus pull request
+- Write surface: one project claim, one repository branch, and one pull request
 
-## Prompt
+## Workflow contract
 
-Implement exactly one ready issue from the canonical project board.
+- Select exactly one issue whose status on the canonical target project is `Backlog`.
+- Require a concrete active release milestone and one-run implementation scope.
+- Claim the issue by moving only that project item to `In Progress` before branching or editing.
+- Treat a failed claim as a hard stop for that issue.
+- Base work on fetched `origin/[TRUNK]` and verify the merge-base before editing.
+- Open a pull request and leave the project item `In Progress`.
+- Never merge the pull request or perform another project-status transition.
 
-Repository and board policy:
-
-- This automation is scoped only to `[PROJECT]`: `[REPO_PATH]`.
-- GitHub repository: `[GITHUB_REPO]`.
-- Canonical project board: `[PROJECT_BOARD]`.
-- Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]` or any unrelated project.
-- Use `[TRUNK]` as the sole trunk/base branch. Open pull requests against `[TRUNK]` only.
-
-Work selection:
-
-- Inspect the canonical project board, open issues, open PRs, local branches, and git worktrees before choosing work.
-- Choose exactly one issue whose status is ready to start and whose priority/scope are clear.
-- Prioritize highest priority first, then older high-confidence issues.
-- Skip backlog, deferred, in-progress, human-review, blocked, and done items.
-- Skip human-only, production-ops-only, external-account, manual-secret, live migration, deploy, or activation work.
-- Skip any issue already covered by an open PR, active branch, active automation branch, or active worktree.
-- Prefer issues with clear acceptance criteria, implementation scope, and verification steps.
-- If no safe issue is ready, report why and stop without creating a branch.
-
-Worktree hard gate:
-
-- This automation must run in the Codex worktree execution environment, not directly in the main checkout.
-- Treat `[REPO_PATH]` as the source checkout only; do not edit, commit, stash, reset, switch, or pull there.
-- If `pwd` resolves to the source checkout, stop and report blocked.
-- Base work from local `[TRUNK]` in the source checkout.
-- If local `[TRUNK]` does not exist, stop and report blocked.
-- Verify the work branch merge-base is exactly local `[TRUNK]` before editing.
-- Run `git fetch --all --prune` in the worktree before creating any branch or commit.
-- Use or create a fresh timestamped branch based directly on `[TRUNK]`, formatted like `[BRANCH_PREFIX]-YYYYMMDD-HHMMSS`.
-
-Implementation workflow:
-
-- Read local agent instructions before editing.
-- Find at least three nearby examples of similar code before writing new code.
-- Keep scope tightly tied to the selected issue.
-- Do not perform opportunistic cleanup unless required by the issue.
-- Preserve existing architecture and package boundaries.
-- Add focused tests or verification for touched behavior.
-- Run the smallest relevant checks/tests for touched areas.
-- Do not run destructive commands, production writes, deploys, or live migrations.
-- Commit the change and open a pull request against `[TRUNK]`.
-- Link the issue in the PR body only when the implementation fully satisfies it.
-- Move the project item to the review status when supported.
-- Do not merge the PR.
-
-Output expectations:
-
-- Report selected issue, priority, milestone/status, branch, base commit, commit, PR URL, validation run, and skipped/risk rationale.
+After editing the canonical prompt, run `python3 scripts/sync-codex-implementation-template.py` to regenerate the TOML, then run `python3 scripts/sync-codex-implementation-template.py --check` to verify synchronization.

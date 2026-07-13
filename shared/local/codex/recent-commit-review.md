@@ -4,7 +4,7 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: worktree
-- Reasoning effort: xhigh
+- Reasoning effort: high
 - Write surface: repo branch, pull request, automation memory
 - Suggested schedule: once daily after the team is unlikely to be pushing to `[TRUNK]`
 
