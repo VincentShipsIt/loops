@@ -19,7 +19,6 @@ Routine requested:
 - State file or memory location: [STATE_FILE]
 - Out of scope: [OUT_OF_SCOPE_PROJECTS]
 - Validation commands, if any: [VALIDATION_COMMANDS]
-- Remote worker, if any: [REMOTE_WORKER]
 
 Steps:
 1. Read this repo's AGENTS.md, CLAUDE.md, README, package scripts, and existing routine docs.
@@ -30,11 +29,14 @@ Steps:
 6. Keep unknowns as [PLACEHOLDER] and list them under Required Setup.
 7. Include setup, connectors/tools, trigger, state/dedupe, safe writes, forbidden actions, prompt, output, failure mode, and manual test.
 8. Keep destructive actions behind explicit approval.
+9. Put model, effort, schedule/enabled state, selected folder, execution mode, permissions, and connector grants in app setup only. Keep outcome, semantic scope, authority, base branch, state/dedupe, verification, stop/failure behavior, and output in the prompt body.
+10. Preserve prompt-level safety assertions even when the app also configures the folder, isolation, permissions, or connectors.
+11. Add remote validation only if the target repo already documents its transport/tool, worker repo path, revision/bootstrap, dependency state, required services, environment-variable names, secret policy, concurrency lock, timeout, cleanup, and result return. Otherwise report heavy/prohibited validation as blocked or skipped.
 
 Do not create or enable the live schedule unless explicitly asked. If live scheduled-task tools are available and the user asks to create it, start disabled or paused when possible.
 
 Output:
-- The complete Routine or SKILL.md draft.
+- App settings, followed by the complete Routine or SKILL.md prompt body.
 - Required setup values still missing.
 - Manual test instructions.
 - Recommended schedule and model.

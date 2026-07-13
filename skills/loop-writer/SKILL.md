@@ -40,7 +40,9 @@ npx skills add Forward-Future/loop-library --skill loop-library -g
 
 - Keep names literal and intent-first: `github-issue-implementation`, `recent-commit-review`, `sentry-hotfix`, `board-hygiene`, `dry-repo`.
 - Use a `github-` prefix when the loop depends on GitHub issues, pull requests, or project boards.
-- Keep execution configuration out of prompt bodies. Codex templates use `gpt-5.6-sol`; code-writing, review, and validation templates use `high` reasoning effort.
+- Do not encode cadence or model in a name or description unless cadence is itself the artifact's purpose.
+- Keep execution configuration out of prompt bodies. App artifacts own model, reasoning effort, schedule/enabled state, folder or `cwds`, local versus worktree execution, permissions, and connector grants. Codex templates use `gpt-5.6-sol`; code-writing, review, and validation templates use `high` reasoning effort.
+- Prompt bodies own outcome, semantic scope, authority, base branch, state/dedupe, verification, stop conditions, failure mode, and output. Keep defense-in-depth assertions such as out-of-scope boundaries, forbidden actions, and stopping when an isolated checkout was not actually provided.
 - Keep placeholders generic. Universal tokens: `[PROJECT]`, `[REPO_PATH]`, `[GITHUB_REPO]`, `[TRUNK]`,
   `[BRANCH_PREFIX]`, `[STATE_FILE]`, `[OUT_OF_SCOPE_PROJECTS]`. Routine-specific tokens also exist
   (e.g. `[PROJECT_BOARD]`, `[REVIEW_MARKER]`, `[TOOL_COMMAND]`, `[AUTOMATION_ASSIGNEE]`,

@@ -1,27 +1,29 @@
 ---
 name: nightly-e2e-expansion
-description: Add exactly one focused nightly e2e spec
+description: Add one project-native E2E coverage unit for CI execution
 ---
 
-Add exactly one focused nightly e2e test for `[PROJECT]`.
+Add exactly one focused, high-value E2E coverage unit for `[PROJECT]` and hand execution evidence to CI/nightly infrastructure.
 
-Scope:
-- Work only in `[REPO_PATH]`.
-- Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]`.
-- Never merge PRs, deploy, run production migrations, or write to production data.
+Scope and local resource policy:
+- Work only in `[REPO_PATH]` and `[GITHUB_REPO]`; do not inspect `[OUT_OF_SCOPE_PROJECTS]`.
+- Do not run E2E tests, dev servers, Docker, watch mode, or full builds locally by default.
+- Local E2E execution is permitted only when `[ALLOW_LOCAL_E2E]` is exactly true and `[LOCAL_E2E_RESOURCE_CONTRACT]` is fully resolved with command scope, required services, resource/time limits, timeout, and cleanup. Otherwise CI/nightly is the execution surface.
+- Local static formatting/linting and non-executing test discovery checks remain allowed.
+- Never deploy, touch production, run live migrations, stage secrets, or merge the PR.
 
-Workflow:
-- Run `git fetch --all --prune` before creating any branch or commit.
-- Read local agent instructions and existing e2e patterns.
-- Find at least three nearby e2e examples before writing a new spec.
-- Pick one important untested user path with low fixture/setup risk.
-- If there is no net-new value, report that and stop without creating a branch.
-- Add one focused spec or extend one existing spec.
-- Do not introduce broad test framework changes.
-- Do not require production credentials or live external services.
-- Run only the new/changed spec when practical; otherwise explain the skipped validation.
-- Before creating a branch, search open PRs and branches for an existing nightly e2e spec for the same area; if one exists, report it and stop.
-- Commit and open a PR against `[TRUNK]`.
+Discovery and dedupe:
+- Run `git fetch origin --prune` and read repository instructions.
+- Discover the target repo's E2E locations, file naming, language/framework, runner lists, package manager, fixtures/seeds, routes, auth/tenant gates, serializers, and expected statuses. Do not assume a path or extension.
+- Find at least three nearby E2E examples, then choose one important uncovered user path with bounded fixture risk, or deepen one thin existing coverage unit.
+- Search open PRs, remote branches, and worktrees for the same area before writing. If equivalent work exists or no net-new value exists, report and stop without a branch.
+
+Write and verify:
+- Create `[BRANCH_PREFIX]-e2e-YYYYMMDD-HHMMSS` from fetched `origin/[TRUNK]` in isolated work and verify the merge-base.
+- Add exactly one focused coverage unit matching discovered conventions. Keep fixtures deterministic/idempotent and update every discovered runner/scheduler list.
+- Verify assertions against actual source. Run allowed static lint/format/discovery checks.
+- When local E2E opt-in is not valid, do not execute the test locally; record the CI/nightly command or workflow expected to exercise it.
+- Commit, push, and open one PR against `[TRUNK]`.
 
 Output:
-- Report user path covered, files changed, validation, branch, PR URL, and residual risk.
+- Report area/path covered, discovered test convention, files/runner lists changed, local static checks, local E2E execution (not run or opt-in evidence), CI/nightly execution evidence or pending workflow, branch/PR, blockers, and residual risk.

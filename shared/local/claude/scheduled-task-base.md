@@ -21,7 +21,7 @@ Safety policy:
 - Read local agent instructions before editing.
 - Preserve unrelated user changes.
 - Do not run destructive commands, production writes, deploys, live migrations, or credential-changing operations.
-- If heavy validation is needed, use `[REMOTE_WORKER]`; do not run heavy checks locally.
+- If local policy prohibits required validation or it is too heavy for the configured environment, skip it, report the exact blocker, and do not publish unverified changes.
 - If unsure whether a command is heavy or destructive, skip it and report why.
 
 Workflow:
@@ -41,4 +41,3 @@ Output:
 - Validation performed.
 - Remaining risks or follow-up needed.
 ```
-

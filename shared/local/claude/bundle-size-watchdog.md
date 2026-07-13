@@ -2,39 +2,28 @@
 
 ## Prompt
 
+Run a read-only bundle and dependency size measurement for `[PROJECT]` at `[REPO_PATH]`.
 
-Run a lightweight bundle/dependency size check for `[PROJECT]` at `[REPO_PATH]`.
+Scope and authority:
 
-Rules:
+- Work only in `[REPO_PATH]` and `[GITHUB_REPO]`; do not inspect `[OUT_OF_SCOPE_PROJECTS]`.
+- Do not build, install dependencies, switch or pull branches, edit repo files, create branches, commit, push, open PRs, deploy, or run migrations.
+- Fetch/read fresh Git metadata only when it does not change the checkout. The only permitted write is the successful measurement baseline in `[STATE_FILE]`.
 
-- Ensure the repo is on `[TRUNK]` and fast-forwarded before reading metrics.
-- Do not run builds.
-- Do not install dependencies.
-- Do not modify files.
-- Do not inspect unrelated projects.
+State and measurement:
 
-Metrics:
+- Read the last successful baseline from `[STATE_FILE]`: source commit, measured timestamp, dependency directory size, top-level package count, and a size keyed by each configured artifact path.
+- Measure `[DEPENDENCY_DIR]`, package count, `[ARTIFACT_PATH_1]`, and `[ARTIFACT_PATH_2]` without generating missing artifacts.
+- Inspect recent dependency manifest and lockfile changes as read-only evidence.
+- If any configured target cannot be measured, report a partial/failed run and retain the prior baseline unchanged.
+- On a complete successful measurement only, replace the baseline with all fields above.
 
-- Check configured build artifact sizes:
-  - `[ARTIFACT_PATH_1]`
-  - `[ARTIFACT_PATH_2]`
-- Check dependency directory size:
-  - `[DEPENDENCY_DIR]`
-- Count top-level dependency packages when useful.
-- Inspect recent dependency lockfile/package manifest changes.
+Thresholds and deltas:
 
-Thresholds:
-
-- Flag if `[DEPENDENCY_DIR]` exceeds `[MAX_DEPENDENCY_SIZE]`.
-- Flag if package count exceeds `[MAX_PACKAGE_COUNT]`.
-- Flag if artifact size exceeds `[MAX_ARTIFACT_SIZE]`.
+- Flag when `[DEPENDENCY_DIR]` exceeds `[MAX_DEPENDENCY_SIZE]`, package count exceeds `[MAX_PACKAGE_COUNT]`, or an artifact exceeds `[MAX_ARTIFACT_SIZE]`.
+- Report absolute values and deltas from the prior successful baseline. On the first complete run, report that a baseline was initialized and no historical delta exists.
 
 Output:
 
-- Dependency directory size.
-- Package count.
-- Artifact sizes.
-- Recent dependency changes.
-- Threshold violations.
-- Do not create a branch or PR.
-
+- Report source commit, timestamp, dependency size/count, artifact sizes, prior-baseline deltas, recent dependency changes, threshold violations, missing targets, baseline update status, blockers, and residual risk.
+- If nothing violates a threshold and no regression exists, report the successful no-op.

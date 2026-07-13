@@ -12,7 +12,7 @@ through the Codex app or Codex automation tools, then paste the relevant prompt.
 
 | Template | Use when | Recommended environment | Reasoning |
 | --- | --- | --- | --- |
-| `board-hygiene.md` | Keep GitHub issues/projects current | `local` | `low` |
+| `board-hygiene.md` | Audit weekly board readiness and repair metadata | `local` | `low` |
 | `github-issue-implementation.md` | Ship exactly one ready GitHub issue | `worktree` | `high` |
 | `recent-commit-review.md` | Review recent trunk commits and fix high-confidence issues | `worktree` | `high` |
 | `sentry-hotfix.md` | Fix unresolved production errors safely | `worktree` | `high` |
@@ -57,9 +57,10 @@ through the Codex app or Codex automation tools, then paste the relevant prompt.
 - `[OUT_OF_SCOPE_PROJECTS]` - comma-separated project names the run must not inspect.
 - `[SENTRY_ORG]` - Sentry organization slug used by sentry-hotfix and similar templates.
 - `[SENTRY_PROJECTS]` - comma-separated Sentry project slugs to query for unresolved issues.
+- `[SENTRY_OBSERVATION_RULE]` - post-deployment window or event-sample rule required before resolving a Sentry issue.
 - `[AUTOMATION_ID]` - stable identifier for this automation (used in deduplication markers and state files).
 - `[AUTOMATION_ASSIGNEE]` - issue assignee that marks an issue as owned by this automation.
-- `[REVIEW_MARKER]` - hidden marker string used to avoid reviewing the same PR head twice.
+- `[REVIEW_MARKER]` - stable marker label written inside a hidden comment with `[AUTOMATION_ID]` and the reviewed head SHA.
 - `[TOOL_COMMAND]` - command this automation runs, such as `bun run lint`.
 - `[TOOL_BASELINE_COMMAND]` - optional read-only baseline command for tools that compare before/after output.
 - `[TOOL_VERIFY_COMMAND]` - optional final scan command that must pass or show verified improvement.
@@ -70,6 +71,8 @@ through the Codex app or Codex automation tools, then paste the relevant prompt.
 - `[SOURCE_PATH_1]`, `[SOURCE_PATH_2]`, `[SOURCE_PATH_3]` - source files checked by docs verification.
 - `[DEPENDENCY_DIR]`, `[ARTIFACT_PATH_1]`, `[ARTIFACT_PATH_2]` - size watchdog targets.
 - `[MAX_DEPENDENCY_SIZE]`, `[MAX_PACKAGE_COUNT]`, `[MAX_ARTIFACT_SIZE]` - size watchdog thresholds.
+- `[ALLOW_LOCAL_E2E]` - boolean opt-in; unresolved or false keeps E2E execution in CI/nightly.
+- `[LOCAL_E2E_RESOURCE_CONTRACT]` - project-defined local E2E command scope, services, resource/time limits, timeout, and cleanup.
 - `[MEMORY_SCOPE]` - repo memory files or globs memory-review may edit, such as `AGENTS.md`, `CLAUDE.md`, or `.agents/memory/`.
 - `[LOOP_LIBRARY_PATH]` - absolute path to the loops library used by loop-discovery for duplicate checks and candidate fit.
 - `[LOOP_LIBRARY_REPO]` - `owner/repo` for the loops library used by loop-discovery.

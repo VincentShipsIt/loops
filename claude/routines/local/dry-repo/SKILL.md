@@ -7,8 +7,8 @@ Make one small behavior-preserving simplification in `[PROJECT]` without deletin
 
 CPU-heavy validation policy:
 - Do not run CPU-intensive tests or heavy validation locally.
-- Run CPU-heavy checks on `[REMOTE_WORKER]` when available.
 - Lightweight local checks are allowed only when clearly quick/static.
+- If required validation is prohibited or too heavy for the configured environment, report blocked and do not publish changes.
 
 Scope:
 - Work only in `[REPO_PATH]`.

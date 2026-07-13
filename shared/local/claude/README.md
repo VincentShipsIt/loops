@@ -10,6 +10,8 @@ Use them as copy-paste starting points for:
 
 Claude model and effort settings are app-managed and stay outside reusable prompt bodies.
 
+The app also owns schedule/enabled state, selected folder, execution mode, permissions, and connectors. Prompt bodies own outcome, scope, authority, base branch, state/dedupe, verification, stop/failure behavior, and output. Runtime safety assertions remain in prompts as defense in depth.
+
 ## Templates
 
 | Template | Best surface | Use when | Suggested cadence |
@@ -18,7 +20,7 @@ Claude model and effort settings are app-managed and stay outside reusable promp
 | `github-issue-implementation.md` | Desktop scheduled task | Ship one ready GitHub issue to PR | Every two hours or nightly |
 | `recent-commit-review.md` | Desktop scheduled task | Review recent trunk commits and PR high-confidence fixes | Daily after trunk is quiet |
 | `github-backlog-pickup.md` | Desktop scheduled task | Fully autonomous issue pickup | Nightly |
-| `board-hygiene.md` | Desktop scheduled task | Keep GitHub boards clean | Daily or twice daily |
+| `board-hygiene.md` | Desktop scheduled task | Audit weekly board readiness and repair metadata | Weekly at the start of the work week |
 | `sentry-hotfix.md` | Desktop scheduled task | Fix unresolved Sentry production errors safely | Every 6 business hours or event-triggered |
 | `tool-fix-pass.md` | Desktop scheduled task | Run a configured scanner/tool and PR safe fixes | Nightly or weekly |
 | `dry-repo.md` | Desktop scheduled task | Reduce duplication or complexity without behavior changes | Weekly at most |
@@ -47,12 +49,10 @@ Universal:
 Local validation:
 - `[VALIDATION_COMMANDS]` - explicit local validation commands to run sequentially.
 
-Remote worker:
-- `[REMOTE_WORKER]` - optional remote worker for local Desktop tasks that explicitly support offloading heavy checks.
-
 Routine-specific:
-- `[PROJECT_BOARD]`, `[REVIEW_MARKER]`, `[TOOL_COMMAND]`, `[TOOL_BASELINE_COMMAND]`, `[TOOL_VERIFY_COMMAND]`, `[TOOL_FOCUS]`, `[AUTOMATION_ASSIGNEE]`, `[ALLOW_SAFE_DELETES]`.
-- `[SENTRY_ORG]`, `[SENTRY_PROJECTS]` (Sentry hotfix scope).
+- `[PROJECT_BOARD]`, `[AUTOMATION_ID]`, `[REVIEW_MARKER]`, `[TOOL_COMMAND]`, `[TOOL_BASELINE_COMMAND]`, `[TOOL_VERIFY_COMMAND]`, `[TOOL_FOCUS]`, `[AUTOMATION_ASSIGNEE]`, `[ALLOW_SAFE_DELETES]`.
+- `[SENTRY_ORG]`, `[SENTRY_PROJECTS]`, `[SENTRY_OBSERVATION_RULE]` (Sentry hotfix scope and post-deployment observation rule).
+- `[ALLOW_LOCAL_E2E]`, `[LOCAL_E2E_RESOURCE_CONTRACT]` (explicit local E2E opt-in and its bounded resource contract).
 - `[REPO_PATH_1]`/`[REPO_PATH_2]`, `[GITHUB_REPO_1]`/`[GITHUB_REPO_2]` (multi-repo).
 - bundle-size-watchdog: `[DEPENDENCY_DIR]`, `[ARTIFACT_PATH_1]`, `[ARTIFACT_PATH_2]`, `[MAX_DEPENDENCY_SIZE]`, `[MAX_PACKAGE_COUNT]`, `[MAX_ARTIFACT_SIZE]`.
 - docs-verification: `[DOC_SCOPE]`, `[DOC_FILE_1]`, `[DOC_FILE_2]`, `[DOC_FILE_3]`, `[SOURCE_PATH_1]`, `[SOURCE_PATH_2]`, `[SOURCE_PATH_3]`.
@@ -60,6 +60,8 @@ Routine-specific:
 
 The canonical local-repo-path token is `[REPO_PATH]` (not `[LOCAL_REPO_PATH]` or `[ABSOLUTE_REPO_PATH]`).
 The canonical tool-invocation token is `[TOOL_COMMAND]` (not `[TOOL_NAME]`).
+
+Remote validation is not part of the generic prompt contract. A target project may add it only after documenting transport/tool, worker repo path, revision/bootstrap, dependency state, required services, environment-variable names, secret policy, concurrency lock, timeout, cleanup, and result return.
 
 ## Tool Fix Presets
 

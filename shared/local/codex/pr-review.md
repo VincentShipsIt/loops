@@ -5,32 +5,39 @@ Recommended settings:
 - Kind: cron or webhook/API trigger
 - Execution environment: worktree
 - Reasoning effort: high
-- Write surface: PR review comments, plus same-branch commits only for automation-owned PR branches
+- Write surface: PR review comments and marker; same-branch commits only for automation-owned PR branches
 
 ## Prompt
 
-Review one open pull request in `[GITHUB_REPO]` and report strict, actionable quality findings.
+Review exactly one open pull request in `[GITHUB_REPO]`. The automation is comment-only by default and may repair the same branch only when every write gate below passes.
 
-Scope:
+Scope and authority:
 
-- Work only in `[REPO_PATH]` and `[GITHUB_REPO]`.
-- Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]`.
-- Never merge PRs, deploy, run live migrations, or write production data.
+- Work only in `[REPO_PATH]` and `[GITHUB_REPO]`; do not inspect `[OUT_OF_SCOPE_PROJECTS]`.
+- Never merge, deploy, run live migrations, write production data, expose secrets, or open a second PR.
+- A branch edit is permitted only when the branch is automation-owned, an isolated clean Codex worktree is available, the fix is small and high-confidence, and focused verification succeeds.
 
-Workflow:
+Selection and marker lifecycle:
 
-- Run `git fetch --all --prune`.
-- Inspect open PRs, local branches, remote branches, worktrees, and prior review markers.
-- Review at most one open PR per run.
-- Skip PRs already reviewed at the current head with `[REVIEW_MARKER]`.
-- If there is no suitable PR, report that and stop.
-- Check out a clean worktree for the PR branch before analysis.
-- Review current branch changes against `[TRUNK]`.
-- Focus on correctness, maintainability, abstraction quality, codebase health, simplification, modularity, duplication, succinctness, and legibility.
-- If the PR branch is automation-owned and the fix is clear, small, behavior-preserving, and high-confidence, push to the same PR branch.
-- Otherwise report concise actionable findings only.
-- Do not open a new PR from this review automation.
+- Run `git fetch --all --prune`, list open non-draft PRs, and review at most one.
+- For each candidate, read its current head SHA and look for `<!-- [REVIEW_MARKER] automation=[AUTOMATION_ID] head=<head-sha> -->`.
+- Skip only when marker automation id and head SHA exactly match the current head. A changed head is eligible again.
+- Missing, malformed, unreadable, or failed marker access is not successful dedupe; report it and continue conservatively.
+- Pick the highest-risk eligible PR based on failing checks, touched surface, security/auth/persistence impact, or size. Stop cleanly if none exists.
+
+Review and optional repair:
+
+- Check out the PR in an isolated clean Codex worktree and compare it with `[TRUNK]`.
+- Prioritize verified correctness, security, data loss, migration, auth/tenancy, concurrency, user-visible regression, maintainability, and missing-test findings. Avoid speculative or style-only comments.
+- If the branch is not automation-owned or any repair gate fails, do not edit; post one concise review with actionable findings ordered by severity.
+- If every repair gate passes, apply only the clear behavior-preserving fix to the same PR branch, run focused verification, commit, push, confirm the new head SHA, and post one concise review/update. Never create another branch or PR.
+- If there are no findings, do not post a noisy approval message; proceed to the marker step.
+
+Marker write:
+
+- Only after the review comment succeeds, or after a same-branch update is pushed, verified, and reported successfully, write the exact hidden marker for the final current head SHA and stable `[AUTOMATION_ID]`.
+- If marker posting fails, report it and do not claim the head was deduped.
 
 Output:
 
-- Report PR reviewed, base/head commits, findings, edits made, validation run, review marker status, skipped work, and residual risk.
+- Report PR, base and initial/final head SHAs, findings, comment URL, edits, validation, marker status, skipped work, blockers, and residual risk.
