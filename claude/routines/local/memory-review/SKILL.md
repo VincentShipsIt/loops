@@ -1,6 +1,6 @@
 ---
 name: memory-review
-description: Weekly source-backed cleanup of stale repository memory
+description: Source-backed cleanup of stale repository memory
 ---
 
 Review and refresh repository memory for `[PROJECT]` so future agents get current, source-backed instructions instead of stale migration-era guidance.

@@ -30,11 +30,13 @@ Steps:
 6. Preserve safety rules: one repo scope, duplicate checks, worktree gate for code-writing, no destructive actions, no secrets in output.
 7. Use `gpt-5.6-sol`. Use `high` reasoning effort for implementation, review, and validation; keep lower effort only for bounded metadata or reporting routines.
 8. Produce a complete automation.toml draft.
+9. Put model, reasoning effort, schedule/enabled state, `cwds`, execution environment, permissions, and connector grants in TOML/app settings only. Keep outcome, semantic scope, authority, base branch, state/dedupe, verification, stop/failure behavior, and output in the prompt.
+10. Preserve prompt-level safety assertions even when TOML also configures the worktree, folder, or permissions.
 
 Do not create or enable the live Codex automation unless explicitly asked. If Codex automation tools are available and the user asks to create it, start it PAUSED.
 
 Output:
-- The automation.toml draft.
+- App settings, followed by the prompt body and complete automation.toml draft.
 - Required setup values still missing.
 - Manual test instructions.
 - Recommended schedule and reasoning effort.

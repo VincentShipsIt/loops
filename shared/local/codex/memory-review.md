@@ -1,4 +1,4 @@
-# Codex Automation: Weekly Memory Review
+# Codex Automation: Memory Review
 
 Recommended settings:
 

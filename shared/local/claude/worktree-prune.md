@@ -12,6 +12,7 @@ Repository policy:
 - Do not delete remote branches, push anything, deploy, run live migrations, or write production data.
 - Always preserve these branch names exactly: `[TRUNK]`.
 - Also preserve the currently checked-out branch in every worktree, unless that worktree is safely removed.
+- Missing, unresolved, or false `[ALLOW_SAFE_DELETES]` means report-only. Never infer permission from the schedule or a previous run.
 
 Preflight:
 
@@ -37,16 +38,20 @@ Merged-work verification:
   - if `origin/[TRUNK]` exists, branch tip is also merged into it
   - file-level verification shows the branch contributes no file content absent from trunk
 - Prefer false negatives over false positives.
+- Verify the branch has no commits that are absent from every configured remote; unpushed work is never eligible.
 
 Cleanup actions:
 
-- Remove eligible clean worktrees with `git worktree remove` without force.
-- Delete eligible local branches with `git branch -d` only.
-- Run `git worktree prune` after successful removals.
+- If `[ALLOW_SAFE_DELETES]` is not exactly true, list all eligible candidates and stop without deleting anything.
+- Only when `[ALLOW_SAFE_DELETES]` is exactly true, remove eligible clean worktrees with `git worktree remove` without force and delete eligible local branches with `git branch -d` only.
+- Run `git worktree prune` only after successful removals.
 - If no worktrees or branches are eligible, report no-op with the candidate count and stop.
 
 Output:
 
-- Report removed branches/worktrees, skipped branches/worktrees, and exact reason for each skip.
+- Report removed branches/worktrees, every candidate, skipped branches/worktrees, exact reason for each skip, and whether safe deletes were enabled.
 - Explicitly call out dirty worktrees.
 
+Manual test before enabling deletes:
+
+- Run once with `[ALLOW_SAFE_DELETES]` false or unresolved and verify the report lists candidates without changing worktrees or branches.

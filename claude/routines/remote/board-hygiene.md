@@ -71,4 +71,3 @@ Final answer format:
 - Exact issues still preventing Ready: yes
 
 If no safe metadata work exists, produce the readiness report and say so.
-Execute this routine now.

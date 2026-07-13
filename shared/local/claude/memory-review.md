@@ -1,4 +1,4 @@
-# Claude Scheduled Task: Weekly Memory Review
+# Claude Scheduled Task: Memory Review
 
 ## Loop Contract
 
