@@ -20,9 +20,9 @@ def expected_block() -> str:
 
 def synchronized_text() -> str:
     current = TEMPLATE.read_text()
-    updated, count = PROMPT_BLOCK.subn(lambda _: expected_block(), current, count=1)
+    updated, count = PROMPT_BLOCK.subn(lambda _: expected_block(), current)
     if count != 1:
-        raise SystemExit(f"could not locate one prompt block in {TEMPLATE}")
+        raise SystemExit(f"expected exactly one prompt block in {TEMPLATE}, found {count}")
     return updated
 
 

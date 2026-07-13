@@ -23,4 +23,4 @@ The app-ready TOML is generated from that prompt so the workflow is authored onc
 - Open a pull request and leave the project item `In Progress`.
 - Never merge the pull request or perform another project-status transition.
 
-Run `python3 scripts/sync-codex-implementation-template.py --check` after editing the canonical prompt.
+After editing the canonical prompt, run `python3 scripts/sync-codex-implementation-template.py` to regenerate the TOML, then run `python3 scripts/sync-codex-implementation-template.py --check` to verify synchronization.
