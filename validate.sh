@@ -185,6 +185,22 @@ require_all 'target-project status is exactly `Backlog`' \
   shared/local/claude/github-issue-implementation.md \
   claude/routines/local/github-issue-implementation/SKILL.md
 
+implementation_prompts='shared/local/codex/github-issue-implementation.prompt.md
+codex/automations/local/github-issue-implementation/automation.toml
+shared/local/claude/github-issue-implementation.md
+claude/routines/local/github-issue-implementation/SKILL.md
+shared/local/claude/github-backlog-pickup.md
+claude/routines/local/github-backlog-pickup/SKILL.md'
+
+for f in $implementation_prompts; do
+  grep -Fq 'git ls-remote --symref origin HEAD' "$f" || err "$f: default branch must be discovered directly from origin"
+  grep -Fq 'refs/remotes/origin/${default_branch}' "$f" || err "$f: discovered default branch must be fetched into its remote-tracking ref"
+  grep -Fq 'git rev-parse HEAD` to equal `default_commit` exactly' "$f" || err "$f: issue branch HEAD must equal the recorded default commit before editing"
+  grep -Fq 'git status --porcelain=v1 --untracked-files=all' "$f" || err "$f: isolated worktree must be clean before editing"
+  grep -Fq 'Never use or mutate a local default branch' "$f" || err "$f: local default branch mutation must be forbidden"
+  if grep -Fq '[TRUNK]' "$f"; then err "$f: canonical implementation prompt must discover the default branch instead of using [TRUNK]"; fi
+done
+
 remote_worker_residue=$(grep -rnF '[REMOTE_WORKER]' shared/local/claude claude/routines/local prompts/create-claude-routine.md 2>/dev/null || true)
 if [ -n "$remote_worker_residue" ]; then
   while IFS= read -r line; do err "generic Claude template assumes REMOTE_WORKER: $line"; done <<< "$remote_worker_residue"

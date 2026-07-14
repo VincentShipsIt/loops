@@ -2,13 +2,14 @@
 
 ## Prompt
 
-Implement exactly one eligible open issue from the canonical GitHub Project for `[GITHUB_REPO]`, then open a pull request against `[TRUNK]`.
+Implement exactly one eligible open issue from the canonical GitHub Project for `[GITHUB_REPO]`, then open a pull request against the remote repository's discovered default branch.
 
 Scope and synchronize:
 
 - Work only on `[PROJECT]` in an isolated branch/worktree. Treat `[REPO_PATH]` as the source checkout and never edit, commit, stash, reset, switch, or pull there.
-- Run `git fetch origin --prune`. Inspect the project whose title is exactly `[PROJECT_BOARD]`, open issues, milestones, open pull requests, remote branches, and worktrees. Only the status attached to that project counts.
-- Start from fetched `origin/[TRUNK]`. Before editing, verify the work branch merge-base is exactly `origin/[TRUNK]`. Stop if the source checkout is the current working directory or remote trunk is unavailable.
+- Discover the default branch directly from `origin` with `git ls-remote --symref origin HEAD`. Accept only one symbolic `ref: refs/heads/<default-branch> HEAD` result; record `<default-branch>` as `default_branch`, and stop if it is missing, ambiguous, or not under `refs/heads/`.
+- Fetch only that branch into its remote-tracking ref with `git fetch --prune origin "+refs/heads/${default_branch}:refs/remotes/origin/${default_branch}"`, then record `default_commit` with `git rev-parse "refs/remotes/origin/${default_branch}^{commit}"`. Inspect the project whose title is exactly `[PROJECT_BOARD]`, open issues, milestones, open pull requests, remote branches, and worktrees. Only the status attached to that project counts.
+- Treat `default_commit` as the sole implementation base. Never use or mutate a local default branch: do not check it out, create it, pull it, switch it, merge it, rebase it, reset it, or update it. Do not base work on the initial worktree `HEAD` or the source checkout branch. Stop if the source checkout is the current working directory, the current checkout is not an isolated registered worktree, or the fetched remote-tracking ref cannot be resolved to a commit.
 - Do not inspect or modify `[OUT_OF_SCOPE_PROJECTS]` or unrelated projects.
 
 Select one issue:
@@ -26,7 +27,7 @@ Claim before editing:
 
 Implement and verify:
 
-- Create a focused `[BRANCH_PREFIX]/<issue-number>-<slug>` branch from `origin/[TRUNK]` in isolated work.
+- In the isolated worktree, create a focused `[BRANCH_PREFIX]/<issue-number>-<slug>` branch with no upstream directly from the recorded `default_commit`. Before editing, require `git rev-parse HEAD` to equal `default_commit` exactly and `git status --porcelain=v1 --untracked-files=all` to produce no output; stop and report without editing if either condition fails.
 - Read the issue body and comments, repository instructions, relevant architecture and documentation, and nearby code before editing.
 - Implement only the selected issue using existing patterns and add or update focused tests.
 - Run verification required by repository instructions and proportional to the change. If a required check is prohibited, unavailable, or too heavy for the configured environment, record the exact command and blocker and do not publish an unverified pull request.
@@ -35,10 +36,10 @@ Implement and verify:
 
 Publish for review:
 
-- Commit with the issue number, push, and open a ready-for-review pull request against `[TRUNK]`. Never create a draft pull request.
+- Commit with the issue number, push, and open a ready-for-review pull request against the recorded `default_branch`. Never create a draft pull request.
 - Link the issue, summarize the implementation, and list verification results and residual blockers. Use `Closes #<number>` only when the issue is fully resolved.
 - Leave the project item `In Progress`. Do not change its project status again or merge the pull request.
 
 Output:
 
-- Report selected issue, milestone and priority, branch and base commit, commit, pull request URL, verification results, skipped checks, blockers, and residual risk.
+- Report selected issue, milestone and priority, discovered default branch and recorded base commit, issue branch, commit, pull request URL, verification results, skipped checks, blockers, and residual risk.
