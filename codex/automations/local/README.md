@@ -21,6 +21,7 @@ These are clean templates, not raw exports. They intentionally do not include pr
 - `content-factory-maintenance/automation.toml` - improve a prompt, skill, template, docs, or evaluation pipeline.
 - `memory-review/automation.toml` - review repo memory against current source truth and open safe correction PRs.
 - `loop-discovery/automation.toml` - inspect a codebase for evidence-backed loop candidates without writing files.
+- `agent-configuration-audit/automation.toml` - audit global and per-repository agent configuration without modifying files.
 - `memory-template/memory.md` - support file for Codex automation state, not a runnable automation.
 
 ## Placeholder Key
@@ -48,6 +49,13 @@ The issue-implementation prompt is authored once in `../../../shared/local/codex
 - `[DEPENDENCY_DIR]` - dependency directory checked by bundle-size-watchdog.
 - `[ARTIFACT_PATH_1]`, `[ARTIFACT_PATH_2]` - build artifacts checked by bundle-size-watchdog.
 - `[MAX_DEPENDENCY_SIZE]`, `[MAX_PACKAGE_COUNT]`, `[MAX_ARTIFACT_SIZE]` - watchdog thresholds.
+- `[REPOSITORY_ROOT]` - parent directory containing repositories for a multi-repo audit.
+- `[PRIORITY_REPOSITORIES]` - repositories that receive a deep configuration review.
+- `[PREVIOUS_AUDIT_PATH]` - prior audit report used for coverage deltas and regression classification.
+- `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]` - effective global agent configuration roots.
+- `[MODEL_ROUTING_POLICY]` - explicit allowlisted model/effort/routing tuples, written positively rather than as a denylist.
+- `[LOCAL_VERIFICATION_POLICY]` - configured policy for local tests, typechecks, lint, builds, and hooks.
+- `[EXCLUDED_PATH_PATTERNS]` - explicit discovery exclusions for the multi-repo audit.
 - `[SENTRY_OBSERVATION_RULE]` - post-deployment window or event-sample rule required before resolving a Sentry issue.
 - `[ALLOW_LOCAL_E2E]` - boolean opt-in; unresolved or false keeps E2E execution in CI/nightly.
 - `[LOCAL_E2E_RESOURCE_CONTRACT]` - project-defined local E2E command scope, services, resource/time limits, timeout, and cleanup.

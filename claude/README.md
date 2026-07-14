@@ -25,6 +25,7 @@ Use `../shared/local/claude/` for sanitized shared templates derived from local 
 - `../shared/local/claude/bundle-size-watchdog.md`
 - `../shared/local/claude/nightly-e2e-expansion.md`
 - `../shared/local/claude/memory-review.md`
+- `../shared/local/claude/agent-configuration-audit.md`
 
 Use `../shared/remote/claude/` for connector-safe remote Routine source prompts.
 
@@ -41,7 +42,7 @@ Use `routines/local/` for app-ready templates derived from local Claude Desktop 
 ~/.claude/scheduled-tasks/
 ```
 
-The template set includes GitHub issue implementation, recent commit review, backlog pickup, board hygiene, Sentry hotfixes, configurable tool fix passes, dry repo, local validation, PR review, worktree pruning, docs verification, bundle checks, e2e expansion, and repo hygiene. Schedule, enabled state, model, folder, and permission settings are app-managed and are not represented in `SKILL.md` files.
+The template set includes GitHub issue implementation, recent commit review, backlog pickup, board hygiene, Sentry hotfixes, configurable tool fix passes, dry repo, local validation, PR review, worktree pruning, docs verification, bundle checks, e2e expansion, repo hygiene, and a read-only global/per-repository agent configuration audit. Schedule, enabled state, model, folder, and permission settings are app-managed and are not represented in `SKILL.md` files.
 
 Use `../shared/loop-intents.md` for the canonical intent names and suggested cadence when creating the live Claude schedule.
 

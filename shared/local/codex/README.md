@@ -30,6 +30,7 @@ templates carry `<app-owned>` placeholders and never name a model.
 | `content-factory-maintenance.md` | Improve a prompt, skill, template, docs, or evaluation pipeline | `worktree` |
 | `memory-review.md` | Refresh repo memory against current source truth | `worktree` |
 | `loop-discovery.md` | Find evidence-backed loop candidates in a target codebase | `local` |
+| `agent-configuration-audit.md` | Audit effective global and per-repository agent configuration | `local` |
 
 ## Support Files
 
@@ -79,6 +80,10 @@ templates carry `<app-owned>` placeholders and never name a model.
 - `[MEMORY_SCOPE]` - repo memory files or globs memory-review may edit, such as `AGENTS.md`, `CLAUDE.md`, or `.agents/memory/`.
 - `[LOOP_LIBRARY_PATH]` - absolute path to the loops library used by loop-discovery for duplicate checks and candidate fit.
 - `[LOOP_LIBRARY_REPO]` - `owner/repo` for the loops library used by loop-discovery.
+- `[REPOSITORY_ROOT]`, `[PRIORITY_REPOSITORIES]`, `[PREVIOUS_AUDIT_PATH]` - multi-repo audit scope and baseline.
+- `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]` - global configuration roots for agent-configuration-audit.
+- `[MODEL_ROUTING_POLICY]` - explicit allowlisted model/effort/routing tuples, written positively rather than as a denylist.
+- `[LOCAL_VERIFICATION_POLICY]`, `[EXCLUDED_PATH_PATTERNS]` - verification and discovery policy inputs for agent-configuration-audit.
 
 ## Tool Fix Presets
 
