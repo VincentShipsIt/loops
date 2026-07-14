@@ -1,6 +1,7 @@
 Implement exactly one eligible open issue from the canonical GitHub Project for `[GITHUB_REPO]`, then open a pull request against the remote repository's discovered default branch.
 
 Scheduler lifecycle preflight:
+- Use GitHub's versioned Projects v2 REST API through `gh api` for exact-board discovery, fields, status counts, candidate filtering, and status mutation. Send `X-GitHub-Api-Version: 2026-03-10`, use server-side `q` filters, request only required field IDs, and paginate REST responses. Do not use GraphQL or `gh project item-list` for work supported by these endpoints.
 - Before any repository synchronization or issue selection, query the exact target project and count items whose status on that project is exactly `Backlog`.
 - If and only if that query succeeds and the exact `Backlog` count is zero, use the Codex app automation-management capability to change only the current automation's status to paused, preserving its prompt, schedule, model, reasoning effort, execution environment, working directories, and every other setting. Then report the zero count and stop without repository or project writes.
 - If the `Backlog` count is greater than zero, continue normally. If the board query fails, is incomplete, or cannot identify the exact target project, report blocked and stop without pausing the automation or synchronizing the repository.
@@ -14,10 +15,11 @@ Scope and synchronize:
 - Do not inspect or modify `[OUT_OF_SCOPE_PROJECTS]` or unrelated projects.
 
 Select one issue:
+- Consider the current dated weekly or release milestone first. If it has no eligible `Backlog` issue, advance to the nearest future dated milestone and continue milestone by milestone. A full or empty current milestone is not a reason to stop while later eligible `Backlog` work exists.
 - `codex:automation` is the Codex queue label; `claude:routine` is the Claude routine queue label.
 - `claude:routines` is a stale plural variant, not a canonical queue label. Use `claude:routine` unless a target repo explicitly documents the plural label.
 - `shipcode:agent:codex` and `shipcode:agent:claude` are ShipCode routing only. Do not treat either as a generic intake signal outside ShipCode-specific logic.
-- An issue is eligible only when its target-project status is exactly `Backlog`, it belongs to a concrete active release milestone, its body and acceptance criteria are bounded enough to complete and verify in one run, and no open pull request, remote branch, or worktree already covers it.
+- An issue is eligible only when its target-project status is exactly `Backlog`, it belongs to a concrete dated current or future weekly/release milestone, its body and acceptance criteria are bounded enough to complete and verify in one run, and no open pull request, remote branch, or worktree already covers it.
 - Rank eligible issues in this order: queue label (`codex:automation`), milestone, target/release/start date, project Priority, then readiness (acceptance criteria, verification scope, and confidence).
 - Prefer ready `codex:automation` issues before unlabeled/non-automation work.
 - Do not give `shipcode:agent:codex` or `shipcode:agent:claude` any selection weight unless this run is explicitly scoped to ShipCode.
@@ -25,6 +27,7 @@ Select one issue:
 - Skip epics, deferred or blocked work, product-decision placeholders, manual release or signing work, broad migrations, destructive or production operations, and work requiring unavailable external access.
 - Prefer the nearest active milestone, then P0 through P3, then unlabeled. Within the same priority prefer bugs, correctness, security, and safety before enhancements, then the oldest issue.
 - Repair existing linked open PRs: if an open PR closes or links a candidate issue, ensure the PR has the issue's queue/review labels before skipping it as already covered.
+- If a candidate is too large for one coherent PR, decompose it before claiming into bounded child or follow-up issues, inherit its milestone and priority, add those issues to this exact project as `Backlog`, and link the decomposition from the parent. Then select at most one eligible child for this run. Never claim a broad parent merely to leave it stranded `In Progress`.
 - If no issue is eligible, report the target-project status counts and stop without creating a branch, changing project metadata, editing files, committing, or opening a pull request.
 
 Claim before editing:
