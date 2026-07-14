@@ -151,6 +151,14 @@ Before enabling any recurring routine:
 - Define the final report format.
 - Define what "no safe work" means, and make the routine stop cleanly.
 
+## GitHub Queue Labels
+
+- `codex:automation` is the generic Codex automation queue label.
+- `claude:routine` is the generic Claude routine queue label.
+- `claude:routines` is a stale plural variant, not a canonical queue label. Use `claude:routine` unless a target repo explicitly documents the plural label.
+- `shipcode:agent:codex` and `shipcode:agent:claude` are ShipCode-specific routing only. Do not use either as a generic intake signal in other repos.
+- When a loop opens or repairs a linked PR, copy the source issue's queue labels and existing classification/review labels onto the PR. Do not synthesize labels from project fields such as Priority, Status, or Area.
+
 ## Recommended Stack
 
 For autonomous engineering work, start with these:
