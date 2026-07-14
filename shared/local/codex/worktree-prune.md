@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: local
-- Reasoning effort: medium
 - Write surface: local worktree and local branch cleanup only
 
 ## Prompt

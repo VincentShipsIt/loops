@@ -20,7 +20,7 @@ Help an agent install or adapt recurring loop prompts into a user's project with
 
 - Keep templates project-agnostic.
 - Use placeholders such as `[PROJECT]`, `[REPO_PATH]`, `[GITHUB_REPO]`, `[TRUNK]`, and `[OUT_OF_SCOPE_PROJECTS]`.
-- Keep execution configuration out of prompt bodies. Codex templates use `gpt-5.6-sol`; code-writing, review, and validation templates use `high` reasoning effort.
+- Keep execution configuration out of prompt bodies. Model and reasoning effort are set in the app UI when the automation or routine is created; templates carry `<app-owned>` placeholders and never name a model.
 - Treat `shared/local/codex/github-issue-implementation.prompt.md` as the canonical implementation prompt and regenerate its app-ready TOML instead of maintaining a second authored copy.
 - Do not add real organization names, private repo names, local paths, tokens, hostnames, issue numbers, PR URLs, run logs, or personal details.
 - Keep every routine explicit about surface, trigger, connectors/tools, state/dedupe, safe writes, forbidden actions, prompt, output, failure mode, and manual test.

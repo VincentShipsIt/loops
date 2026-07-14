@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # validate.sh - lint the loops template library.
-# Checks: SKILL.md frontmatter + name==dir, Codex model/effort policy,
+# Checks: SKILL.md frontmatter + name==dir, app-owned model/effort policy
+# (templates carry "<app-owned>" placeholders and never name a concrete model),
 # generated prompt synchronization, intent artifact/invariant parity,
 # placeholder documentation coverage, and project/secret residue.
 set -uo pipefail
@@ -28,15 +29,26 @@ for f in skills/*/SKILL.md; do
   [ "$name" = "$dir" ] || err "$f: name '$name' != dir '$dir'"
 done
 
-# 2) Codex automation.toml required keys + current model policy
+# 2) Codex automation.toml required keys + app-owned model policy
 for f in codex/automations/local/*/automation.toml; do
   [ -e "$f" ] || continue
   for k in version id kind name prompt status rrule; do
     grep -qE "^$k[[:space:]]*=" "$f" || err "$f: missing required key '$k'"
   done
-  grep -qE '^model[[:space:]]*=[[:space:]]*"gpt-5\.6-sol"' "$f" || err "$f: model must be gpt-5.6-sol"
-  grep -qE '^reasoning_effort[[:space:]]*=[[:space:]]*"(low|medium|high)"' "$f" || err "$f: unsupported or missing reasoning_effort"
+  grep -qE '^model[[:space:]]*=[[:space:]]*"<app-owned>"' "$f" || err "$f: model must be the \"<app-owned>\" placeholder (model is chosen in the app UI)"
+  grep -qE '^reasoning_effort[[:space:]]*=[[:space:]]*"<app-owned>"' "$f" || err "$f: reasoning_effort must be the \"<app-owned>\" placeholder (effort is chosen in the app UI)"
 done
+
+# 2b) No concrete model identifiers anywhere in authored content.
+# Model and reasoning effort are app-owned settings; reintroducing a pinned
+# model in templates, drafts, or guidance must fail here. Word boundaries keep
+# ordinary words (solution, terraform, console) from matching the variant names.
+model_residue=$(grep -rniE 'gpt-[0-9]|claude-[0-9]|claude-(opus|sonnet|haiku|fable)|\b(sol|terra|luna)\b' \
+  --exclude-dir=.git --exclude-dir=upstream --exclude-dir=linked-examples \
+  --exclude=validate.sh . 2>/dev/null || true)
+if [ -n "$model_residue" ]; then
+  while IFS= read -r line; do err "concrete model identifier in authored content (models are app-owned): $line"; done <<< "$model_residue"
+fi
 
 python3 scripts/sync-codex-implementation-template.py --check || fail=1
 

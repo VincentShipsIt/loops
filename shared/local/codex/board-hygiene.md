@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: local
-- Reasoning effort: low
 - Write surface: GitHub metadata only
 
 ## Prompt

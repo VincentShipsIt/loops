@@ -15,7 +15,7 @@ Keep execution configuration in the app artifact, not in the reusable prompt bod
 
 Safety assertions stay in prompts as defense in depth. For example, a code-writing prompt must still stop when it was not given an isolated checkout, even when the app is configured for worktree execution. Names and descriptions should identify intent, not repeat model or cadence settings.
 
-Codex templates target `gpt-5.6-sol`. Implementation, review, and validation automations use `high` reasoning effort. The GitHub issue implementation workflow is authored once in `shared/local/codex/github-issue-implementation.prompt.md` and generated into the app-ready TOML.
+Model and reasoning effort are set in the app UI when the automation or routine is created; templates carry `<app-owned>` placeholders and never name a model. The GitHub issue implementation workflow is authored once in `shared/local/codex/github-issue-implementation.prompt.md` and generated into the app-ready TOML.
 
 Use `shared/github/pull-request-issue-link.md` in repository PR templates so fully resolving PRs consistently close their linked issue when merged. Configure each GitHub Project's `Item closed` workflow to move the closed issue to `Done`, and enable the repository's automatic merged-branch deletion setting.
 

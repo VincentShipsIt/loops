@@ -41,7 +41,7 @@ npx skills add Forward-Future/loop-library --skill loop-library -g
 - Keep names literal and intent-first: `github-issue-implementation`, `recent-commit-review`, `sentry-hotfix`, `board-hygiene`, `dry-repo`.
 - Use a `github-` prefix when the loop depends on GitHub issues, pull requests, or project boards.
 - Do not encode cadence or model in a name or description unless cadence is itself the artifact's purpose.
-- Keep execution configuration out of prompt bodies. App artifacts own model, reasoning effort, schedule/enabled state, folder or `cwds`, local versus worktree execution, permissions, and connector grants. Codex templates use `gpt-5.6-sol`; code-writing, review, and validation templates use `high` reasoning effort.
+- Keep execution configuration out of prompt bodies. App artifacts own model, reasoning effort, schedule/enabled state, folder or `cwds`, local versus worktree execution, permissions, and connector grants. Model and reasoning effort are set in the app UI when the automation or routine is created; templates carry `<app-owned>` placeholders and never name a model.
 - Prompt bodies own outcome, semantic scope, authority, base branch, state/dedupe, verification, stop conditions, failure mode, and output. Keep defense-in-depth assertions such as out-of-scope boundaries, forbidden actions, and stopping when an isolated checkout was not actually provided.
 - Keep placeholders generic. Universal tokens: `[PROJECT]`, `[REPO_PATH]`, `[GITHUB_REPO]`, `[TRUNK]`,
   `[BRANCH_PREFIX]`, `[STATE_FILE]`, `[OUT_OF_SCOPE_PROJECTS]`. Routine-specific tokens also exist
@@ -89,7 +89,7 @@ For any code-writing loop, also define:
 Before finishing:
 
 - Run `python3 scripts/sync-codex-implementation-template.py --check`.
-- Confirm Codex templates use `gpt-5.6-sol` and only `low`, `medium`, or `high` reasoning effort.
+- Confirm Codex `automation.toml` templates carry the `<app-owned>` placeholder for both `model` and `reasoning_effort` and never name a concrete model.
 - Run a private/project residue scan if any template was derived from local routines.
 - Validate `automation.toml` files when Codex templates changed.
 - Run `./validate.sh` and ensure it passes.
