@@ -16,8 +16,11 @@ Use this checklist when drafting or auditing a loop.
 
 ## Code-Writing Loop Requirements
 
-- Work from a fetched current base.
-- Use a worktree or disposable checkout.
+- Resolve the remote default branch dynamically from the hosting remote; do not configure or assume `main`, `master`, or `[TRUNK]` in an executable code-writing prompt.
+- Fetch that branch explicitly into its remote-tracking ref and record the exact remote commit.
+- Create the work branch with no upstream directly from the recorded commit.
+- Use a separate registered worktree or disposable checkout, and before editing require both exact `HEAD` equality with the recorded commit and a clean status including untracked files.
+- Never use or mutate a local default branch, and target the resolved remote default branch when opening a PR.
 - Never edit the source checkout directly when a worktree surface exists.
 - Make one minimal coherent change.
 - Add or update tests when behavior changes.
@@ -32,4 +35,3 @@ Use this checklist when drafting or auditing a loop.
 - No explicit forbidden actions.
 - Verification that depends on model confidence instead of commands, evidence, or repeatable checks.
 - A prompt copied from another project with names, URLs, hostnames, issue numbers, or raw run logs intact.
-

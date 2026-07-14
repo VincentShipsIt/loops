@@ -16,6 +16,7 @@ The app-ready TOML is generated from that prompt so the workflow is authored onc
 ## Workflow contract
 
 - Select exactly one issue whose status on the canonical target project is `Backlog`.
+- Pause only the current Codex automation, preserving every other setting, when a successful exact-target query proves the `Backlog` count is zero; never pause on query failure or eligibility exhaustion with a nonzero backlog.
 - Require a concrete active release milestone and one-run implementation scope.
 - Claim the issue by moving only that project item to `In Progress` before branching or editing.
 - Treat a failed claim as a hard stop for that issue.

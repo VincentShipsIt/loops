@@ -16,7 +16,7 @@ through the Codex app or Codex automation tools, then paste the relevant prompt.
 | `github-issue-implementation.md` | Ship exactly one ready GitHub issue | `worktree` | `high` |
 | `recent-commit-review.md` | Review recent trunk commits and fix high-confidence issues | `worktree` | `high` |
 | `sentry-hotfix.md` | Fix unresolved production errors safely | `worktree` | `high` |
-| `pr-review.md` | Review one open PR and improve only automation-owned branches | `worktree` | `high` |
+| `pr-review.md` | Review one open PR with comments and markers only | `worktree` | `high` |
 | `tool-fix-pass.md` | Run one configured scanner/tool and PR safe fixes | `worktree` | `high` |
 | `dry-repo.md` | Make one behavior-preserving simplification | `worktree` | `high` |
 | `local-validation.md` | Run read-only validation in the local checkout | `local` | `high` |

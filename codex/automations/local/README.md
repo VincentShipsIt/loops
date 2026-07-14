@@ -10,7 +10,7 @@ These are clean templates, not raw exports. They intentionally do not include pr
 - `recent-commit-review/automation.toml` - review recent trunk commits and open safe fix PRs.
 - `board-hygiene/automation.toml` - audit weekly board readiness and repair evidence-backed metadata.
 - `sentry-hotfix/automation.toml` - inspect unresolved Sentry errors and open safe fix PRs.
-- `pr-review/automation.toml` - review one open PR and improve only automation-owned branches.
+- `pr-review/automation.toml` - review one open PR with comments and markers only.
 - `tool-fix-pass/automation.toml` - run one configured scanner/tool and open safe fix PRs.
 - `dry-repo/automation.toml` - make one behavior-preserving simplification.
 - `local-validation/automation.toml` - run read-only validation in the local checkout.

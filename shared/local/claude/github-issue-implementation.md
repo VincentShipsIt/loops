@@ -4,6 +4,14 @@
 
 Implement exactly one eligible open issue from the canonical GitHub Project for `[GITHUB_REPO]`, then open a pull request against the remote repository's discovered default branch.
 
+Scheduler lifecycle preflight:
+
+- Before any repository synchronization or issue selection, query the exact target project and count items whose status on that project is exactly `Backlog`.
+- If and only if that query succeeds and the exact `Backlog` count is zero, use `mcp__scheduled-tasks__list_scheduled_tasks` and `mcp__scheduled-tasks__update_scheduled_task` when both are available to identify and pause only the current Claude scheduled task while preserving every other setting. Then report the zero count and stop without repository or project writes.
+- If the scheduled-task tools are unavailable or the current task cannot be identified unambiguously, report the inability and stop without claiming a pause or mutating another scheduler.
+- If the `Backlog` count is greater than zero, continue normally. If the board query fails, is incomplete, or cannot identify the exact target project, report blocked and stop without pausing the task or synchronizing the repository.
+- Never pause merely because `Backlog` is nonzero but no item passes milestone, scope, dedupe, access, or other eligibility gates.
+
 Scope and synchronize:
 
 - Work only on `[PROJECT]` in an isolated branch/worktree. Treat `[REPO_PATH]` as the source checkout and never edit, commit, stash, reset, switch, or pull there.

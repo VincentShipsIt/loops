@@ -27,26 +27,27 @@ Repository policy:
 Workflow:
 
 - Read local agent instructions before editing.
-- Run `git fetch --all --prune` before creating any branch/worktree.
-- Use `origin/[TRUNK]` as the base branch.
-- Create a fresh timestamped branch/worktree based directly on `origin/[TRUNK]`, formatted like `[BRANCH_PREFIX]-YYYYMMDD-HHMMSS`.
+- Discover the default branch directly from `origin` with `git ls-remote --symref origin HEAD`; accept only one symbolic `ref: refs/heads/<default-branch> HEAD` result and record it as `default_branch`.
+- Fetch only that branch into its remote-tracking ref with `git fetch --prune origin "+refs/heads/${default_branch}:refs/remotes/origin/${default_branch}"`, then record `default_commit` with `git rev-parse "refs/remotes/origin/${default_branch}^{commit}"`. Stop if discovery or resolution is missing or ambiguous.
+- Treat `[REPO_PATH]` as the source checkout and require a separate registered worktree for edits. Treat `default_commit` as the sole fix base and never use or mutate a local default branch.
 - Before editing, inspect local branches/worktrees and open PRs for similar `[TOOL_COMMAND]` or `[TOOL_FOCUS]` work.
-- If equivalent active work exists, update it only when it is clearly this automation's branch and safe to continue. Otherwise skip and report.
-- Verify the work branch is based directly on `origin/[TRUNK]` before editing.
+- If equivalent active work exists, skip and report it; never continue a pre-existing branch.
 - If `[TOOL_COMMAND]` is still a placeholder or not configured, report required setup and stop.
+- Create `[BRANCH_PREFIX]-tool-fix-YYYYMMDD-HHMMSS` with no upstream directly from `default_commit` in the isolated worktree.
+- Before any command that may edit files, require `git rev-parse HEAD` to equal `default_commit` exactly and `git status --porcelain=v1 --untracked-files=all` to produce no output; stop and report without editing if either check fails.
 - If `[TOOL_BASELINE_COMMAND]` is configured, run it first and record the baseline output.
 - Run `[TOOL_COMMAND]`.
 - Fix only clear, actionable findings with small, reviewable changes tied to `[TOOL_FOCUS]`.
 - Prefer existing codebase patterns.
 - If `[TOOL_VERIFY_COMMAND]` is configured, run it after fixes and keep only improvements that verify against the final scan.
 - Run focused checks/tests for touched areas.
-- Commit changes and open a pull request against `[TRUNK]`.
+- Commit changes and open a pull request against `default_branch`.
 - If there are no actionable findings, report the result without creating noisy changes.
 
 Output:
 
 - Tool run summary, focus, baseline command if used, and verification command if used.
 - Findings fixed/skipped.
-- Branch/commit/PR.
+- Discovered default branch, recorded base commit, branch/commit/PR.
 - Validation.
 - Residual risk.

@@ -1,5 +1,11 @@
 Implement exactly one eligible open issue from the canonical GitHub Project for `[GITHUB_REPO]`, then open a pull request against the remote repository's discovered default branch.
 
+Scheduler lifecycle preflight:
+- Before any repository synchronization or issue selection, query the exact target project and count items whose status on that project is exactly `Backlog`.
+- If and only if that query succeeds and the exact `Backlog` count is zero, use the Codex app automation-management capability to change only the current automation's status to paused, preserving its prompt, schedule, model, reasoning effort, execution environment, working directories, and every other setting. Then report the zero count and stop without repository or project writes.
+- If the `Backlog` count is greater than zero, continue normally. If the board query fails, is incomplete, or cannot identify the exact target project, report blocked and stop without pausing the automation or synchronizing the repository.
+- Never pause merely because `Backlog` is nonzero but no item passes milestone, scope, dedupe, access, or other eligibility gates.
+
 Scope and synchronize:
 - Work only on `[PROJECT]` in the isolated Codex automation worktree. Treat `[REPO_PATH]` as the source checkout and never edit, commit, stash, reset, switch, or pull there.
 - Discover the default branch directly from `origin` with `git ls-remote --symref origin HEAD`. Accept only one symbolic `ref: refs/heads/<default-branch> HEAD` result; record `<default-branch>` as `default_branch`, and stop if it is missing, ambiguous, or not under `refs/heads/`.
