@@ -44,7 +44,9 @@ Implement and verify:
 - In the isolated worktree, create a focused `[BRANCH_PREFIX]/<issue-number>-<slug>` branch with no upstream directly from the recorded `default_commit`. Before editing, require `git rev-parse HEAD` to equal `default_commit` exactly and `git status --porcelain=v1 --untracked-files=all` to produce no output; stop and report without editing if either condition fails.
 - Read the issue body and comments, repository instructions, relevant architecture and documentation, and nearby code before editing. Repository-specific safety and domain rules in `AGENTS.md` are binding unless they conflict with this automation's explicit project or trunk contract.
 - Implement only the selected issue using existing patterns. Add or update focused tests.
-- Run the relevant formatter, lint, typecheck or build, unit, coverage, and user-facing checks discovered from repository instructions and scripts, proportional to the change. Record the exact command and blocker for any required check that cannot run.
+- Never run a full-repository or full-monorepo test, typecheck, build, coverage, or end-to-end suite on the local computer. Locally run only focused package/file checks that repository instructions explicitly permit. Run every broad suite through GitHub Actions.
+- Before a push or workflow dispatch that would start broad CI, acquire the configured fleet-wide CI serialization lock and verify that no other fleet repository has a queued or running broad validation workflow. Hold the lock until the required GitHub checks finish, then release it even on failure. Wait rather than starting a second broad run; never bypass a live lock. Recover a stale lock only when its owner is gone and GitHub confirms that no fleet-wide broad run is active.
+- Run the relevant formatter, lint, focused unit checks, and user-facing checks discovered from repository instructions and scripts, proportional to the change. Record the exact local or GitHub Actions command and blocker for any required check that cannot run.
 - Review the final diff for correctness, security, regressions, unnecessary complexity, dead code, and unrelated changes.
 
 Publish for review:
