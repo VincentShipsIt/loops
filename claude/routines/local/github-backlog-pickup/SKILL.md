@@ -22,9 +22,15 @@ Scope and synchronize:
 - Do not inspect or modify `[OUT_OF_SCOPE_PROJECTS]` or unrelated projects.
 
 Eligibility and claim:
+- `claude:routine` is the Claude routine queue label.
+- Prefer ready `claude:routine` issues before unlabeled/non-routine work.
+- `claude:routines` is a stale plural variant, not a canonical queue label. Use `claude:routine` unless a target repo explicitly documents the plural label.
+- `codex:automation` is the Codex queue label.
+- `shipcode:agent:codex` and `shipcode:agent:claude` are ShipCode routing only. Do not treat either as a generic intake signal outside ShipCode-specific logic.
 - Select exactly one issue whose target-project status is `Backlog`, which has a concrete active release milestone, bounded one-run acceptance criteria, and no covering open PR, remote branch, or worktree.
-- Order by nearest active milestone, P0 through P3 then unlabeled, bugs/correctness/security/safety before enhancements, then oldest.
+- Rank eligible issues in this order: queue label (`claude:routine`), milestone, target/release/start date, project Priority, then readiness (acceptance criteria, verification scope, and confidence).
 - Skip epics, deferred/blocked work, product-decision placeholders, manual release/signing work, broad migrations, destructive/production operations, and unavailable external access.
+- Repair existing linked open PRs: if an open PR closes or links a candidate issue, ensure the PR has the issue's queue/review labels before skipping it as already covered.
 - Re-check all eligibility and duplicate signals immediately before claiming. Move only the target-project item from `Backlog` to `In Progress` before branching or editing.
 - When supported, assign `[AUTOMATION_ASSIGNEE]` and leave one concise pickup comment with the start time. These do not replace the project-status claim.
 - If the claim fails or state changed, try the next eligible issue or stop. If none is eligible, report status counts and stop without writes.
@@ -36,6 +42,9 @@ Implement and publish:
 - Never deploy, run live migrations, write production data, or use destructive commands.
 - Commit with the issue number, push, and open a ready-for-review PR against the recorded `default_branch`; never open a draft or merge it.
 - Use `Closes #<number>` only when fully resolved. Comment with the PR link when supported.
+- When opening a PR, mirror source issue labels onto the PR: always copy queue labels (`codex:automation`, `claude:routine`) and copy existing classification/review labels such as `code-quality`, `security`, `product`, `bug`, `enhancement`, `backend`, `frontend`, `infra`, and `e2e`.
+- Do not invent labels from project fields like Priority, Status, or Area unless those labels already exist on the issue.
+- If a non-ShipCode issue or PR has stale `shipcode:agent:codex` or `shipcode:agent:claude`, or any issue or PR has stale plural `claude:routines`, remove it only when the correct queue label is present or can be added with clear evidence; otherwise report it as uncertain.
 - Leave the target-project item `In Progress` and perform no later project-status transition.
 
 Output:

@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: worktree
-- Reasoning effort: high
 - Write surface: scoped memory files, repo branch, pull request, automation memory
 - Suggested schedule: weekly, after the primary development week has settled
 

@@ -47,6 +47,7 @@ that exists, use `local-validation` and report missing environment as blocked.
 | `bundle-size-watchdog` | Read dependency/build artifact sizes and report threshold violations without modifying files. | Daily or weekly. | Codex `bundle-size-watchdog`; Claude `bundle-size-watchdog`. |
 | `nightly-e2e-expansion` | Add exactly one high-value nightly e2e spec and update runner lists. | Nightly or weekly. | Codex `nightly-e2e-expansion`; Claude `nightly-e2e-expansion`. |
 | `agent-content-maintenance` | Improve a repo whose product is prompts, skills, templates, docs, rubrics, or evaluation fixtures. This is not a general app-maintenance loop. | Weekly or monthly, and only for content/template-heavy repos. | Codex `content-factory-maintenance`. |
+| `agent-configuration-audit` | Audit effective global and per-repository Claude/Codex instructions, routing, permissions, hooks, symlinks, and drift without modifying configuration. | Monthly, and manually after major agent-tool or routing changes. | Codex local `agent-configuration-audit`; Claude local `agent-configuration-audit`. |
 
 ## Canonical Artifact Map
 

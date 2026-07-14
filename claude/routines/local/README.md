@@ -30,6 +30,7 @@ The app also owns schedule/enabled state, selected folder, execution mode, permi
 - `nightly-e2e-expansion/`
 - `repo-hygiene-cleanup/`
 - `memory-review/`
+- `agent-configuration-audit/`
 
 ## Suggested Cadence
 
@@ -51,6 +52,7 @@ Claude stores schedule settings in the app, not in these `SKILL.md` prompt files
 | `docs-verification`, `bundle-size-watchdog` | Weekly or after relevant large changes. |
 | `nightly-e2e-expansion` | Nightly or weekly. |
 | `memory-review` | Weekly, or after large source/schema changes. |
+| `agent-configuration-audit` | Monthly, or after major Claude Code/Codex or routing changes. |
 
 ## Placeholder Key
 
@@ -80,6 +82,10 @@ Claude stores schedule settings in the app, not in these `SKILL.md` prompt files
 - `[LOCAL_E2E_RESOURCE_CONTRACT]` - project-defined local E2E command scope, services, resource/time limits, timeout, and cleanup.
 - `[REPO_PATH_1]`, `[REPO_PATH_2]` - local repo paths for multi-repo routines (repo-hygiene-cleanup).
 - `[GITHUB_REPO_1]`, `[GITHUB_REPO_2]` - `owner/repo` for multi-repo routines.
+- `[REPOSITORY_ROOT]`, `[PRIORITY_REPOSITORIES]`, `[PREVIOUS_AUDIT_PATH]` - multi-repo audit scope and baseline.
+- `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]` - global configuration roots.
+- `[MODEL_ROUTING_POLICY]` - explicit allowlisted model/effort/routing tuples, written positively rather than as a denylist.
+- `[LOCAL_VERIFICATION_POLICY]`, `[EXCLUDED_PATH_PATTERNS]` - remaining policy inputs for agent-configuration-audit.
 
 Remote validation is opt-in only. A project-specific routine may add it after the repo documents transport/tool, worker repo path, revision/bootstrap, dependency state, required services, environment-variable names, secret policy, concurrency lock, timeout, cleanup, and result return. Generic templates report prohibited or heavy validation as blocked/skipped instead.
 

@@ -26,6 +26,9 @@ Scope:
 - Do not use or assume a local repository path.
 - Do not inspect, summarize, or update `[OUT_OF_SCOPE_PROJECTS]` or any unrelated project.
 - Metadata-only mode: do not create source edits, branches, commits, pull requests, deploys, or production writes.
+- Queue labels are `codex:automation` for Codex automation work and `claude:routine` for Claude routine work.
+- `claude:routines` is a stale plural variant, not a canonical queue label. Use `claude:routine` unless a target repo explicitly documents the plural label.
+- `shipcode:agent:codex` and `shipcode:agent:claude` are ShipCode routing only. Do not treat either as a generic intake signal outside ShipCode-specific logic.
 
 Board identity:
 
@@ -52,7 +55,11 @@ Repair policy:
 - Move merged/completed work to Done.
 - Carry unfinished last-week goals into the current or next weekly milestone when clear.
 - Create or update the current weekly milestone only if the repo's existing naming/date pattern (`[WEEKLY_MILESTONE_PATTERN]`) makes it obvious.
-- Search by issue URL, project item ID, title, normalized title slug, linked PRs, and branch names before adding or updating any board item.
+- Search by issue URL, project item ID, title, normalized title slug, linked PRs, and branch names before adding or updating any board item, so no duplicate issue or card is created.
+- Repair existing linked open PRs: if an open PR closes or links an issue, ensure the PR has the issue's queue/review labels.
+- Always copy queue labels (`codex:automation`, `claude:routine`) from linked issues to PRs, and copy existing classification/review labels such as `code-quality`, `security`, `product`, `bug`, `enhancement`, `backend`, `frontend`, `infra`, and `e2e`.
+- Do not invent labels from project fields like Priority, Status, or Area unless those labels already exist on the issue.
+- If a non-ShipCode issue or PR has stale `shipcode:agent:codex` or `shipcode:agent:claude`, or any issue or PR has stale plural `claude:routines`, remove it only when the correct queue label is present or can be added with clear evidence; otherwise report it as uncertain.
 - If metadata cannot be decided from evidence, leave it unchanged and report the exact blocker.
 
 Final answer format:

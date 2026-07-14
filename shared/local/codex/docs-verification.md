@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: worktree
-- Reasoning effort: high
 - Write surface: documentation branch plus pull request
 
 ## Prompt

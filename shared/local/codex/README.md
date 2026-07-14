@@ -8,25 +8,29 @@ against the public examples in `../../../codex/upstream/`.
 They are prompt templates, not live automation files. Create live automations
 through the Codex app or Codex automation tools, then paste the relevant prompt.
 
+Model and reasoning effort are set in the app UI when the automation is created;
+templates carry `<app-owned>` placeholders and never name a model.
+
 ## Templates
 
-| Template | Use when | Recommended environment | Reasoning |
-| --- | --- | --- | --- |
-| `board-hygiene.md` | Audit weekly board readiness and repair metadata | `local` | `low` |
-| `github-issue-implementation.md` | Ship exactly one ready GitHub issue | `worktree` | `high` |
-| `recent-commit-review.md` | Review recent trunk commits and fix high-confidence issues | `worktree` | `high` |
-| `sentry-hotfix.md` | Fix unresolved production errors safely | `worktree` | `high` |
-| `pr-review.md` | Review one open PR with comments and markers only | `worktree` | `high` |
-| `tool-fix-pass.md` | Run one configured scanner/tool and PR safe fixes | `worktree` | `high` |
-| `dry-repo.md` | Make one behavior-preserving simplification | `worktree` | `high` |
-| `local-validation.md` | Run read-only validation in the local checkout | `local` | `high` |
-| `docs-verification.md` | Verify docs against source and PR corrections | `worktree` | `high` |
-| `bundle-size-watchdog.md` | Report dependency and artifact size drift | `local` | `medium` |
-| `nightly-e2e-expansion.md` | Add exactly one focused nightly e2e spec | `worktree` | `high` |
-| `worktree-prune.md` | Remove only clean, provably merged local worktrees when enabled | `local` | `medium` |
-| `content-factory-maintenance.md` | Improve a prompt, skill, template, docs, or evaluation pipeline | `worktree` | `low` or `medium` |
-| `memory-review.md` | Refresh repo memory against current source truth | `worktree` | `high` |
-| `loop-discovery.md` | Find evidence-backed loop candidates in a target codebase | `local` | `medium` |
+| Template | Use when | Recommended environment |
+| --- | --- | --- |
+| `board-hygiene.md` | Audit weekly board readiness and repair metadata | `local` |
+| `github-issue-implementation.md` | Ship exactly one ready GitHub issue | `worktree` |
+| `recent-commit-review.md` | Review recent trunk commits and fix high-confidence issues | `worktree` |
+| `sentry-hotfix.md` | Fix unresolved production errors safely | `worktree` |
+| `pr-review.md` | Review one open PR with comments and markers only | `worktree` |
+| `tool-fix-pass.md` | Run one configured scanner/tool and PR safe fixes | `worktree` |
+| `dry-repo.md` | Make one behavior-preserving simplification | `worktree` |
+| `local-validation.md` | Run read-only validation in the local checkout | `local` |
+| `docs-verification.md` | Verify docs against source and PR corrections | `worktree` |
+| `bundle-size-watchdog.md` | Report dependency and artifact size drift | `local` |
+| `nightly-e2e-expansion.md` | Add exactly one focused nightly e2e spec | `worktree` |
+| `worktree-prune.md` | Remove only clean, provably merged local worktrees when enabled | `local` |
+| `content-factory-maintenance.md` | Improve a prompt, skill, template, docs, or evaluation pipeline | `worktree` |
+| `memory-review.md` | Refresh repo memory against current source truth | `worktree` |
+| `loop-discovery.md` | Find evidence-backed loop candidates in a target codebase | `local` |
+| `agent-configuration-audit.md` | Audit effective global and per-repository agent configuration | `local` |
 
 ## Support Files
 
@@ -76,6 +80,10 @@ through the Codex app or Codex automation tools, then paste the relevant prompt.
 - `[MEMORY_SCOPE]` - repo memory files or globs memory-review may edit, such as `AGENTS.md`, `CLAUDE.md`, or `.agents/memory/`.
 - `[LOOP_LIBRARY_PATH]` - absolute path to the loops library used by loop-discovery for duplicate checks and candidate fit.
 - `[LOOP_LIBRARY_REPO]` - `owner/repo` for the loops library used by loop-discovery.
+- `[REPOSITORY_ROOT]`, `[PRIORITY_REPOSITORIES]`, `[PREVIOUS_AUDIT_PATH]` - multi-repo audit scope and baseline.
+- `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]` - global configuration roots for agent-configuration-audit.
+- `[MODEL_ROUTING_POLICY]` - explicit allowlisted model/effort/routing tuples, written positively rather than as a denylist.
+- `[LOCAL_VERIFICATION_POLICY]`, `[EXCLUDED_PATH_PATTERNS]` - verification and discovery policy inputs for agent-configuration-audit.
 
 ## Tool Fix Presets
 

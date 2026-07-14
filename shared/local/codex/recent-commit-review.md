@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: worktree
-- Reasoning effort: high
 - Write surface: repo branch, pull request, automation memory
 - Suggested schedule: once daily after the team is unlikely to be pushing to the remote default branch
 

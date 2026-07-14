@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron or webhook/API trigger
 - Execution environment: worktree
-- Reasoning effort: high
 - Write surface: PR review comments and marker only
 
 ## Prompt

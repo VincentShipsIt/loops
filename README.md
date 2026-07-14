@@ -15,7 +15,7 @@ Keep execution configuration in the app artifact, not in the reusable prompt bod
 
 Safety assertions stay in prompts as defense in depth. For example, a code-writing prompt must still stop when it was not given an isolated checkout, even when the app is configured for worktree execution. Names and descriptions should identify intent, not repeat model or cadence settings.
 
-Codex templates target `gpt-5.6-sol`. Implementation, review, and validation automations use `high` reasoning effort. The GitHub issue implementation workflow is authored once in `shared/local/codex/github-issue-implementation.prompt.md` and generated into the app-ready TOML.
+Model and reasoning effort are set in the app UI when the automation or routine is created; templates carry `<app-owned>` placeholders and never name a model. The GitHub issue implementation workflow is authored once in `shared/local/codex/github-issue-implementation.prompt.md` and generated into the app-ready TOML.
 
 Use `shared/github/pull-request-issue-link.md` in repository PR templates so fully resolving PRs consistently close their linked issue when merged. Configure each GitHub Project's `Item closed` workflow to move the closed issue to `Done`, and enable the repository's automatic merged-branch deletion setting.
 
@@ -93,12 +93,14 @@ This repo is organized by platform and execution surface:
    - Codex local validation: `codex/automations/local/local-validation/automation.toml`
    - Codex weekly memory review: `codex/automations/local/memory-review/automation.toml`
    - Codex loop discovery: `codex/automations/local/loop-discovery/automation.toml`
+   - Codex agent configuration audit: `codex/automations/local/agent-configuration-audit/automation.toml`
    - Claude local GitHub issue work: `claude/routines/local/github-issue-implementation/SKILL.md`
    - Claude recent commit review/fix: `claude/routines/local/recent-commit-review/SKILL.md`
    - Claude Sentry fix loop: `claude/routines/local/sentry-hotfix/SKILL.md`
    - Claude local validation: `claude/routines/local/local-validation/SKILL.md`
    - Claude PR review: `claude/routines/local/pr-review/SKILL.md`
    - Claude weekly memory review: `claude/routines/local/memory-review/SKILL.md`
+   - Claude agent configuration audit: `claude/routines/local/agent-configuration-audit/SKILL.md`
    - Claude remote board hygiene: `claude/routines/remote/board-hygiene.md`
 
 3. Replace every placeholder:
@@ -150,6 +152,14 @@ Before enabling any recurring routine:
 - Keep secrets, tokens, `.env` files, request bodies, and private host details out of output.
 - Define the final report format.
 - Define what "no safe work" means, and make the routine stop cleanly.
+
+## GitHub Queue Labels
+
+- `codex:automation` is the generic Codex automation queue label.
+- `claude:routine` is the generic Claude routine queue label.
+- `claude:routines` is a stale plural variant, not a canonical queue label. Use `claude:routine` unless a target repo explicitly documents the plural label.
+- `shipcode:agent:codex` and `shipcode:agent:claude` are ShipCode-specific routing only. Do not use either as a generic intake signal in other repos.
+- When a loop opens or repairs a linked PR, copy the source issue's queue labels and existing classification/review labels onto the PR. Do not synthesize labels from project fields such as Priority, Status, or Area.
 
 ## Recommended Stack
 

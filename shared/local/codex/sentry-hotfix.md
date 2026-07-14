@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: worktree
-- Reasoning effort: high
 - Write surface: one repo branch/PR, state, and evidence-gated Sentry resolution
 
 ## Prompt
