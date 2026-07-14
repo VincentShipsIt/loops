@@ -4,8 +4,7 @@ Recommended settings:
 
 - Kind: cron or manual
 - Execution environment: local
-- Model: GPT-5.6 Sol
-- Reasoning effort: high
+- Model and reasoning effort: set in the app UI; intentionally app-owned
 - Agent execution: current session
 - Write surface: read-only filesystem/repository inspection plus non-sensitive automation memory
 - Suggested schedule: monthly, and manually after major agent-tool or model-routing changes

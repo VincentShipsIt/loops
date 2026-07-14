@@ -1,8 +1,3 @@
-version = 1
-id = "[AUTOMATION_ID]-github-issue-implementation"
-kind = "cron"
-name = "GitHub Issue Implementation - [PROJECT]"
-prompt = """
 Implement exactly one eligible open issue from the canonical GitHub Project for `[GITHUB_REPO]`, then open a pull request against `[TRUNK]`.
 
 Scope and synchronize:
@@ -46,10 +41,3 @@ Publish for review:
 - Leave the project item `In Progress`. Do not change its project status again, describe or assume a later project transition, or merge the pull request.
 
 Report the selected issue, milestone and priority, branch and base commit, commit, pull request URL, verification results, skipped checks, blockers, and residual risk.
-"""
-status = "PAUSED"
-rrule = "FREQ=HOURLY;INTERVAL=2"
-model = "<app-owned>"
-reasoning_effort = "<app-owned>"
-execution_environment = "worktree"
-cwds = ["[REPO_PATH]"]

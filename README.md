@@ -6,6 +6,19 @@ This repo is agent-friendly first. Give it to Codex, Claude, or another coding a
 
 This repo is not an installed automation pack. Use it as a source of prompt bodies, schedules, guardrails, and setup patterns, then create the live loop inside Codex or Claude.
 
+## App Settings Versus Prompt Semantics
+
+Keep execution configuration in the app artifact, not in the reusable prompt body:
+
+- App settings: model, reasoning effort, schedule and enabled state, selected folder or `cwds`, local versus worktree execution, permissions, and connector grants.
+- Prompt semantics: outcome, semantic scope, authority and write surface, base branch, state and dedupe, verification, stop conditions, failure mode, and output.
+
+Safety assertions stay in prompts as defense in depth. For example, a code-writing prompt must still stop when it was not given an isolated checkout, even when the app is configured for worktree execution. Names and descriptions should identify intent, not repeat model or cadence settings.
+
+Model and reasoning effort are set in the app UI when the automation or routine is created; templates carry `<app-owned>` placeholders and never name a model. The GitHub issue implementation workflow is authored once in `shared/local/codex/github-issue-implementation.prompt.md` and generated into the app-ready TOML.
+
+Use `shared/github/pull-request-issue-link.md` in repository PR templates so fully resolving PRs consistently close their linked issue when merged. Configure each GitHub Project's `Item closed` workflow to move the closed issue to `Done`, and enable the repository's automatic merged-branch deletion setting.
+
 ## Copy-Paste Install Prompt
 
 Paste this into an agent with your target project open:
@@ -101,7 +114,6 @@ This repo is organized by platform and execution surface:
    - `[VALIDATION_COMMANDS]` if used
    - `[WEEKLY_MILESTONE_PATTERN]` if used
    - `[OUT_OF_SCOPE_PROJECTS]`
-   - `[REMOTE_WORKER]` if used
 
    Full placeholder reference: `claude/routines/local/README.md` and `shared/local/claude/README.md` Placeholder Keys.
 
@@ -116,6 +128,8 @@ This repo is organized by platform and execution surface:
    - Claude remote Routine: use `claude/routines/remote/` or `shared/remote/claude/`, configure only the connectors the routine actually needs, and paste the prompt into the Routine UI.
 
 6. Run it once manually and inspect the output before enabling the schedule.
+
+Remote validation is an explicit project capability, not a library default. Add it only when the target repo documents the transport/tool, worker repo path, revision and bootstrap procedure, dependency state, required services, environment-variable names, secret-handling policy, concurrency lock, timeout, cleanup, and how results return to the caller. Otherwise skip prohibited or heavy local validation and report the blocker.
 
 ## Agent Prompts
 
@@ -138,6 +152,14 @@ Before enabling any recurring routine:
 - Keep secrets, tokens, `.env` files, request bodies, and private host details out of output.
 - Define the final report format.
 - Define what "no safe work" means, and make the routine stop cleanly.
+
+## GitHub Queue Labels
+
+- `codex:automation` is the generic Codex automation queue label.
+- `claude:routine` is the generic Claude routine queue label.
+- `claude:routines` is a stale plural variant, not a canonical queue label. Use `claude:routine` unless a target repo explicitly documents the plural label.
+- `shipcode:agent:codex` and `shipcode:agent:claude` are ShipCode-specific routing only. Do not use either as a generic intake signal in other repos.
+- When a loop opens or repairs a linked PR, copy the source issue's queue labels and existing classification/review labels onto the PR. Do not synthesize labels from project fields such as Priority, Status, or Area.
 
 ## Recommended Stack
 

@@ -20,11 +20,15 @@ For each routine found:
 - Classify it as keep, merge, rewrite, disable, or delete-candidate.
 - Extract the reusable pattern.
 - Remove project names, org names, local paths, hostnames, issue numbers, PR URLs, run history, secrets, and personal details.
+- Split configuration into App settings and Prompt body. App settings are model, reasoning effort, schedule/enabled state, folder/cwds, local versus worktree execution, permissions, and connector grants. Prompt semantics are outcome, semantic scope, authority, base branch, state/dedupe, verification, stop/failure behavior, and output.
+- Flag model tokens or model names, effort directives, schedule prose, enabled-state prose, hardcoded local `cd` commands, folder/workspace assumptions, and execution-mode configuration that leaked into reusable prompt bodies.
+- Do not remove prompt-level out-of-scope boundaries, forbidden actions, or runtime isolation assertions merely because the app has overlapping settings.
 
 Create:
 - A concise audit report.
 - Clean templates under .agents/loops/ or the repo's existing automation docs location.
 - A migration checklist for turning drafts into live routines.
+- Separate App settings and Prompt body sections for every retained routine.
 
 Rules:
 - Do not create live schedules or update app-managed automations unless explicitly asked.
@@ -38,4 +42,5 @@ Finish with:
 - Clean templates created.
 - Unsafe or stale routines to retire.
 - Recommended first three routines to enable manually.
+- Legacy configuration residue that still needs removal from installed app prompts.
 ```

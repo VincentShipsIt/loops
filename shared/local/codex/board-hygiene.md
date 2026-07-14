@@ -1,48 +1,51 @@
-# Codex Automation: GitHub Board Hygiene
+# Codex Automation: GitHub Board Weekly Readiness
 
 Recommended settings:
 
 - Kind: cron
 - Execution environment: local
-- Reasoning effort: low
 - Write surface: GitHub metadata only
 
 ## Prompt
 
-Clean up this repository's canonical GitHub issue board and keep issues current without creating duplicates.
+Audit and repair `[PROJECT]` GitHub project board, milestones, priorities, and weekly deliverables, then answer whether the board is ready for weekly execution.
 
-Repository policy:
+Scope and identity:
 
-- This automation is scoped only to `[PROJECT]`: `[REPO_PATH]`.
-- GitHub repository: `[GITHUB_REPO]`.
-- Canonical project board: `[PROJECT_BOARD]`.
-- Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]` or any unrelated project.
-- This automation is GitHub metadata only. Do not create local worktrees, branches, commits, pull requests, source edits, or repo file changes.
+- Work only on `[GITHUB_REPO]`, `[PROJECT_BOARD]`, and read-only evidence in `[REPO_PATH]`; do not inspect `[OUT_OF_SCOPE_PROJECTS]`.
+- Metadata-only mode: never create source edits, branches, commits, PRs, deploys, or production writes.
+- Determine the canonical board from existing project items and linked planning docs. If identity is ambiguous, stop instead of guessing.
+- Queue labels are `codex:automation` for Codex automation work and `claude:routine` for Claude routine work.
+- `claude:routines` is a stale plural variant, not a canonical queue label. Use `claude:routine` unless a target repo explicitly documents the plural label.
+- `shipcode:agent:codex` and `shipcode:agent:claude` are ShipCode routing only. Do not treat either as a generic intake signal outside ShipCode-specific logic.
 
-Workflow:
+Required audit:
 
-- Read `AGENTS.md`, `CLAUDE.md`, and relevant local memory or label guidance when present.
-- Inspect open issues, labels, milestones, open and merged PRs, and GitHub project fields.
-- Run read-only git/GitHub inspection only when needed for evidence.
-- Do not create duplicate issues or board cards.
-- Search by issue URL, title, normalized title slug, linked PRs, and branch names before adding or updating any board item.
+- List open issues, active board items, and active milestones; identify the current weekly deliverable milestone and last-week goals.
+- Verify every open actionable issue is represented once with Status, Priority, and Milestone.
+- Verify every active card has an open/relevant issue, evidence-backed status/priority, and the current or next weekly milestone.
+- Identify stale In Progress items, merged work not Done, duplicate cards, missing items, and goals that need completion, carry-forward, or an explicit blocker.
 
-Board hygiene tasks:
+Repair policy:
 
-- Ensure every open issue is represented once on the canonical board.
-- Remove or archive duplicate board cards, keeping the canonical issue card.
-- Normalize issue type and project fields only when supported by issue text, comments, PRs, branches, or board evidence.
-- Keep labels concise. Avoid labels for values already represented by project fields.
-- Keep issue titles short and board-readable when the body preserves the nuance.
-- Ensure PRD-style issues follow the repo's current issue-body format and flag uncertain items.
-- Move active, blocked, completed, stale, and merged work to the appropriate status based on evidence.
-- Move low-priority stale work to the repo's holding status unless active evidence says otherwise.
+- Search issue URL, project item id, title/slug, linked PR, and branch before any add/update.
+- Apply only evidence-backed GitHub metadata fixes: add missing actionable issues, set fields, archive duplicate cards, move completed work to Done, and carry unfinished goals forward.
+- Create/update the weekly milestone only when `[WEEKLY_MILESTONE_PATTERN]` makes the naming and dates unambiguous.
+- Repair existing linked open PRs: if an open PR closes or links an issue, ensure the PR has the issue's queue/review labels.
+- Always copy queue labels (`codex:automation`, `claude:routine`) from linked issues to PRs, and copy existing classification/review labels such as `code-quality`, `security`, `product`, `bug`, `enhancement`, `backend`, `frontend`, `infra`, and `e2e`.
+- Do not invent labels from project fields like Priority, Status, or Area unless those labels already exist on the issue.
+- If a non-ShipCode issue or PR has stale `shipcode:agent:codex` or `shipcode:agent:claude`, or any issue or PR has stale plural `claude:routines`, remove it only when the correct queue label is present or can be added with clear evidence; otherwise report it as uncertain.
+- Leave uncertain metadata unchanged and report the exact blocker.
 
-Output expectations:
+Final answer format:
 
-- Summarize changed issues/cards.
-- List duplicate cleanup.
-- List field, label, title, and body changes.
-- List items left uncertain and why.
-- If nothing changed, report the checks performed.
+- Ready: yes/no
+- Canonical board
+- Current weekly deliverable milestone
+- Last-week goals found; completed; carried forward; blocked
+- Missing board items, Status, Priority, and Milestone fixed
+- Duplicate/stale items fixed
+- Remaining blockers
+- Exact issues still preventing Ready: yes
 
+If no safe metadata work exists, produce the readiness report and say so.

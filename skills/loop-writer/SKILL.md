@@ -34,45 +34,21 @@ npx skills add Forward-Future/loop-library --skill loop-library -g
 - Use `claude/routines/remote/` for connector/API-driven work. Keep it read-only or metadata-only by default, such as GitHub board updates, triage, digests, and notifications.
 - Do not make remote-worker validation a default template. Use local/worktree loops for tests and code execution unless a target project explicitly defines a safe worker contract.
 - Use `shared/` for reusable source prompts before creating app-specific files.
+- For GitHub issue implementation, edit `shared/local/codex/github-issue-implementation.prompt.md`, then run `python3 scripts/sync-codex-implementation-template.py` to update the app-ready TOML.
 
 ## Naming Rules
 
 - Keep names literal and intent-first: `github-issue-implementation`, `recent-commit-review`, `sentry-hotfix`, `board-hygiene`, `dry-repo`.
 - Use a `github-` prefix when the loop depends on GitHub issues, pull requests, or project boards.
-- Do not use `ultracode` in Codex template names, paths, ids, headings, or descriptions.
-- In this repo, `ultracode` means Claude Opus 4.8-level effort. Use it only for Claude routine templates where that effort level is intentional.
+- Do not encode cadence or model in a name or description unless cadence is itself the artifact's purpose.
+- Keep execution configuration out of prompt bodies. App artifacts own model, reasoning effort, schedule/enabled state, folder or `cwds`, local versus worktree execution, permissions, and connector grants. Model and reasoning effort are set in the app UI when the automation or routine is created; templates carry `<app-owned>` placeholders and never name a model.
+- Prompt bodies own outcome, semantic scope, authority, base branch, state/dedupe, verification, stop conditions, failure mode, and output. Keep defense-in-depth assertions such as out-of-scope boundaries, forbidden actions, and stopping when an isolated checkout was not actually provided.
 - Keep placeholders generic. Universal tokens: `[PROJECT]`, `[REPO_PATH]`, `[GITHUB_REPO]`, `[TRUNK]`,
   `[BRANCH_PREFIX]`, `[STATE_FILE]`, `[OUT_OF_SCOPE_PROJECTS]`. Routine-specific tokens also exist
   (e.g. `[PROJECT_BOARD]`, `[REVIEW_MARKER]`, `[TOOL_COMMAND]`, `[AUTOMATION_ASSIGNEE]`,
   `[ALLOW_SAFE_DELETES]`). Canonical local path = `[REPO_PATH]`; canonical tool invocation =
   `[TOOL_COMMAND]`; multi-repo routines use `[REPO_PATH_1]`/`[GITHUB_REPO_1]` etc. Source of truth:
   `claude/routines/local/README.md` Placeholder Key, `shared/local/claude/README.md` Placeholder Key, and the matching remote README when using a remote surface.
-
-## Ultracode Emit Rule
-
-Claude code-review, code-building, and validation templates that should run at Opus 4.8 effort
-MUST emit a bare `ultracode` token as the FIRST line of the prompt body (after frontmatter). Rules:
-
-- The token is `ultracode` with no surrounding backticks, no prefix, no suffix — a single bare word on
-  its own line.
-- It goes in the prompt body, NOT in the task name, path, or any heading.
-- The body token is the trigger; do not encode the execution effort in task names.
-
-Example correct placement:
-
-```text
----
-name: recent-commit-review
-description: Review recent trunk commits and open a fix PR
----
-
-ultracode
-
-Review new commits on `[GITHUB_REPO]` ...
-```
-
-Also set the task's app model to **Claude Opus 4.8**; the body token and the model selection work
-together to drive the high-effort run.
 
 ## Required Loop Contract
 
@@ -105,15 +81,16 @@ For any code-writing loop, also define:
 - Start live automations paused or disabled unless explicitly asked otherwise.
 - Prefer one bounded unit of work per run.
 - Make no-op behavior explicit.
+- Describe only project-status transitions that the loop itself performs. Do not add a full board lifecycle or imply a later transition outside the loop's authority.
 - Do not imply that a catalog prompt grants permission to deploy, delete, merge, spend money, contact users, or write production data.
 
 ## Finish
 
 Before finishing:
 
-- Run `rg -n "ultracode" codex shared/local/codex shared/remote/codex README.md prompts` and ensure only Claude-intentional references remain outside Codex surfaces.
+- Run `python3 scripts/sync-codex-implementation-template.py --check`.
+- Confirm Codex `automation.toml` templates carry the `<app-owned>` placeholder for both `model` and `reasoning_effort` and never name a concrete model.
 - Run a private/project residue scan if any template was derived from local routines.
 - Validate `automation.toml` files when Codex templates changed.
 - Run `./validate.sh` and ensure it passes.
-- Confirm every code/review/validation Claude template emits the bare `ultracode` token as the first prompt-body line.
 - Report files changed, validation run, and any unresolved setup placeholders.

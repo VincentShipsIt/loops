@@ -2,41 +2,37 @@
 
 ## Prompt
 
-ultracode
+Inspect unresolved Sentry errors for `[PROJECT]`, open at most one safe fix PR, and resolve an issue only after deployment and observation evidence.
 
-Check unresolved Sentry errors for `[PROJECT]` and implement safe code fixes when the evidence is clear.
+Scope and state:
 
-CPU-heavy validation policy:
+- Work only in `[REPO_PATH]`, `[GITHUB_REPO]`, `[SENTRY_ORG]`, and `[SENTRY_PROJECTS]`; do not inspect `[OUT_OF_SCOPE_PROJECTS]`.
+- Never expose secrets, merge, deploy, run live migrations, or write production data.
+- In `[STATE_FILE]`, dedupe by Sentry issue id and stack signature. Record fix PR, fix commit, target release/environment, last checked event id/time, deployment evidence, observation status, and resolution status.
 
-- Do not run CPU-intensive tests or heavy validation locally.
-- Run CPU-heavy tests/checks on `[REMOTE_WORKER]` when available.
-- Lightweight local checks are allowed only when clearly quick/static.
+Triage and dedupe:
 
-Scope:
+- Read repository instructions and run `git fetch --all --prune`.
+- Inspect each unresolved issue's latest event, stacktrace, route, environment, release, tags, breadcrumbs, and suspect code.
+- Check state, open PRs, and recent branches for issue id, title, route, and stack signature before creating work.
+- A matching open/new PR is a fix handoff only. Opening or finding a PR never resolves the Sentry issue.
+- If no issue needs a new code fix or lifecycle check, report the unresolved count and stop.
 
-- Work only in `[REPO_PATH]` and `[GITHUB_REPO]`.
-- Check only `[SENTRY_ORG]` and `[SENTRY_PROJECTS]`.
-- Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]`.
-- Never print tokens, secrets, request bodies with sensitive data, or environment file contents.
+Fix workflow:
 
-Workflow:
+- For one actionable issue without a covering PR, create an isolated `[BRANCH_PREFIX]-sentry-YYYYMMDD-HHMMSS` branch/worktree from fetched `origin/[TRUNK]`. Never edit, switch, pull, stash, or reset the source checkout.
+- Find relevant local examples, apply the smallest safe fix, and add focused tests when behavior changes.
+- Run required proportional validation. If a required check is prohibited, unavailable, or too heavy, report the blocker and do not publish an unverified PR.
+- Commit, push, and open one PR against `[TRUNK]` with issue id, route/signature, root cause, fix commit, and validation. Do not resolve the Sentry issue.
 
-- Read local agent instructions and project memory before changing code.
-- Run `git fetch --all --prune`.
-- Inspect unresolved Sentry issues, latest event, stacktrace, route, environment, release, tags, breadcrumbs, and suspect code.
-- Check open PRs and recent branches for issue short ID, title, route, and stack signature before creating duplicate work.
-- If no unresolved issues are actionable, report the count and stop without creating a branch.
-- If an issue is already clearly fixed by an open PR against `[TRUNK]`, report the PR and do not duplicate it.
-- For one actionable new issue, create a fresh branch/worktree from `origin/[TRUNK]` formatted like `[BRANCH_PREFIX]-sentry-YYYYMMDD-HHMMSS`.
-- Find at least three relevant local examples before changing patterns.
-- Apply the smallest safe fix that converts the failure into handled behavior.
-- Add or update focused tests when behavior, shared helpers, auth, validation, persistence, or user-facing flows change.
-- Run focused validation for touched areas.
-- If validation cannot run or fails, report the blocker and do not push a fix PR.
-- Commit, push, and open a PR against `[TRUNK]` with issue IDs, route/signature, root cause, and validation.
-- Do not resolve a Sentry issue unless a clear existing PR or newly opened PR covers it.
-- Do not merge the PR, deploy, run live migrations, or write production data.
+Deployment-aware resolution:
+
+- On every run, check tracked fix commits for explicit evidence that the commit is included in a deployed release for the affected environment.
+- If deployment evidence is unavailable or ambiguous, leave the issue unresolved and report `handoff: awaiting deployment evidence`.
+- After deployment, apply `[SENTRY_OBSERVATION_RULE]` using Sentry events after the deployment time. Resolve only when the configured observation window/sample is complete and the stack signature has not recurred.
+- If the signature recurs, keep the issue unresolved, update the last checked event, and report the recurrence.
+- Never infer deployment from merge state, a PR label, or elapsed time alone.
 
 Output:
 
-- Report unresolved count, handled issue IDs, branch, base commit, commit, PR URL, validation run, issues resolved or left open, blockers, and residual risk.
+- Report unresolved count and, per handled issue: PR opened/reused, fix commit, deployed yes/no/unknown, observation complete/pending/recurred, resolved yes/no, release/environment, last checked event, validation, blockers, and residual risk.

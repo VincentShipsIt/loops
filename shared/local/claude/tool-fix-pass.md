@@ -5,16 +5,14 @@ safe auto-patch tools, dead-code detectors, or lint/code-quality agents.
 
 ## Prompt
 
-ultracode
 
 Run `[TOOL_COMMAND]` in this repository and apply fixes for `[TOOL_FOCUS]`.
 
 CPU-heavy validation policy:
 
 - Do not run CPU-intensive tests or heavy validation locally.
-- Run CPU-heavy tests/checks on `[REMOTE_WORKER]` when available.
 - Lightweight local checks are allowed only when quick/static.
-- If unsure whether a command is heavy, run it remotely or skip it with a clear note.
+- If required validation is prohibited or too heavy for the configured environment, skip it with a clear blocker and do not publish changes.
 
 Repository policy:
 

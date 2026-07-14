@@ -1,66 +1,46 @@
 # Claude Scheduled Task: GitHub Backlog Pickup
 
-Use this for a high-autonomy nightly task that claims and implements one eligible issue.
+This is the higher-autonomy variant of `github-issue-implementation`. Eligibility, project claim, base, verification blocker, ready-PR handoff, issue linking, and final `In Progress` status are identical. The intentional differences are: never pause for input, claim the configured automation assignee when supported, leave a pickup comment, and use bounded orchestration for discovery and critique when available.
 
 ## Prompt
 
-ultracode
+Operate autonomously and implement exactly one eligible open issue from the canonical GitHub Project for `[GITHUB_REPO]`. Never pause for input. If genuinely blocked, document the blocker on the claimed issue when safe and stop.
 
-Operate fully autonomously. Never pause to ask the user anything. Make reasonable decisions and document them in the issue or PR. If genuinely blocked, comment the blocker and stop.
+Scope and synchronize:
 
-Repository policy:
+- Work only on `[PROJECT]` in an isolated branch/worktree. Treat `[REPO_PATH]` as the source checkout and never edit, commit, stash, reset, switch, or pull there.
+- Run `git fetch origin --prune`. Inspect the project whose title is exactly `[PROJECT_BOARD]`, open issues, active release milestones, open pull requests, remote branches, and worktrees. Only that project's status counts.
+- Start from fetched `origin/[TRUNK]`; verify the work branch merge-base is exactly `origin/[TRUNK]` before editing.
+- Do not inspect or modify `[OUT_OF_SCOPE_PROJECTS]` or unrelated projects.
 
-- Workspace: `[REPO_PATH]`.
-- GitHub repository: `[GITHUB_REPO]`.
-- Base branch: `[TRUNK]`.
-- Read repo instructions and memory before coding.
-- Use the repo's package manager and conventions.
-- Do not deploy, run live migrations, or touch production data.
+Eligibility and claim:
 
-Objective:
+- `claude:routine` is the Claude routine queue label.
+- Prefer ready `claude:routine` issues before unlabeled/non-routine work.
+- `claude:routines` is a stale plural variant, not a canonical queue label. Use `claude:routine` unless a target repo explicitly documents the plural label.
+- `codex:automation` is the Codex queue label.
+- `shipcode:agent:codex` and `shipcode:agent:claude` are ShipCode routing only. Do not treat either as a generic intake signal outside ShipCode-specific logic.
+- Select exactly one issue whose target-project status is `Backlog`, which has a concrete active release milestone, bounded one-run acceptance criteria, and no covering open PR, remote branch, or worktree.
+- Rank eligible issues in this order: queue label (`claude:routine`), milestone, target/release/start date, project Priority, then readiness (acceptance criteria, verification scope, and confidence).
+- Skip epics, deferred/blocked work, product-decision placeholders, manual release/signing work, broad migrations, destructive/production operations, and unavailable external access.
+- Repair existing linked open PRs: if an open PR closes or links a candidate issue, ensure the PR has the issue's queue/review labels before skipping it as already covered.
+- Re-check all eligibility and duplicate signals immediately before claiming. Move only the target-project item from `Backlog` to `In Progress` before branching or editing.
+- When supported, assign `[AUTOMATION_ASSIGNEE]` and leave one concise pickup comment with the start time. These are additional ownership signals, not substitutes for the project-status claim.
+- If the claim fails or state changed, try the next eligible issue or stop. If none is eligible, report status counts and stop without writes.
 
-Pick exactly one eligible backlog issue from GitHub and implement it end-to-end using multi-agent orchestration when available.
+Implement and publish:
 
-Issue selection:
+- Create `[BRANCH_PREFIX]/<issue-number>-<slug>` from `origin/[TRUNK]` in isolated work.
+- Read repository instructions and use bounded orchestration for discovery or critique when useful. Keep every changed line traceable to the issue.
+- Add focused tests and run required proportional verification. If required verification is prohibited, unavailable, or too heavy for the configured environment, document the blocker and do not publish an unverified PR.
+- Never deploy, run live migrations, write production data, or use destructive commands.
+- Commit with the issue number, push, and open a ready-for-review PR against `[TRUNK]`; never open a draft or merge it.
+- Use `Closes #<number>` only when fully resolved. Comment with the PR link when supported.
+- When opening a PR, mirror source issue labels onto the PR: always copy queue labels (`codex:automation`, `claude:routine`) and copy existing classification/review labels such as `code-quality`, `security`, `product`, `bug`, `enhancement`, `backend`, `frontend`, `infra`, and `e2e`.
+- Do not invent labels from project fields like Priority, Status, or Area unless those labels already exist on the issue.
+- If a non-ShipCode issue or PR has stale `shipcode:agent:codex` or `shipcode:agent:claude`, or any issue or PR has stale plural `claude:routines`, remove it only when the correct queue label is present or can be added with clear evidence; otherwise report it as uncertain.
+- Leave the target-project item `In Progress` and perform no later project-status transition.
 
-- List open issues and inspect assignees, labels, title, URL, and status.
-- Eligible issues must be unassigned or assigned to the automation owner.
-- Never pick an issue assigned to someone else.
-- Skip issues already in progress.
-- Check open PRs, local/remote branches, and worktrees for the issue number or slug.
-- Skip human-review, production-ops, manual-secret, live-migration, deploy, or external-account work.
-- Prioritize highest priority, then smaller well-scoped issues.
-- Never pick an epic issue itself; pick child tickets.
-- If no eligible issue exists, say so and stop.
+Output:
 
-Claim:
-
-- Assign the issue to the automation owner when appropriate.
-- Comment that an automated session picked it up with start time.
-- Run `git fetch --all --prune` before creating the worktree/branch.
-- Create a worktree/branch off `origin/[TRUNK]` named `issue-<number>-<short-slug>`.
-
-Implement:
-
-- Map relevant code with search, graph tools, or subagents.
-- Use TDD where practical.
-- Follow existing codebase patterns.
-- Keep every changed line traceable to the issue.
-- No gratuitous refactoring.
-- Keep secrets out of git.
-- Cap expensive validation locally; use `[REMOTE_WORKER]` for heavier checks.
-
-Ship:
-
-- Commit with a conventional message referencing the issue.
-- Push the branch and open a PR against `[TRUNK]`.
-- Link the issue with a closing keyword only when fully implemented.
-- Comment on the issue with the PR link.
-- Do not merge the PR.
-
-Success criteria:
-
-- One issue claimed.
-- Implementation complete or clearly blocked.
-- PR opened or draft PR opened with blocker.
-- Verification listed with commands executed and pass/fail outcome.
+- Report selected issue, milestone/priority, ownership signals, branch/base, commit, ready PR URL, verification results, blockers, and residual risk.

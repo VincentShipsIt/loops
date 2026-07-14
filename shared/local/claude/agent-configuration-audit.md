@@ -3,8 +3,7 @@
 Recommended settings:
 
 - Surface: Claude Desktop local scheduled task
-- Model: Claude Opus 4.8
-- Effort: high
+- Model and effort: set in the app UI; intentionally app-owned
 - Agent execution: current Claude session
 - Write surface: read-only filesystem/repository inspection plus non-sensitive scheduled-task memory
 - Suggested cadence: monthly, and manually after major agent-tool or model-routing changes

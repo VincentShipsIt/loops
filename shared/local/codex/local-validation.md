@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: local
-- Reasoning effort: xhigh
 - Write surface: read-only validation report
 
 ## Prompt

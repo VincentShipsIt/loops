@@ -23,17 +23,21 @@ Automation requested:
 Steps:
 1. Read this repo's AGENTS.md, CLAUDE.md, README, package scripts, and existing automation docs.
 2. Choose the closest template from `codex/automations/local/`.
+   For GitHub issue implementation, render from `shared/local/codex/github-issue-implementation.prompt.md`; do not maintain a separate prompt variant.
 3. Fill every placeholder from verified repo facts.
 4. Keep the same intent contract as the matching Claude routine when one exists; only the Codex artifact shape should differ.
 5. Keep unknowns as [PLACEHOLDER] and list them under Required Setup.
 6. Preserve safety rules: one repo scope, duplicate checks, worktree gate for code-writing, no destructive actions, no secrets in output.
-7. Produce a complete automation.toml draft.
+7. Leave model and reasoning effort to the app UI when the automation is created; keep `<app-owned>` placeholders in the TOML draft and never name a model.
+8. Produce a complete automation.toml draft.
+9. Put model, reasoning effort, schedule/enabled state, `cwds`, execution environment, permissions, and connector grants in TOML/app settings only. Keep outcome, semantic scope, authority, base branch, state/dedupe, verification, stop/failure behavior, and output in the prompt.
+10. Preserve prompt-level safety assertions even when TOML also configures the worktree, folder, or permissions.
 
 Do not create or enable the live Codex automation unless explicitly asked. If Codex automation tools are available and the user asks to create it, start it PAUSED.
 
 Output:
-- The automation.toml draft.
+- App settings, followed by the prompt body and complete automation.toml draft.
 - Required setup values still missing.
 - Manual test instructions.
-- Recommended schedule and reasoning effort.
+- Recommended schedule.
 ```

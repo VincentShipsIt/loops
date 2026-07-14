@@ -6,8 +6,7 @@ prompt = """
 Audit agent configuration across active Git repositories under [REPOSITORY_ROOT] and the global configuration that affects them.
 
 Execution profile:
-- Use GPT-5.6 Sol at high reasoning effort.
-- Before auditing, verify the active runtime reports GPT-5.6 Sol and high effort. Stop with a configuration mismatch if it does not.
+- Model and reasoning effort are app-owned settings and are intentionally not pinned in this reusable template.
 - Complete the audit in the current agent session.
 - This is a read-only audit. Do not modify repositories or global configuration.
 
@@ -100,8 +99,8 @@ For every actionable finding include severity, repository/scope, effective impac
 """
 status = "PAUSED"
 rrule = "RRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=1;BYHOUR=8;BYMINUTE=10"
-model = "gpt-5.6-sol"
-reasoning_effort = "high"
+model = "<app-owned>"
+reasoning_effort = "<app-owned>"
 execution_environment = "local"
 cwds = ["[REPOSITORY_ROOT]"]
 

@@ -1,4 +1,4 @@
-# Claude Scheduled Task: Weekly Memory Review
+# Claude Scheduled Task: Memory Review
 
 ## Loop Contract
 
@@ -22,7 +22,6 @@ Manual test before enabling: Run once with scheduling disabled. Confirm the run 
 
 ## Prompt
 
-ultracode
 
 Review and refresh repository memory for `[PROJECT]` so future agents get current, source-backed instructions instead of stale migration-era guidance.
 

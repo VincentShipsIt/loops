@@ -3,40 +3,37 @@ id = "[AUTOMATION_ID]-pr-review"
 kind = "cron"
 name = "PR Review - [PROJECT]"
 prompt = """
-Review one open pull request in [GITHUB_REPO] and report quality findings.
+Review exactly one open pull request in [GITHUB_REPO]. The automation is comment-only by default and may repair the same branch only when every write gate below passes.
 
-Repository policy:
-- This automation is scoped only to [PROJECT]: [REPO_PATH].
-- GitHub repository: [GITHUB_REPO].
-- Do not inspect, modify, summarize, or report on [OUT_OF_SCOPE_PROJECTS] or any unrelated project.
-- Never print tokens, secrets, request bodies with sensitive data, or environment file contents.
-- Do not merge PRs, deploy, run live migrations, or write production data.
+Scope and authority:
+- Work only in [REPO_PATH] and [GITHUB_REPO]; do not inspect [OUT_OF_SCOPE_PROJECTS] or unrelated projects.
+- Never merge, deploy, run live migrations, write production data, expose secrets, or open a second PR.
+- A branch edit is permitted only when the branch is automation-owned, an isolated clean Codex worktree is available, the fix is small and high-confidence, and focused verification succeeds.
 
-Selection and dedupe:
-- Run git fetch --all --prune before selecting a PR.
-- Inspect open PRs, local branches, remote branches, worktrees, and prior review markers.
-- Review at most one open PR per run.
-- Prefer recent automation-created PRs or PRs with changes since the last review.
-- Skip PRs already reviewed at the current head with [REVIEW_MARKER].
-- If there is no suitable PR, report that and stop.
+Selection and marker lifecycle:
+- Run git fetch --all --prune, list open non-draft PRs, and review at most one.
+- For each candidate, read its current head SHA and look for <!-- [REVIEW_MARKER] automation=[AUTOMATION_ID] head=<head-sha> -->.
+- Skip only when marker automation id and head SHA exactly match the current head. A changed head is eligible again.
+- Missing, malformed, unreadable, or failed marker access is not successful dedupe; report it and continue conservatively.
+- Pick the highest-risk eligible PR based on failing checks, touched surface, security/auth/persistence impact, or size. Stop cleanly if none exists.
 
-Review workflow:
-- Use the Codex worktree execution environment for any checkout.
-- Check out a clean worktree for the PR branch before analysis.
-- Review current branch changes against [TRUNK].
-- Focus on correctness, maintainability, abstraction quality, codebase health, simplification, modularity, duplication, succinctness, and legibility.
-- Prioritize bugs, regressions, missing tests, unsafe behavior, and avoidable complexity.
-- Do not report style preferences or speculative concerns.
-- If the PR branch is automation-owned and an improvement is clear, small, behavior-preserving, and high-confidence, apply it to the PR branch, run focused validation, commit, and push to that same branch.
-- If the branch is not automation-owned or the improvement is broad/risky, do not edit. Report concise actionable findings instead.
-- Do not open a new PR from this review automation.
+Review and optional repair:
+- Check out the PR in an isolated clean Codex worktree and compare it with [TRUNK].
+- Prioritize verified correctness, security, data loss, migration, auth/tenancy, concurrency, user-visible regression, maintainability, and missing-test findings. Avoid speculative or style-only comments.
+- If the branch is not automation-owned or any repair gate fails, do not edit; post one concise review with actionable findings ordered by severity.
+- If every repair gate passes, apply only the clear behavior-preserving fix to the same PR branch, run focused verification, commit, push, confirm the new head SHA, and post one concise review/update. Never create another branch or PR.
+- If there are no findings, do not post a noisy approval message; proceed to the marker step.
+
+Marker write:
+- Only after the review comment succeeds, or after a same-branch update is pushed, verified, and reported successfully, write the exact hidden marker for the final current head SHA and stable [AUTOMATION_ID].
+- If marker posting fails, report it and do not claim the head was deduped.
 
 Output expectations:
-- Report PR reviewed, base/head commits, findings, edits made, validation run, review marker status, skipped work, and residual risk.
+- Report PR, base and initial/final head SHAs, findings, comment URL, edits, validation, marker status, skipped work, blockers, and residual risk.
 """
 status = "PAUSED"
 rrule = "RRULE:FREQ=HOURLY;INTERVAL=1;BYMINUTE=35;BYDAY=MO,TU,WE,TH,FR"
-model = "gpt-5.5"
-reasoning_effort = "xhigh"
+model = "<app-owned>"
+reasoning_effort = "<app-owned>"
 execution_environment = "worktree"
 cwds = ["[REPO_PATH]"]

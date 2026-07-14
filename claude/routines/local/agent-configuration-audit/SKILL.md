@@ -6,9 +6,7 @@ description: Read-only audit of global and per-repository agent configuration
 Audit agent configuration across active Git repositories under `[REPOSITORY_ROOT]` and the global configuration that affects them.
 
 Execution profile:
-- Required scheduled-task model: Claude Opus 4.8.
-- Required scheduled-task effort: high.
-- Before auditing, verify the active runtime reports Claude Opus 4.8 and high effort. Stop with a configuration mismatch if it does not.
+- Model and effort are app-owned settings and are intentionally not pinned in this reusable prompt.
 - Complete the audit in the current Claude session.
 - This is a read-only audit. Do not modify repositories or global configuration.
 

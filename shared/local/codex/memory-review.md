@@ -1,10 +1,9 @@
-# Codex Automation: Weekly Memory Review
+# Codex Automation: Memory Review
 
 Recommended settings:
 
 - Kind: cron
 - Execution environment: worktree
-- Reasoning effort: xhigh
 - Write surface: scoped memory files, repo branch, pull request, automation memory
 - Suggested schedule: weekly, after the main development week has settled
 
