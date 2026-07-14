@@ -3,7 +3,7 @@
 ## Prompt
 
 
-Review new commits on `[GITHUB_REPO]` `[TRUNK]` since the last successful review baseline SHA, or the last 24 hours when no baseline exists. Fix only high-confidence issues.
+Review new commits on the resolved remote default branch of `[GITHUB_REPO]` since the last successful review baseline SHA, or the last 24 hours when no baseline exists. Fix only high-confidence issues.
 
 Surface:
 
@@ -13,7 +13,6 @@ Surface:
 Scope:
 
 - Work only in `[REPO_PATH]` and `[GITHUB_REPO]`.
-- Trunk branch: `[TRUNK]`.
 - Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]` or unrelated projects.
 - Never merge PRs, deploy, run production migrations, or write to production data.
 - Never print tokens, secrets, `.env` contents, private payloads, or credentials.
@@ -21,10 +20,11 @@ Scope:
 State and baseline:
 
 - Store `last_successful_review_baseline_sha` in `[STATE_FILE]`.
-- Fetch the latest remote state before reading or writing the baseline.
-- If a valid baseline SHA exists and is an ancestor of `origin/[TRUNK]`, review `baseline..origin/[TRUNK]`.
-- If no valid baseline exists, review commits on `origin/[TRUNK]` from the last 24 hours.
-- If the baseline is not an ancestor of `origin/[TRUNK]`, stop and report the mismatch.
+- Discover the default branch directly from `origin` with `git ls-remote --symref origin HEAD`. Accept only one symbolic `ref: refs/heads/<default-branch> HEAD` result; record it as `default_branch`, and stop if it is missing, ambiguous, or not under `refs/heads/`.
+- Fetch only that branch into its remote-tracking ref with `git fetch --prune origin "+refs/heads/${default_branch}:refs/remotes/origin/${default_branch}"`, then record `default_commit` with `git rev-parse "refs/remotes/origin/${default_branch}^{commit}"`.
+- If a valid baseline SHA exists and is an ancestor of `default_commit`, review `baseline..default_commit`.
+- If no valid baseline exists, review commits ending at `default_commit` from the last 24 hours.
+- If the baseline is not an ancestor of `default_commit`, stop and report the mismatch.
 - Update the baseline only after a successful review cycle:
   - no new commits,
   - no findings,
@@ -35,7 +35,7 @@ State and baseline:
 Workflow:
 
 - Read local agent instructions before acting.
-- Run `git fetch --all --prune`.
+- Treat `[REPO_PATH]` as the source checkout only and require a separate registered worktree before any fix.
 - List each reviewed commit with short hash, author, date, message, and GitHub link.
 - Summarize the change in one sentence per commit after reading the diff.
 - Flag notable commits:
@@ -44,7 +44,7 @@ Workflow:
   - behavior changes without tests or docs,
   - unusual patterns compared with local examples.
 - Review each commit and combined diff for correctness, security, data loss, tenancy/auth, concurrency, null/undefined handling, edge cases, performance, critical path risk, and missing tests.
-- Verify every finding against current `origin/[TRUNK]`, not only the old commit snapshot.
+- Verify every finding against `default_commit`, not only the old commit snapshot.
 - Include severity, file/line when available, affected commit link, concern, and recommended fix.
 - Do not report style preferences or speculative issues.
 
@@ -52,11 +52,13 @@ Fix workflow:
 
 - Before fixing, search open PRs, branches, and recent commits for an existing fix covering the same files, commit range, or finding.
 - If there are no new commits, no findings, low-confidence findings only, an existing PR already covers the issue, or verification is blocked, do not create a PR.
-- For high-confidence fixable issues, create a fresh branch from latest `origin/[TRUNK]` formatted like `[BRANCH_PREFIX]-commit-review-YYYYMMDD-HHMMSS`.
+- Treat `default_commit` as the sole review and fix base. Never use or mutate a local default branch: do not check it out, create it, pull it, switch it, merge it, rebase it, reset it, or update it.
+- For high-confidence fixable issues, create a fresh `[BRANCH_PREFIX]-commit-review-YYYYMMDD-HHMMSS` branch with no upstream directly from `default_commit` in the isolated worktree.
+- Before editing, require `git rev-parse HEAD` to equal `default_commit` exactly and `git status --porcelain=v1 --untracked-files=all` to produce no output; stop and report without editing if either check fails.
 - Find at least three relevant local examples before changing patterns.
 - Apply the smallest safe fix. Add or update focused tests when behavior, shared helpers, auth, validation, persistence, concurrency, or user-facing flows change.
 - Run focused verification for touched areas.
-- Commit, push, and open one PR against `[TRUNK]` with:
+- Commit, push, and open one PR against `default_branch` with:
   - reviewed commit range,
   - findings fixed,
   - files changed,
@@ -65,4 +67,4 @@ Fix workflow:
 
 Output:
 
-- Report baseline SHA, reviewed head SHA, commit count, commit inventory, findings, notable commits, branch/PR if created, validation run, baseline update status, skipped work, blockers, and residual risk.
+- Report `default_branch`, `default_commit`, baseline SHA, reviewed head SHA, commit count, commit inventory, findings, notable commits, branch/PR if created, validation run, baseline update status, skipped work, blockers, and residual risk.

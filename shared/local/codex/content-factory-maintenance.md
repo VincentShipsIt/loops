@@ -21,13 +21,12 @@ Repository policy:
 
 Worktree hard gate:
 
-- This automation must run in the Codex worktree execution environment, not directly in the main checkout.
+- This automation must run in the Codex worktree execution environment, not directly in the source checkout.
 - Treat `[REPO_PATH]` as the source checkout only; do not edit, commit, stash, reset, switch, or pull there.
 - If `pwd` resolves to the source checkout, stop and report blocked.
-- Run git fetch --all --prune before creating any branch or commit.
-- Base work from latest origin/`[TRUNK]`.
-- Verify the work branch merge-base is exactly origin/`[TRUNK]` before changing code or docs.
-- Open pull requests against `[TRUNK]` only when changes are made.
+- Discover the default branch directly from origin with `git ls-remote --symref origin HEAD`; accept only one symbolic `ref: refs/heads/<default-branch> HEAD` result and record it as `default_branch`.
+- Fetch only that branch into its remote-tracking ref with `git fetch --prune origin "+refs/heads/${default_branch}:refs/remotes/origin/${default_branch}"`, then record `default_commit` with `git rev-parse "refs/remotes/origin/${default_branch}^{commit}"`. Stop if discovery or resolution is missing or ambiguous.
+- Treat `default_commit` as the sole work base. Never use or mutate a local default branch.
 
 Workflow:
 
@@ -50,9 +49,11 @@ Workflow:
 - If code or docs are changed, run the most relevant lightweight validation available.
 - If no improvement with clear positive impact is identified, report that and stop without creating a branch or PR.
 - Before creating a branch, search open PRs and branches on the repository for any automation-owned content-factory PR; if one is open and not merged, skip the PR step and report the existing PR URL.
+- Create `[BRANCH_PREFIX]-content-YYYYMMDD-HHMMSS` with no upstream directly from `default_commit` in the isolated worktree.
+- Before editing, require `git rev-parse HEAD` to equal `default_commit` exactly and `git status --porcelain=v1 --untracked-files=all` to produce no output; stop and report without editing if either check fails.
 - Update `[STATE_FILE]` with the chosen item only after the PR is opened and pushed.
-- Commit and open a pull request against `[TRUNK]`.
+- Commit and open a pull request against `default_branch`.
 
 Output expectations:
 
-- Report what changed, sources used, why it improves the factory, validation run, and next candidates.
+- Report `default_branch`, `default_commit`, what changed, sources used, why it improves the factory, validation run, and next candidates.

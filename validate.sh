@@ -198,6 +198,124 @@ require_all 'target-project status is exactly `Backlog`' \
   shared/local/claude/github-issue-implementation.md \
   claude/routines/local/github-issue-implementation/SKILL.md
 
+write_capable_prompts='shared/local/codex/github-issue-implementation.prompt.md
+codex/automations/local/github-issue-implementation/automation.toml
+shared/local/claude/github-issue-implementation.md
+claude/routines/local/github-issue-implementation/SKILL.md
+shared/local/claude/github-backlog-pickup.md
+claude/routines/local/github-backlog-pickup/SKILL.md
+shared/local/codex/recent-commit-review.md
+codex/automations/local/recent-commit-review/automation.toml
+shared/local/claude/recent-commit-review.md
+claude/routines/local/recent-commit-review/SKILL.md
+shared/local/codex/sentry-hotfix.md
+codex/automations/local/sentry-hotfix/automation.toml
+shared/local/claude/sentry-hotfix.md
+claude/routines/local/sentry-hotfix/SKILL.md
+shared/local/codex/tool-fix-pass.md
+codex/automations/local/tool-fix-pass/automation.toml
+shared/local/claude/tool-fix-pass.md
+claude/routines/local/tool-fix-pass/SKILL.md
+shared/local/codex/dry-repo.md
+codex/automations/local/dry-repo/automation.toml
+shared/local/claude/dry-repo.md
+claude/routines/local/dry-repo/SKILL.md
+shared/local/codex/docs-verification.md
+codex/automations/local/docs-verification/automation.toml
+shared/local/claude/docs-verification.md
+claude/routines/local/docs-verification/SKILL.md
+shared/local/codex/nightly-e2e-expansion.md
+codex/automations/local/nightly-e2e-expansion/automation.toml
+shared/local/claude/nightly-e2e-expansion.md
+claude/routines/local/nightly-e2e-expansion/SKILL.md
+shared/local/codex/memory-review.md
+codex/automations/local/memory-review/automation.toml
+shared/local/claude/memory-review.md
+claude/routines/local/memory-review/SKILL.md
+shared/local/codex/content-factory-maintenance.md
+codex/automations/local/content-factory-maintenance/automation.toml
+shared/local/claude/scheduled-task-base.md
+claude/routines/local/scheduled-task-base/SKILL.md'
+
+for f in $write_capable_prompts; do
+  grep -Fq 'git ls-remote --symref origin HEAD' "$f" || err "$f: default branch must be discovered directly from origin"
+  grep -Fq 'refs/remotes/origin/${default_branch}' "$f" || err "$f: discovered default branch must be fetched into its remote-tracking ref"
+  grep -Fq 'default_commit' "$f" || err "$f: exact remote default commit must be recorded"
+  grep -Fiq 'no upstream' "$f" || err "$f: work branch must be created without upstream tracking"
+  grep -Fq 'git rev-parse HEAD' "$f" || err "$f: work branch HEAD must equal the recorded default commit before editing"
+  grep -Fq 'git status --porcelain=v1 --untracked-files=all' "$f" || err "$f: isolated worktree must be clean before editing"
+  grep -Eiq 'isolated .*worktree|separate registered worktree|registered worktree.*isolated' "$f" || err "$f: edits must run in an isolated registered worktree"
+  grep -Fiq 'never use or mutate a local default branch' "$f" || err "$f: local default branch mutation must be forbidden"
+  grep -Eq 'against .*default_branch|[Tt]arget .*default_branch' "$f" || err "$f: pull requests must target the resolved default branch"
+  if grep -Fq '[TRUNK]' "$f"; then err "$f: canonical code-writing prompt must discover the default branch instead of using [TRUNK]"; fi
+  if grep -Fiq 'merge-base' "$f"; then err "$f: merge-base-only gates are forbidden in canonical code-writing prompts"; fi
+  if LC_ALL=C grep -Eqi '(^|[^[:alnum:]_])(main|master)([^[:alnum:]_]|$)' "$f"; then err "$f: hard-coded main/master branch name is forbidden"; fi
+done
+
+is_write_capable_prompt() {
+  printf '%s\n' "$write_capable_prompts" | grep -Fxq "$1"
+}
+
+for f in $mapped_artifacts; do
+  if grep -Eqi '^[[:space:]]*-[[:space:]]*(create|commit|push|open).*(branch|commit|pull request|PR)' "$f"; then
+    if ! is_write_capable_prompt "$f" && [ "$f" != 'shared/local/codex/github-issue-implementation.md' ]; then
+      err "$f: apparent canonical code-writing prompt is missing from write_capable_prompts"
+    fi
+  fi
+done
+
+pr_review_prompts='shared/local/codex/pr-review.md
+codex/automations/local/pr-review/automation.toml
+shared/local/claude/pr-review.md
+claude/routines/local/pr-review/SKILL.md'
+for f in $pr_review_prompts; do
+  grep -Fq 'git ls-remote --symref origin HEAD' "$f" || err "$f: PR review must discover the default branch directly from origin"
+  grep -Fq 'refs/remotes/origin/${default_branch}' "$f" || err "$f: PR review must fetch the default remote-tracking ref explicitly"
+  grep -Fq 'default_commit' "$f" || err "$f: PR review must compare against the exact remote default commit"
+  grep -Fiq 'strictly comment-only' "$f" || err "$f: PR review must remain repository-read-only"
+  grep -Fq 'Never edit repository files, create or switch branches, commit, push' "$f" || err "$f: PR review repository-write prohibition is missing"
+  if grep -Fq '[TRUNK]' "$f"; then err "$f: PR review must discover the default branch instead of using [TRUNK]"; fi
+done
+
+codex_issue_prompts='shared/local/codex/github-issue-implementation.prompt.md
+codex/automations/local/github-issue-implementation/automation.toml'
+for f in $codex_issue_prompts; do
+  grep -Fq 'Scheduler lifecycle preflight:' "$f" || err "$f: scheduler lifecycle preflight section is missing"
+  grep -Fq 'Before any repository synchronization or issue selection' "$f" || err "$f: backlog count must precede repository synchronization"
+  grep -Fq 'If and only if that query succeeds and the exact `Backlog` count is zero' "$f" || err "$f: zero-backlog-only pause gate is missing"
+  grep -Fq "change only the current automation's status to paused" "$f" || err "$f: current-automation-only pause action is missing"
+  grep -Fq 'preserving its prompt, schedule, model, reasoning effort, execution environment, working directories, and every other setting' "$f" || err "$f: pause must preserve every other automation setting"
+  grep -Fq 'Never pause merely because `Backlog` is nonzero but no item passes' "$f" || err "$f: eligibility exhaustion must not pause the automation"
+  grep -Fq 'board query fails' "$f" || err "$f: board-query failure must not pause the automation"
+  preflight_line=$(grep -nF 'Scheduler lifecycle preflight:' "$f" | head -n1 | cut -d: -f1)
+  fetch_line=$(grep -nF 'git fetch --prune origin' "$f" | head -n1 | cut -d: -f1)
+  if [ -z "$preflight_line" ] || [ -z "$fetch_line" ] || [ "$preflight_line" -ge "$fetch_line" ]; then
+    err "$f: scheduler lifecycle preflight must run before repository fetch"
+  fi
+done
+
+claude_issue_prompts='shared/local/claude/github-issue-implementation.md
+claude/routines/local/github-issue-implementation/SKILL.md
+shared/local/claude/github-backlog-pickup.md
+claude/routines/local/github-backlog-pickup/SKILL.md'
+for f in $claude_issue_prompts; do
+  grep -Fq 'Scheduler lifecycle preflight:' "$f" || err "$f: scheduler lifecycle preflight section is missing"
+  grep -Fq 'Before any repository synchronization or issue selection' "$f" || err "$f: backlog count must precede repository synchronization"
+  grep -Fq 'mcp__scheduled-tasks__list_scheduled_tasks' "$f" || err "$f: Claude scheduled-task discovery tool is missing"
+  grep -Fq 'mcp__scheduled-tasks__update_scheduled_task' "$f" || err "$f: Claude scheduled-task update tool is missing"
+  grep -Fq 'If and only if that query succeeds and the exact `Backlog` count is zero' "$f" || err "$f: zero-backlog-only pause gate is missing"
+  grep -Fq 'pause only the current Claude scheduled task while preserving every other setting' "$f" || err "$f: Claude self-pause scope is missing"
+  grep -Fq 'tools are unavailable or the current task cannot be identified unambiguously' "$f" || err "$f: unavailable/ambiguous scheduler fallback is missing"
+  grep -Fq 'without claiming a pause or mutating another scheduler' "$f" || err "$f: Claude scheduler fallback must remain report-only"
+  grep -Fq 'Never pause merely because `Backlog` is nonzero but no item passes' "$f" || err "$f: eligibility exhaustion must not pause the Claude task"
+  grep -Fq 'board query fails' "$f" || err "$f: board-query failure must not pause the Claude task"
+  preflight_line=$(grep -nF 'Scheduler lifecycle preflight:' "$f" | head -n1 | cut -d: -f1)
+  fetch_line=$(grep -nF 'git fetch --prune origin' "$f" | head -n1 | cut -d: -f1)
+  if [ -z "$preflight_line" ] || [ -z "$fetch_line" ] || [ "$preflight_line" -ge "$fetch_line" ]; then
+    err "$f: scheduler lifecycle preflight must run before repository fetch"
+  fi
+done
+
 remote_worker_residue=$(grep -rnF '[REMOTE_WORKER]' shared/local/claude claude/routines/local prompts/create-claude-routine.md 2>/dev/null || true)
 if [ -n "$remote_worker_residue" ]; then
   while IFS= read -r line; do err "generic Claude template assumes REMOTE_WORKER: $line"; done <<< "$remote_worker_residue"

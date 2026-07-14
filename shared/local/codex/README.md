@@ -19,7 +19,7 @@ templates carry `<app-owned>` placeholders and never name a model.
 | `github-issue-implementation.md` | Ship exactly one ready GitHub issue | `worktree` |
 | `recent-commit-review.md` | Review recent trunk commits and fix high-confidence issues | `worktree` |
 | `sentry-hotfix.md` | Fix unresolved production errors safely | `worktree` |
-| `pr-review.md` | Review one open PR and improve only automation-owned branches | `worktree` |
+| `pr-review.md` | Review one open PR with comments and markers only | `worktree` |
 | `tool-fix-pass.md` | Run one configured scanner/tool and PR safe fixes | `worktree` |
 | `dry-repo.md` | Make one behavior-preserving simplification | `worktree` |
 | `local-validation.md` | Run read-only validation in the local checkout | `local` |

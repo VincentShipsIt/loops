@@ -67,7 +67,11 @@ Every loop must define:
 
 For any code-writing loop, also define:
 
-- Base branch
+- Dynamic remote-default discovery, explicit remote-tracking fetch, and exact recorded base commit
+- No-upstream branch creation directly from that commit
+- Exact pre-edit `HEAD` equality and clean isolated-worktree gates
+- A prohibition on using or mutating any local default branch
+- PR targeting of the resolved remote default branch
 - Worktree or isolated checkout policy
 - Duplicate PR/branch/worktree search
 - Verification command or blocker behavior

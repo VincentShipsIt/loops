@@ -18,7 +18,8 @@ Scope and state:
 
 Triage and dedupe:
 
-- Read repository instructions and run `git fetch origin --prune`.
+- Read repository instructions. Discover the default branch directly from `origin` with `git ls-remote --symref origin HEAD`; accept only one symbolic `ref: refs/heads/<default-branch> HEAD` result and record it as `default_branch`.
+- Fetch only that branch into its remote-tracking ref with `git fetch --prune origin "+refs/heads/${default_branch}:refs/remotes/origin/${default_branch}"`, then record `default_commit` with `git rev-parse "refs/remotes/origin/${default_branch}^{commit}"`. Stop if discovery or resolution is missing or ambiguous.
 - Inspect each unresolved issue's latest event, stacktrace, route, environment, release, tags, breadcrumbs, and suspect code.
 - Check state, open PRs, and recent branches for issue id, title, route, and stack signature before creating work.
 - A matching open/new PR is a fix handoff only. Opening or finding a PR never resolves the Sentry issue.
@@ -27,10 +28,12 @@ Triage and dedupe:
 Fix workflow:
 
 - Run in an isolated Codex worktree. Treat `[REPO_PATH]` as the source checkout; never edit, switch, pull, stash, or reset it, and stop if it is the current working directory.
-- For one actionable issue without a covering PR, create `[BRANCH_PREFIX]-sentry-YYYYMMDD-HHMMSS` from fetched `origin/[TRUNK]` and verify the merge-base.
+- Treat `default_commit` as the sole fix base. Never use or mutate a local default branch: do not check it out, create it, pull it, switch it, merge it, rebase it, reset it, or update it.
+- For one actionable issue without a covering PR, create `[BRANCH_PREFIX]-sentry-YYYYMMDD-HHMMSS` with no upstream directly from `default_commit` in the isolated worktree.
+- Before editing, require `git rev-parse HEAD` to equal `default_commit` exactly and `git status --porcelain=v1 --untracked-files=all` to produce no output; stop and report without editing if either check fails.
 - Find relevant local examples, apply the smallest safe fix, add focused tests, and run required proportional validation.
 - If required validation cannot run or fails, report the blocker and do not publish an unverified PR.
-- Commit, push, and open one PR against `[TRUNK]` with issue id, route/signature, root cause, fix commit, and validation. Do not resolve the Sentry issue.
+- Commit, push, and open one PR against `default_branch` with issue id, route/signature, root cause, fix commit, and validation. Do not resolve the Sentry issue.
 
 Deployment-aware resolution:
 
@@ -42,4 +45,4 @@ Deployment-aware resolution:
 
 Output:
 
-- Report unresolved count and, per handled issue: PR opened/reused, fix commit, deployed yes/no/unknown, observation complete/pending/recurred, resolved yes/no, release/environment, last checked event, validation, blockers, and residual risk.
+- Report `default_branch`, `default_commit`, unresolved count and, per handled issue: PR opened/reused, fix commit, deployed yes/no/unknown, observation complete/pending/recurred, resolved yes/no, release/environment, last checked event, validation, blockers, and residual risk.

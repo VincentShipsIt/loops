@@ -20,18 +20,21 @@ Scope:
 
 Workflow:
 
-- Run `git fetch --all --prune`.
-- Base work from latest `origin/[TRUNK]`.
+- Discover the default branch directly from `origin` with `git ls-remote --symref origin HEAD`; accept only one symbolic `ref: refs/heads/<default-branch> HEAD` result and record it as `default_branch`.
+- Fetch only that branch into its remote-tracking ref with `git fetch --prune origin "+refs/heads/${default_branch}:refs/remotes/origin/${default_branch}"`, then record `default_commit` with `git rev-parse "refs/remotes/origin/${default_branch}^{commit}"`. Stop if discovery or resolution is missing or ambiguous.
+- Treat `default_commit` as the sole source and correction base. Never use or mutate a local default branch.
 - Verify documentation claims against source, not assumptions.
 - Check method signatures, schema fields, constants, values, flow descriptions, file paths, interface shapes, deleted features, setup commands, and examples.
 - Update last verified dates only after checking the relevant source.
 - If all claims are current, report checked files and stop without creating a branch.
+- When corrections are needed, create `[BRANCH_PREFIX]-docs-YYYYMMDD-HHMMSS` with no upstream directly from `default_commit` in the isolated worktree.
+- Before editing, require `git rev-parse HEAD` to equal `default_commit` exactly and `git status --porcelain=v1 --untracked-files=all` to produce no output; stop and report without editing if either check fails.
 - If changes are needed, edit only documentation files in scope.
 - Run relevant lightweight docs validation when available.
 - Before committing, search open PRs and recent branches for existing docs-verification work on the same files; if one exists, report it and do not open a duplicate PR.
-- Commit, push, and open one PR against `[TRUNK]`.
+- Commit, push, and open one PR against `default_branch`.
 - Do not merge the PR.
 
 Output:
 
-- Report files checked, source files checked, claims corrected, branch, commit, PR URL, validation, uncertain claims, skipped work, and residual risk.
+- Report `default_branch`, `default_commit`, files checked, source files checked, claims corrected, branch, commit, PR URL, validation, uncertain claims, skipped work, and residual risk.
