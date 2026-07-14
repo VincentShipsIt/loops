@@ -33,7 +33,7 @@ Output expectations:
 """
 status = "PAUSED"
 rrule = "RRULE:FREQ=HOURLY;INTERVAL=1;BYMINUTE=35;BYDAY=MO,TU,WE,TH,FR"
-model = "gpt-5.6-sol"
-reasoning_effort = "high"
+model = "<app-owned>"
+reasoning_effort = "<app-owned>"
 execution_environment = "worktree"
 cwds = ["[REPO_PATH]"]

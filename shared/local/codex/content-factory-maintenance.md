@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: worktree
-- Reasoning effort: low or medium
 - Write surface: docs, prompts, skills, tests, or evaluation fixtures
 
 ## Prompt

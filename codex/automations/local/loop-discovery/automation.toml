@@ -42,7 +42,7 @@ Output expectations:
 """
 status = "PAUSED"
 rrule = "RRULE:FREQ=WEEKLY;BYDAY=FR;BYHOUR=10;BYMINUTE=10"
-model = "gpt-5.6-sol"
-reasoning_effort = "medium"
+model = "<app-owned>"
+reasoning_effort = "<app-owned>"
 execution_environment = "local"
 cwds = ["[REPO_PATH]", "[LOOP_LIBRARY_PATH]"]

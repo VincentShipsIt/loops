@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: local
-- Reasoning effort: medium
 - Write surface: automation memory or `[STATE_FILE]` only; repository read-only
 
 ## Prompt

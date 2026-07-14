@@ -25,7 +25,7 @@ These are clean templates, not raw exports. They intentionally do not include pr
 
 ## Placeholder Key
 
-The issue-implementation prompt is authored once in `../../../shared/local/codex/github-issue-implementation.prompt.md`; run `python3 scripts/sync-codex-implementation-template.py` from the repository root after editing it. Codex templates use `gpt-5.6-sol`, with `high` reasoning effort for code-writing, review, and validation work.
+The issue-implementation prompt is authored once in `../../../shared/local/codex/github-issue-implementation.prompt.md`; run `python3 scripts/sync-codex-implementation-template.py` from the repository root after editing it. Model and reasoning effort are set in the app UI when the automation is created; templates carry `<app-owned>` placeholders and never name a model.
 
 - `[AUTOMATION_ID]` - stable slug for the automation.
 - `[PROJECT]` - human-readable project name.

@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron or manual
 - Execution environment: local
-- Reasoning effort: medium
 - Write surface: read-only repository inspection, read-only loop-library comparison, automation memory
 - Suggested schedule: weekly or manual after a major project milestone
 

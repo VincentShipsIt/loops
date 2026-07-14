@@ -8,8 +8,6 @@ The app-ready TOML is generated from that prompt so the workflow is authored onc
 
 - Kind: cron
 - Cadence: every two hours
-- Model: `gpt-5.6-sol`
-- Reasoning effort: `high`
 - Execution environment: worktree
 - Write surface: one project claim, one repository branch, and one pull request
 
