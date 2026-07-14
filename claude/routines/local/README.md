@@ -6,33 +6,11 @@ These are clean templates, not raw exports. They intentionally do not include pr
 
 Each directory contains a `SKILL.md` prompt body. When installed as a Claude Desktop scheduled task, Claude Desktop manages schedule, enabled state, model, folder, and permissions in the app.
 
-## Ultracode Trigger
+## Execution settings
 
-`ultracode` requests Claude Opus 4.8-level effort. The trigger is a **bare `ultracode` token on the first
-line of the prompt body**, immediately after the frontmatter — NOT the task name. Keep task names
-focused on the automation intent, not the execution effort.
+Claude Desktop manages model and effort settings in the app. Keep those settings out of reusable prompt bodies.
 
-Correct shape:
-
-```text
----
-name: recent-commit-review
-description: Review recent trunk commits and open a fix PR
----
-
-ultracode
-
-Review new commits on `[GITHUB_REPO]` ...
-```
-
-Also set the task's model to **Claude Opus 4.8** in the app. The app model selection and the body token
-work together: the token drives the high-effort run.
-
-Templates that carry the trigger (code review + code building + validation):
-github-issue-implementation, github-backlog-pickup, recent-commit-review, sentry-hotfix,
-pr-review, tool-fix-pass, dry-repo, nightly-e2e-expansion,
-docs-verification, bundle-size-watchdog, local-validation, memory-review.
-Pure hygiene tasks (board-hygiene, worktree-prune, repo-hygiene-cleanup) intentionally omit it.
+The app also owns schedule/enabled state, selected folder, execution mode, permissions, and connectors. Prompt bodies own outcome, scope, authority, base branch, state/dedupe, verification, stop/failure behavior, and output. Keep runtime safety checks in the prompt as defense in depth.
 
 ## Templates
 
@@ -60,10 +38,10 @@ Claude stores schedule settings in the app, not in these `SKILL.md` prompt files
 
 | Task | Suggested cadence |
 | --- | --- |
-| `github-issue-implementation` | Every 4-6 business hours for active repos, or nightly for conservative repos. |
+| `github-issue-implementation` | Every two hours for active repositories, or nightly for conservative repositories. |
 | `github-backlog-pickup` | Nightly. |
 | `recent-commit-review` | Daily after `[TRUNK]` is usually quiet. |
-| `board-hygiene` | Daily or twice daily on active boards. |
+| `board-hygiene` | Weekly, at the start of the work week. |
 | `sentry-hotfix` | Every 6 business hours, or event-triggered after new unresolved production errors. |
 | `pr-review` | Hourly during work hours, or event-triggered when a PR opens/updates. |
 | `tool-fix-pass` | Nightly or weekly, depending on tool noise. Configure `[TOOL_FOCUS]` for security, React, lint, dead code, dependencies, or accessibility. |
@@ -84,11 +62,10 @@ Claude stores schedule settings in the app, not in these `SKILL.md` prompt files
 - `[STATE_FILE]` - file or scheduled task memory location for durable loop state.
 - `[OUT_OF_SCOPE_PROJECTS]` - projects this task must not inspect.
 - `[VALIDATION_COMMANDS]` - explicit local validation commands to run sequentially.
-- `[REMOTE_WORKER]` - optional remote worker name for code-writing tasks that explicitly support offloading heavy checks.
 - `[PROJECT_BOARD]` - canonical issue/project board (e.g. a GitHub Projects board).
+- `[AUTOMATION_ID]` - stable routine identifier used in dedupe markers and state.
 - `[WEEKLY_MILESTONE_PATTERN]` - the repo's existing milestone naming/date pattern used to identify or create the current weekly deliverable (e.g. `Week of YYYY-MM-DD` or `Sprint NN`).
-- `[REVIEW_MARKER]` - hidden marker string this routine writes into its own review comments so it can
-  detect already-reviewed PRs (e.g. an HTML comment like `<!-- routine:pr-review -->`).
+- `[REVIEW_MARKER]` - stable marker label written inside a hidden comment with `[AUTOMATION_ID]` and the reviewed head SHA (for example `routine:pr-review`).
 - `[TOOL_COMMAND]` - command this routine runs (linter/scanner/test script), e.g. `bun run lint`.
 - `[TOOL_BASELINE_COMMAND]` - optional read-only baseline command for tools that compare before/after output.
 - `[TOOL_VERIFY_COMMAND]` - optional final scan command that must pass or show verified improvement.
@@ -98,8 +75,13 @@ Claude stores schedule settings in the app, not in these `SKILL.md` prompt files
   targets, otherwise it only reports candidates.
 - `[SENTRY_ORG]` - Sentry organization slug used by sentry-hotfix.
 - `[SENTRY_PROJECTS]` - comma-separated Sentry project slugs to query for unresolved issues.
+- `[SENTRY_OBSERVATION_RULE]` - configured post-deployment window or event-sample rule required before resolving a Sentry issue.
+- `[ALLOW_LOCAL_E2E]` - boolean opt-in; unresolved or false keeps E2E execution in CI/nightly.
+- `[LOCAL_E2E_RESOURCE_CONTRACT]` - project-defined local E2E command scope, services, resource/time limits, timeout, and cleanup.
 - `[REPO_PATH_1]`, `[REPO_PATH_2]` - local repo paths for multi-repo routines (repo-hygiene-cleanup).
 - `[GITHUB_REPO_1]`, `[GITHUB_REPO_2]` - `owner/repo` for multi-repo routines.
+
+Remote validation is opt-in only. A project-specific routine may add it after the repo documents transport/tool, worker repo path, revision/bootstrap, dependency state, required services, environment-variable names, secret policy, concurrency lock, timeout, cleanup, and result return. Generic templates report prohibited or heavy validation as blocked/skipped instead.
 
 ## Tool Fix Presets
 

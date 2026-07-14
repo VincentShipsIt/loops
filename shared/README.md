@@ -47,3 +47,5 @@ shared/
 - `remote/codex/` is reserved until Codex has portable remote templates with explicit connector/write boundaries.
 
 Keep implementation-specific setup in the platform folders. Keep reusable prompt bodies here.
+
+Execution configuration belongs to the platform/app artifact: model, effort, schedule, enabled state, folder, execution mode, permissions, and connectors. Shared prompt bodies own outcome, scope, authority, base branch, state/dedupe, verification, stop/failure behavior, and output. Runtime safety assertions remain in the prompt even when the app duplicates the underlying protection.

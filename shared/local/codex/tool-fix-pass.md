@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: worktree
-- Reasoning effort: xhigh
 - Write surface: repo branch plus pull request
 
 ## Prompt
@@ -19,6 +18,8 @@ Scope:
 - Optional verification command: `[TOOL_VERIFY_COMMAND]`.
 - Tool focus: `[TOOL_FOCUS]`.
 - Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]`.
+- Never print tokens, secrets, request bodies with sensitive data, or environment file contents.
+- Never deploy, run live migrations, or write production data.
 - Open pull requests against `[TRUNK]` only.
 
 Workflow:
@@ -26,6 +27,8 @@ Workflow:
 - Read local agent instructions before editing.
 - Run `git fetch --all --prune`.
 - Run in the Codex worktree execution environment.
+- Treat `[REPO_PATH]` as the source checkout only; do not edit, commit, or stash there.
+- Stop if pwd resolves to `[REPO_PATH]`.
 - Base work from latest `origin/[TRUNK]`.
 - Search open PRs, branches, and worktrees for active `[TOOL_COMMAND]` or `[TOOL_FOCUS]` work before creating a branch.
 - If equivalent active work exists, skip and report it.

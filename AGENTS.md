@@ -20,7 +20,8 @@ Help an agent install or adapt recurring loop prompts into a user's project with
 
 - Keep templates project-agnostic.
 - Use placeholders such as `[PROJECT]`, `[REPO_PATH]`, `[GITHUB_REPO]`, `[TRUNK]`, and `[OUT_OF_SCOPE_PROJECTS]`.
-- Do not use `ultracode` in Codex template names, paths, ids, or headings. In this repo, `ultracode` means Claude Opus 4.8-level effort. The mechanism: a bare `ultracode` token as the first line of a Claude scheduled-task prompt body (after frontmatter) triggers high-effort execution — NOT the task name. The Codex prohibition on `ultracode` in names/paths/ids/headings remains in force regardless.
+- Keep execution configuration out of prompt bodies. Model and reasoning effort are set in the app UI when the automation or routine is created; templates carry `<app-owned>` placeholders and never name a model.
+- Treat `shared/local/codex/github-issue-implementation.prompt.md` as the canonical implementation prompt and regenerate its app-ready TOML instead of maintaining a second authored copy.
 - Do not add real organization names, private repo names, local paths, tokens, hostnames, issue numbers, PR URLs, run logs, or personal details.
 - Keep every routine explicit about surface, trigger, connectors/tools, state/dedupe, safe writes, forbidden actions, prompt, output, failure mode, and manual test.
 - Prefer a small set of installable routines over a broad pile of vague ideas.

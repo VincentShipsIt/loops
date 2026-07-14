@@ -4,32 +4,32 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: local
-- Reasoning effort: medium
-- Write surface: read-only report
+- Write surface: automation memory or `[STATE_FILE]` only; repository read-only
 
 ## Prompt
 
-Run a read-only bundle and dependency size check for `[PROJECT]` at `[REPO_PATH]`.
+Run a read-only bundle and dependency size measurement for `[PROJECT]` at `[REPO_PATH]`.
 
-Scope:
+Scope and authority:
 
-- Work only in `[REPO_PATH]` and `[GITHUB_REPO]`.
-- Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]`.
-- Do not run builds, install dependencies, edit files, create branches, commit, push, open PRs, deploy, or run live migrations.
+- Work only in `[REPO_PATH]` and `[GITHUB_REPO]`; do not inspect `[OUT_OF_SCOPE_PROJECTS]`.
+- Do not build, install dependencies, switch or pull branches, edit repo files, create branches, commit, push, open PRs, deploy, or run migrations.
+- Fetch/read fresh Git metadata only when it does not change the checkout. The only permitted write is the successful baseline in automation memory or `[STATE_FILE]`.
 
-Metrics:
+State and measurement:
 
-- Check configured build artifact sizes: `[ARTIFACT_PATH_1]`, `[ARTIFACT_PATH_2]`.
-- Check dependency directory size: `[DEPENDENCY_DIR]`.
-- Count top-level dependency packages when useful.
-- Inspect recent dependency lockfile/package manifest changes.
+- Read the last successful baseline: source commit, measured timestamp, dependency directory size, top-level package count, and a size keyed by each configured artifact path.
+- Measure `[DEPENDENCY_DIR]`, package count, `[ARTIFACT_PATH_1]`, and `[ARTIFACT_PATH_2]` without generating missing artifacts.
+- Inspect recent dependency manifest and lockfile changes as read-only evidence.
+- If any configured target cannot be measured, report a partial/failed run and retain the prior baseline unchanged.
+- On a complete successful measurement only, replace the baseline with all fields above.
 
-Thresholds:
+Thresholds and deltas:
 
-- Flag if `[DEPENDENCY_DIR]` exceeds `[MAX_DEPENDENCY_SIZE]`.
-- Flag if package count exceeds `[MAX_PACKAGE_COUNT]`.
-- Flag if an artifact exceeds `[MAX_ARTIFACT_SIZE]`.
+- Flag when `[DEPENDENCY_DIR]` exceeds `[MAX_DEPENDENCY_SIZE]`, package count exceeds `[MAX_PACKAGE_COUNT]`, or an artifact exceeds `[MAX_ARTIFACT_SIZE]`.
+- Report absolute values and deltas from the prior successful baseline. On the first complete run, report baseline initialization and no historical delta.
 
 Output:
 
-- Report dependency directory size, package count, artifact sizes, recent dependency changes, threshold violations, skipped files, blockers, and residual risk.
+- Report source commit, timestamp, dependency size/count, artifact sizes, prior-baseline deltas, recent dependency changes, threshold violations, missing targets, baseline update status, blockers, and residual risk.
+- If nothing violates a threshold and no regression exists, report the successful no-op.

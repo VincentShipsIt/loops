@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: worktree
-- Reasoning effort: xhigh
 - Write surface: documentation branch plus pull request
 
 ## Prompt
@@ -21,7 +20,6 @@ Scope:
 
 Workflow:
 
-- Run in the Codex worktree execution environment.
 - Run `git fetch --all --prune`.
 - Base work from latest `origin/[TRUNK]`.
 - Verify documentation claims against source, not assumptions.
@@ -30,6 +28,7 @@ Workflow:
 - If all claims are current, report checked files and stop without creating a branch.
 - If changes are needed, edit only documentation files in scope.
 - Run relevant lightweight docs validation when available.
+- Before committing, search open PRs and recent branches for existing docs-verification work on the same files; if one exists, report it and do not open a duplicate PR.
 - Commit, push, and open one PR against `[TRUNK]`.
 - Do not merge the PR.
 

@@ -12,22 +12,29 @@ Repository policy:
 - GitHub repository: [GITHUB_REPO].
 - Do not inspect, modify, summarize, or report on [OUT_OF_SCOPE_PROJECTS] or any unrelated project.
 - Use [TRUNK] as the trunk/base branch for pull requests.
+- Never print tokens, secrets, .env contents, private payloads, or credentials.
+- Never merge PRs, deploy, run production migrations, or write to production data.
 
 Worktree hard gate:
 - Run in the Codex worktree execution environment.
 - Treat [REPO_PATH] as the source checkout only.
 - Stop if pwd resolves to the source checkout.
-- Base work from local [TRUNK] and verify the merge-base before editing.
+- Run git fetch --all --prune before creating any branch or commit.
+- Base work from latest origin/[TRUNK] and verify the merge-base before editing.
 - Create a fresh timestamped branch formatted like [BRANCH_PREFIX]-content-YYYYMMDD-HHMMSS.
 
 Workflow:
 - Read local agent instructions and existing content workflow docs.
 - Inspect relevant prompts, templates, skills, rubrics, evaluation docs, recent changes, and open issues.
 - Optionally scan a small set of public primary sources for fresh ideas. Summarize patterns; do not copy proprietary or large verbatim text.
+- Read [STATE_FILE] for previously addressed items; skip any candidate already listed there.
 - Choose one small improvement: tighter guardrails, clearer QA rubric, better evaluation checks, less stale wording, stronger daily operating loop, or improved metadata.
 - Prefer changes that improve output quality or reduce human intervention.
 - Preserve existing repository patterns and unrelated changes.
 - Run relevant lightweight validation.
+- If no improvement with clear positive impact is identified, report that and stop without creating a branch or PR.
+- Before creating a branch, search open PRs and branches on [GITHUB_REPO] for any automation-owned content-factory PR; if one is open and not merged, skip the PR step and report the existing PR URL.
+- Update [STATE_FILE] with the chosen item only after the PR is opened and pushed.
 - Commit and open a pull request when files change.
 
 Output expectations:
@@ -35,7 +42,7 @@ Output expectations:
 """
 status = "PAUSED"
 rrule = "RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=9;BYMINUTE=15"
-model = "gpt-5.5"
-reasoning_effort = "medium"
+model = "<app-owned>"
+reasoning_effort = "<app-owned>"
 execution_environment = "worktree"
 cwds = ["[REPO_PATH]"]

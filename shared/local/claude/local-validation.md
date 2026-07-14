@@ -2,7 +2,6 @@
 
 ## Prompt
 
-ultracode
 
 Run scheduled local validation for `[PROJECT]`.
 
@@ -19,7 +18,7 @@ Local preflight:
 
 - Verify `[REPO_PATH]` exists and is a git worktree.
 - Stop if it has staged, unstaged, or untracked local changes.
-- Use a per-repo non-overlap lock under `/tmp`; skip cleanly if another validation run is active.
+- Use a per-repo non-overlap lock under `/tmp`; if another validation run is active, skip cleanly. If the lock is older than a reasonable threshold (e.g. 30 minutes) or its owning process or run is no longer present, treat it as stale, clear it, and proceed.
 - Do not fetch, switch branches, pull, or mutate git state. Validate the current checkout only.
 - Record the current branch and commit before running commands.
 - Inspect package scripts and project docs to understand the configured validation surface.

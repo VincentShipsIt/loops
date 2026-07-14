@@ -3,8 +3,6 @@ name: recent-commit-review
 description: Review recent trunk commits and open a fix PR for high-confidence issues
 ---
 
-ultracode
-
 Review new commits on `[GITHUB_REPO]` `[TRUNK]` since the last successful review baseline SHA, or the last 24 hours when no baseline exists. Fix only high-confidence issues.
 
 Scope:
@@ -19,7 +17,7 @@ State and baseline:
 - Fetch the latest remote state before reading or writing the baseline.
 - If a valid baseline SHA exists and is an ancestor of `origin/[TRUNK]`, review `baseline..origin/[TRUNK]`.
 - If no valid baseline exists, review commits on `origin/[TRUNK]` from the last 24 hours.
-- If the baseline is not an ancestor of `origin/[TRUNK]`, stop and report the mismatch instead of guessing.
+- If the baseline is not an ancestor of `origin/[TRUNK]`, stop and report the mismatch.
 - Update the baseline only after a successful review cycle: no new commits, no findings, findings reported with no safe fix needed, or a verified fix branch is pushed and a PR is opened.
 - Do not update the baseline when fetch, review, validation, push, or PR creation fails.
 

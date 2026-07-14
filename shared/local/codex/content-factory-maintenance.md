@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: worktree
-- Reasoning effort: low or medium
 - Write surface: docs, prompts, skills, tests, or evaluation fixtures
 
 ## Prompt
@@ -17,14 +16,17 @@ Repository policy:
 
 - This automation is scoped only to `[REPO_PATH]`.
 - Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]` or any unrelated project.
+- Never print tokens, secrets, .env contents, private payloads, or credentials.
+- Never merge PRs, deploy, run production migrations, or write to production data.
 
 Worktree hard gate:
 
 - This automation must run in the Codex worktree execution environment, not directly in the main checkout.
 - Treat `[REPO_PATH]` as the source checkout only; do not edit, commit, stash, reset, switch, or pull there.
 - If `pwd` resolves to the source checkout, stop and report blocked.
-- Base work from local `[TRUNK]` in the source checkout.
-- Verify the work branch merge-base is exactly local `[TRUNK]` before changing code or docs.
+- Run git fetch --all --prune before creating any branch or commit.
+- Base work from latest origin/`[TRUNK]`.
+- Verify the work branch merge-base is exactly origin/`[TRUNK]` before changing code or docs.
 - Open pull requests against `[TRUNK]` only when changes are made.
 
 Workflow:
@@ -32,6 +34,7 @@ Workflow:
 - Inspect existing skills, content workflows, prompts, templates, evaluation docs, and recent changes.
 - Scan a small set of relevant public primary sources for fresh ideas in the target domain.
 - Avoid copying proprietary or large verbatim text; summarize useful patterns and adapt only what fits this repo.
+- Read `[STATE_FILE]` for previously addressed items; skip any candidate already listed there.
 - Identify one small high-leverage improvement:
   - tighten an existing skill
   - add missing guardrails
@@ -45,6 +48,9 @@ Workflow:
 - Prefer changes that improve output quality with less human intervention.
 - Follow existing repository patterns and preserve unrelated changes.
 - If code or docs are changed, run the most relevant lightweight validation available.
+- If no improvement with clear positive impact is identified, report that and stop without creating a branch or PR.
+- Before creating a branch, search open PRs and branches on the repository for any automation-owned content-factory PR; if one is open and not merged, skip the PR step and report the existing PR URL.
+- Update `[STATE_FILE]` with the chosen item only after the PR is opened and pushed.
 - Commit and open a pull request against `[TRUNK]`.
 
 Output expectations:

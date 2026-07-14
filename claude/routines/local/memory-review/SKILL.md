@@ -1,9 +1,7 @@
 ---
 name: memory-review
-description: Weekly source-backed cleanup of stale repository memory
+description: Source-backed cleanup of stale repository memory
 ---
-
-ultracode
 
 Review and refresh repository memory for `[PROJECT]` so future agents get current, source-backed instructions instead of stale migration-era guidance.
 
@@ -21,7 +19,7 @@ State and baseline:
 - Fetch the latest remote state before reading or writing the baseline.
 - If a valid baseline SHA exists and is an ancestor of `origin/[TRUNK]`, inspect repository changes in `baseline..origin/[TRUNK]` plus all files in `[MEMORY_SCOPE]`.
 - If no valid baseline exists, inspect repository changes on `origin/[TRUNK]` from the last 7 days plus all files in `[MEMORY_SCOPE]`.
-- If the baseline is not an ancestor of `origin/[TRUNK]`, stop and report the mismatch instead of guessing.
+- If the baseline is not an ancestor of `origin/[TRUNK]`, stop and report the mismatch.
 - Update the baseline only after a completed review cycle: no changes needed, findings reported with no safe fix, an equivalent existing PR found, or a verified memory-update PR is opened.
 - Do not update the baseline when fetch, review, validation, push, or PR creation fails.
 

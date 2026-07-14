@@ -4,12 +4,11 @@ Recommended settings:
 
 - Kind: cron
 - Execution environment: local
-- Reasoning effort: medium
 - Write surface: local worktree and local branch cleanup only
 
 ## Prompt
 
-Clean up local worktrees and local branches in `[PROJECT]` that are already merged into `[TRUNK]`, conservatively and without touching dirty work.
+Clean up local worktrees and local branches in `[PROJECT]` that are already merged into `[TRUNK]`.
 
 Scope:
 

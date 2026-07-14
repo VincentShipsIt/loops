@@ -1,29 +1,32 @@
 ---
 name: pr-review
-description: Strict quality review of one open pull request
+description: Review one PR and optionally repair its automation-owned branch
 ---
 
-ultracode
+Review exactly one open pull request in `[GITHUB_REPO]`. The routine is comment-only by default and may repair the same branch only when every write gate below passes.
 
-Review one open pull request in `[GITHUB_REPO]`.
+Scope and authority:
+- Work only in `[REPO_PATH]` and `[GITHUB_REPO]`; do not inspect `[OUT_OF_SCOPE_PROJECTS]`.
+- Never merge, deploy, run live migrations, write production data, expose secrets, or open a second PR.
+- A branch edit is permitted only when the branch is automation-owned, an isolated clean checkout is available, the fix is small and high-confidence, and focused verification succeeds.
 
-Scope:
-- Work only in `[REPO_PATH]` and `[GITHUB_REPO]`.
-- Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]`.
-- Do not merge PRs.
+Selection and marker lifecycle:
+- Run `git fetch --all --prune`, list open non-draft PRs, and review at most one.
+- For each candidate, read its current head SHA and look for `<!-- [REVIEW_MARKER] automation=[AUTOMATION_ID] head=<head-sha> -->`.
+- Skip only when marker automation id and head SHA exactly match the current head. A changed head is eligible again.
+- Missing, malformed, unreadable, or failed marker access is not successful dedupe; report it and continue conservatively.
+- Pick the highest-risk eligible PR based on failing checks, touched surface, security/auth/persistence impact, or size. Stop cleanly if none exists.
 
-Selection:
-- List open PRs.
-- Skip drafts unless the task explicitly allows draft review.
-- Skip PRs already reviewed by this routine using marker `[REVIEW_MARKER]`.
-- Pick the highest-risk unreviewed PR based on touched surface, failing checks, security/auth/persistence impact, or size.
+Review and optional repair:
+- Check out the selected PR in an isolated clean worktree and compare it with `[TRUNK]`.
+- Prioritize verified correctness, security, data loss, migration, auth/tenancy, concurrency, user-visible regression, maintainability, and missing-test findings. Avoid speculative or style-only comments.
+- If the branch is not automation-owned or any repair gate fails, do not edit; post one concise review with actionable findings ordered by severity.
+- If every repair gate passes, apply only the clear behavior-preserving fix to the same PR branch, run focused verification, commit, push, confirm the new head SHA, and post one concise review/update. Never create another branch or PR.
+- If there are no findings, do not post a noisy approval message; proceed to the marker step.
 
-Review workflow:
-- Fetch the diff and inspect relevant code.
-- Prioritize correctness, security, data loss, migrations, auth/tenancy, concurrency, user-visible regressions, and missing tests.
-- Verify every finding against the code.
-- Do not comment on style unless it causes real risk.
-- Post one concise review comment with findings ordered by severity.
+Marker write:
+- Only after the review comment succeeds, or after a same-branch update is pushed, verified, and reported successfully, write the exact hidden marker for the final current head SHA and stable `[AUTOMATION_ID]`.
+- If marker posting fails, report it and do not claim the head was deduped.
 
 Output:
-- Report PR reviewed, findings posted, validation performed, skipped PRs, and residual risk.
+- Report PR, base and initial/final head SHAs, findings, comment URL, edits, validation, marker status, skipped work, blockers, and residual risk.

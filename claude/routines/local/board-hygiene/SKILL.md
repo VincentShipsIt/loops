@@ -62,3 +62,5 @@ Final answer format:
 - Missing Milestone fixed
 - Remaining blockers
 - Exact issues still preventing Ready: yes
+
+If no safe metadata work exists, produce the readiness report and say so.

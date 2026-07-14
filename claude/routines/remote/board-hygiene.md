@@ -33,8 +33,8 @@ Scope:
 Board identity:
 
 - Determine the canonical board from existing issue project items, repo/org
-  projects, and planning docs already linked from the repo.
-- If board identity is ambiguous, stop and report it as a blocker instead of guessing.
+  projects, and planning docs linked from the repo.
+- If board identity is ambiguous, stop and report it as a blocker.
 
 Required audit:
 
@@ -77,5 +77,4 @@ Final answer format:
 - Remaining blockers
 - Exact issues still preventing Ready: yes
 
-If no safe metadata work exists, still produce the readiness report and say so.
-Execute this routine now.
+If no safe metadata work exists, produce the readiness report and say so.

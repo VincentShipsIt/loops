@@ -3,8 +3,6 @@ name: tool-fix-pass
 description: Run a project scanner or tool and open a safe fix PR
 ---
 
-ultracode
-
 Run one safe automated fix pass for `[PROJECT]` using `[TOOL_COMMAND]`.
 
 Scope:
@@ -14,6 +12,12 @@ Scope:
 - Optional baseline command: `[TOOL_BASELINE_COMMAND]`.
 - Optional verification command: `[TOOL_VERIFY_COMMAND]`.
 - Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]`.
+- Never merge PRs, deploy, run production migrations, or write to production data.
+- Never print tokens, secrets, `.env` contents, private payloads, or credentials.
+
+Validation policy:
+- Run only checks allowed by local agent instructions and the configured environment.
+- If required validation is prohibited or too heavy, report blocked and do not publish changes.
 
 Workflow:
 - Read local agent instructions.

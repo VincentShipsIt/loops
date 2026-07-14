@@ -20,7 +20,7 @@ Repository policy:
 Board identity:
 - Read local agent instructions, project memory, and planning docs before changing metadata.
 - Determine the canonical board from existing issue project items, repo/org projects, and linked planning docs.
-- If board identity is ambiguous, stop and report it as a blocker instead of guessing.
+- If board identity is ambiguous, stop and report it as a blocker.
 
 Required audit:
 - List all open issues, active board items, and active milestones.
@@ -58,10 +58,12 @@ Final answer format:
 - Missing Milestone fixed
 - Remaining blockers
 - Exact issues still preventing Ready: yes
+
+If nothing changed, report the checks performed.
 """
 status = "PAUSED"
 rrule = "RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=8;BYMINUTE=45"
-model = "gpt-5.5"
-reasoning_effort = "low"
+model = "<app-owned>"
+reasoning_effort = "<app-owned>"
 execution_environment = "local"
 cwds = ["[REPO_PATH]"]

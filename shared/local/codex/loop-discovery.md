@@ -4,7 +4,6 @@ Recommended settings:
 
 - Kind: cron or manual
 - Execution environment: local
-- Reasoning effort: medium
 - Write surface: read-only repository inspection, read-only loop-library comparison, automation memory
 - Suggested schedule: weekly or manual after a major project milestone
 
@@ -28,6 +27,7 @@ State and dedupe:
 - If the target head and library head are unchanged since the last successful run, report a clean no-op unless the user explicitly requested a fresh full scan.
 - Before recommending a new loop, search the loop library by title, path, id, prompt language, surface, trigger, verification style, and outcome. Report close matches instead of duplicating them.
 - Do not update the state cursor when repository access, comparison, or reporting fails.
+- If either repository is inaccessible or the git fetch returns an error, stop and report blocked without emitting candidate rankings.
 
 Evidence collection:
 

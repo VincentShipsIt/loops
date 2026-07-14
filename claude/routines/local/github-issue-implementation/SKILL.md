@@ -1,54 +1,50 @@
 ---
 name: github-issue-implementation
-description: Ship one ready GitHub issue to a pull request
+description: Ship one eligible GitHub Project issue to a ready pull request
 ---
 
-ultracode
+Implement exactly one eligible open issue from the canonical GitHub Project for `[GITHUB_REPO]`, then open a pull request against `[TRUNK]`.
 
-Implement one ready, high-value GitHub issue in `[PROJECT]` without creating duplicate work.
+Scope and synchronize:
+- Work only on `[PROJECT]` in an isolated branch/worktree. Treat `[REPO_PATH]` as the source checkout and never edit, commit, stash, reset, switch, or pull there.
+- Run `git fetch origin --prune`. Inspect the project whose title is exactly `[PROJECT_BOARD]`, open issues, milestones, open pull requests, remote branches, and worktrees. Only the status attached to that project counts.
+- Start from fetched `origin/[TRUNK]`. Before editing, verify the work branch merge-base is exactly `origin/[TRUNK]`. Stop if the source checkout is the current working directory or remote trunk is unavailable.
+- Do not inspect or modify `[OUT_OF_SCOPE_PROJECTS]` or unrelated projects.
 
-CPU-heavy validation policy:
-- Do not run CPU-intensive tests or heavy validation locally.
-- Run CPU-heavy checks on `[REMOTE_WORKER]` when available.
-- Lightweight local checks are allowed only when clearly quick/static.
-- If unsure whether a command is CPU-heavy, run it remotely or skip it with a clear note.
-
-Repository policy:
-- Work only in `[REPO_PATH]`.
-- GitHub repository: `[GITHUB_REPO]`.
-- Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]`.
+Select one issue:
 - `codex:automation` is the Codex queue label; `claude:routine` is the Claude routine queue label.
 - `claude:routines` is a stale plural variant, not a canonical queue label. Use `claude:routine` unless a target repo explicitly documents the plural label.
 - `shipcode:agent:codex` and `shipcode:agent:claude` are ShipCode routing only. Do not treat either as a generic intake signal outside ShipCode-specific logic.
-
-Workflow:
-- Read local agent instructions and project memory before editing.
-- Inspect open issues, open PRs, branches, and worktrees before choosing work.
-- Use `[TRUNK]` as the base branch.
-- Choose exactly one ready issue not covered by active work.
+- An issue is eligible only when its target-project status is exactly `Backlog`, it belongs to a concrete active release milestone, its body and acceptance criteria are bounded enough to complete and verify in one run, and no open pull request, remote branch, or worktree already covers it.
 - Rank eligible issues in this order: queue label (`claude:routine`), milestone, target/release/start date, project Priority, then readiness (acceptance criteria, verification scope, and confidence).
 - Prefer ready `claude:routine` issues before unlabeled/non-routine work.
 - Do not give `shipcode:agent:codex` or `shipcode:agent:claude` any selection weight unless this run is explicitly scoped to ShipCode.
 - Do not give stale `claude:routines` any selection weight unless target repo policy explicitly documents that plural label.
-- Prefer small, shippable tasks with clear acceptance criteria.
+- Skip epics, deferred or blocked work, product-decision placeholders, manual release or signing work, broad migrations, destructive or production operations, and work requiring unavailable external access.
+- Prefer the nearest active milestone, then P0 through P3, then unlabeled. Within the same priority prefer bugs, correctness, security, and safety before enhancements, then the oldest issue.
 - Repair existing linked open PRs: if an open PR closes or links a candidate issue, ensure the PR has the issue's queue/review labels before skipping it as already covered.
-- Run `git fetch --all --prune`.
-- Create a fresh timestamped branch `[BRANCH_PREFIX]-YYYYMMDD-HHMMSS` from `origin/[TRUNK]`.
-- Follow existing codebase patterns; find at least three examples before introducing a new pattern.
-- Add focused tests or validation for changed behavior.
-- Commit and open a pull request against `[TRUNK]`.
+- If no issue is eligible, report target-project status counts and stop without creating a branch, changing project metadata, editing files, committing, or opening a pull request.
+
+Claim before editing:
+- Select exactly one issue and immediately re-check its project status, open pull requests, remote branches, and worktrees.
+- Move only its target-project item from `Backlog` to `In Progress` before creating a branch or editing.
+- If the claim fails or state changed, try the next eligible issue or stop. Never implement an issue that was not successfully claimed.
+
+Implement and verify:
+- Create a focused `[BRANCH_PREFIX]/<issue-number>-<slug>` branch from `origin/[TRUNK]` in isolated work.
+- Read the issue body and comments, repository instructions, relevant architecture and documentation, and nearby code before editing.
+- Implement only the selected issue using existing patterns and add or update focused tests.
+- Run verification required by repository instructions and proportional to the change. If a required check is prohibited, unavailable, or too heavy for the configured environment, record the exact command and blocker and do not publish an unverified pull request.
+- Review the final diff for correctness, security, regressions, unnecessary complexity, dead code, and unrelated changes.
+- Never run destructive commands, production writes, deploys, or live migrations.
+
+Publish for review:
+- Commit with the issue number, push, and open a ready-for-review pull request against `[TRUNK]`. Never create a draft pull request.
 - When opening a PR, mirror source issue labels onto the PR: always copy queue labels (`codex:automation`, `claude:routine`) and copy existing classification/review labels such as `code-quality`, `security`, `product`, `bug`, `enhancement`, `backend`, `frontend`, `infra`, and `e2e`.
 - Do not invent labels from project fields like Priority, Status, or Area unless those labels already exist on the issue.
 - If a non-ShipCode issue or PR has stale `shipcode:agent:codex` or `shipcode:agent:claude`, or any issue or PR has stale plural `claude:routines`, remove it only when the correct queue label is present or can be added with clear evidence; otherwise report it as uncertain.
-- Do not merge the PR.
-
-If no safe ready issue is available, report why and stop.
+- Link the issue, summarize the implementation, and list verification results and residual blockers. Use `Closes #<number>` only when the issue is fully resolved.
+- Leave the project item `In Progress`. Do not change its project status again or merge the pull request.
 
 Output:
-- Selected issue (number and title).
-- Branch name and base commit.
-- Commit SHA.
-- PR URL.
-- Validation run (commands executed, pass/fail).
-- Skipped work (issues considered but not chosen, and why).
-- Residual risk (anything that could not be verified locally).
+- Report selected issue, milestone and priority, branch and base commit, commit, pull request URL, verification results, skipped checks, blockers, and residual risk.

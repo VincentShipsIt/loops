@@ -3,7 +3,7 @@ id = "[AUTOMATION_ID]-worktree-prune"
 kind = "cron"
 name = "Worktree Prune - [PROJECT]"
 prompt = """
-Clean up local worktrees and local branches in [PROJECT] that are already merged into [TRUNK], conservatively and without touching dirty work.
+Clean up local worktrees and local branches in [PROJECT] that are already merged into [TRUNK].
 
 Repository policy:
 - This automation is scoped only to [PROJECT]: [REPO_PATH].
@@ -32,7 +32,6 @@ Merged-work verification:
 - Prefer false negatives over false positives.
 
 Cleanup actions:
-- If [ALLOW_SAFE_DELETES] is not true, report candidates only.
 - Remove eligible clean worktrees with git worktree remove without force.
 - Delete eligible local branches with git branch -d only.
 - Run git worktree prune after successful removals.
@@ -42,7 +41,7 @@ Output expectations:
 """
 status = "PAUSED"
 rrule = "RRULE:FREQ=WEEKLY;BYDAY=FR;BYHOUR=11;BYMINUTE=15"
-model = "gpt-5.5"
-reasoning_effort = "medium"
+model = "<app-owned>"
+reasoning_effort = "<app-owned>"
 execution_environment = "local"
 cwds = ["[REPO_PATH]"]

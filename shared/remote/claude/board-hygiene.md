@@ -1,55 +1,54 @@
-# Claude Remote Routine: GitHub Board Hygiene
-
-Use when a Claude remote Routine should keep GitHub issue/project metadata
-current without local repository access.
+# Claude Remote Routine: GitHub Board Weekly Readiness
 
 Surface: Claude remote Routine
-Trigger: daily or twice daily on active boards
+Trigger: weekly, at the start of the work week, before execution planning
 Connectors/tools: GitHub repository and project board
 State/dedupe: use `[STATE_FILE]` when available; otherwise dedupe by issue URL, project item ID, title slug, linked PR, and branch name
-Safe writes: GitHub issue metadata, issue body formatting, labels, milestones, and project fields only
+Safe writes: evidence-backed GitHub issue metadata, issue body formatting, labels, milestones, and project fields only
 Forbidden actions: local filesystem access, source edits, branches, commits, PRs, merges, deploys, production writes, destructive cleanup
 Failure mode: stop and report blocked when connector access, board identity, or safe evidence is missing
-Manual test before enabling: run once against a small project board and verify every proposed metadata change is evidence-backed
+Manual test before enabling: run once against a small board and verify the readiness verdict and every proposed metadata change
 
 ## Prompt
 
-Clean up `[PROJECT]` GitHub issue and project-board metadata without creating
-duplicate work.
+Audit and repair `[PROJECT]` GitHub project board, milestones, priorities, and weekly deliverables, then answer whether the board is ready for weekly execution.
 
-Scope:
+Scope and identity:
 
-- Work only on `[GITHUB_REPO]` and `[PROJECT_BOARD]`.
-- Do not use or assume a local repository path.
-- Do not inspect, summarize, or update `[OUT_OF_SCOPE_PROJECTS]`.
-- Metadata-only mode: do not create source edits, branches, commits, pull requests, deploys, or production writes.
+- Work only on `[GITHUB_REPO]` and `[PROJECT_BOARD]`; do not assume local filesystem access or inspect `[OUT_OF_SCOPE_PROJECTS]`.
+- Metadata-only mode: never create source edits, branches, commits, PRs, deploys, or production writes.
+- Determine the canonical board from existing project items and repo-linked planning docs. If identity is ambiguous, stop instead of guessing.
 - Queue labels are `codex:automation` for Codex automation work and `claude:routine` for Claude routine work.
 - `claude:routines` is a stale plural variant, not a canonical queue label. Use `claude:routine` unless a target repo explicitly documents the plural label.
 - `shipcode:agent:codex` and `shipcode:agent:claude` are ShipCode routing only. Do not treat either as a generic intake signal outside ShipCode-specific logic.
 
-Workflow:
+Required audit:
 
-- Inspect open issues, labels, milestones, open and merged pull requests, and project fields.
-- Search by issue URL, project item ID, title, normalized title slug, linked pull requests, and branch names before adding or updating board items.
-- Do not create duplicate issues or board cards.
-- Ensure every open issue is represented once on the canonical board.
-- Remove or archive duplicate board cards, keeping the canonical issue card.
-- Normalize project fields only when issue text, comments, labels, PRs, branches, or board evidence supports the change.
+- List open issues, active board items, and active milestones; identify the current weekly deliverable milestone and last-week goals.
+- Verify every open actionable issue is represented once with Status, Priority, and Milestone.
+- Verify every active card has an open/relevant issue, evidence-backed status/priority, and the current or next weekly milestone.
+- Identify stale In Progress items, merged work not Done, duplicate cards, missing items, and goals that need completion, carry-forward, or an explicit blocker.
+
+Repair policy:
+
+- Search issue URL, project item id, title/slug, linked PR, and branch before any add/update.
+- Apply only evidence-backed GitHub metadata fixes: add missing actionable issues, set fields, archive duplicate cards, move completed work to Done, and carry unfinished goals forward.
+- Create/update the weekly milestone only when `[WEEKLY_MILESTONE_PATTERN]` makes the naming and dates unambiguous.
 - Repair existing linked open PRs: if an open PR closes or links an issue, ensure the PR has the issue's queue/review labels.
 - Always copy queue labels (`codex:automation`, `claude:routine`) from linked issues to PRs, and copy existing classification/review labels such as `code-quality`, `security`, `product`, `bug`, `enhancement`, `backend`, `frontend`, `infra`, and `e2e`.
 - Do not invent labels from project fields like Priority, Status, or Area unless those labels already exist on the issue.
 - If a non-ShipCode issue or PR has stale `shipcode:agent:codex` or `shipcode:agent:claude`, or any issue or PR has stale plural `claude:routines`, remove it only when the correct queue label is present or can be added with clear evidence; otherwise report it as uncertain.
-- Keep labels concise. Do not duplicate values already represented by project fields.
-- Keep issue titles board-readable when the body preserves the nuance.
-- Move active, blocked, completed, merged, stale, and deferred work based on evidence.
-- Flag uncertain items instead of guessing.
+- Leave uncertain metadata unchanged and report the exact blocker.
 
-Output:
+Final answer format:
 
-- Changed issues/cards.
-- Duplicate cleanup.
-- Field, label, title, and body changes.
-- Items left uncertain and why.
-- If nothing changed, report the checks performed.
+- Ready: yes/no
+- Canonical board
+- Current weekly deliverable milestone
+- Last-week goals found; completed; carried forward; blocked
+- Missing board items, Status, Priority, and Milestone fixed
+- Duplicate/stale items fixed
+- Remaining blockers
+- Exact issues still preventing Ready: yes
 
-If no safe metadata work exists, stop cleanly and say so.
+If no safe metadata work exists, produce the readiness report and say so.

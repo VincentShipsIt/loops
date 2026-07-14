@@ -13,6 +13,8 @@ Goal:
 - Create clean, project-specific loop drafts that can later be pasted into Codex Automations, Claude local routines, or Claude remote Routines.
 - Use the same intent contract for Codex and Claude. The prompt intent, safety boundary, state/dedupe, cadence recommendation, and stopping conditions should match; only the final artifact format should differ.
 - Do not create live schedules, webhooks, recurring jobs, or app automations unless explicitly asked after the drafts are reviewed.
+- Separate app settings from prompt semantics. App settings own model, reasoning effort, schedule/enabled state, folder/cwds, local versus worktree execution, permissions, and connector grants. Prompt bodies own outcome, semantic scope, authority, base branch, state/dedupe, verification, stop/failure behavior, and output.
+- Keep safety assertions in the prompt even when the app also configures the workspace, worktree, permissions, or connectors.
 
 First inspect this project:
 - Read AGENTS.md, CLAUDE.md, README, package scripts, existing docs, and existing automation/routine files if present.
@@ -66,11 +68,14 @@ Rules:
 - Add duplicate checks for issues, branches, worktrees, PRs, and previous run state.
 - Put destructive actions behind explicit approval.
 - Make every routine stop cleanly when no safe work exists.
+- Do not put model names, effort directives, cadence prose, enabled state, hardcoded `cd` commands, or app-selected folder/execution settings in reusable prompt bodies.
+- Add remote validation only when the repo documents transport/tool, worker repo path, revision/bootstrap, dependency state, services, environment-variable names, secret policy, concurrency lock, timeout, cleanup, and result return. Otherwise report heavy/prohibited validation as blocked or skipped.
 
 Finish with:
 - Files created or changed.
 - Which drafts are ready to paste into Codex or Claude.
 - Any intentional Codex/Claude gaps and why.
 - Required setup values still missing.
+- Separate App settings and Prompt body sections for each draft.
 - Recommended first manual test.
 ```

@@ -45,7 +45,7 @@ The template set includes GitHub issue implementation, recent commit review, bac
 
 Use `../shared/loop-intents.md` for the canonical intent names and suggested cadence when creating the live Claude schedule.
 
-Ultracode-class templates (code review/build/validation) emit a bare `ultracode` token as the first prompt-body line to run at Claude Opus 4.8 effort; the app model should be set to Opus 4.8.
+Execution model and effort are app-managed settings and do not belong in Claude prompt bodies.
 
 ## Included Upstreams
 

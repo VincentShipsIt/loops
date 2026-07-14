@@ -5,16 +5,14 @@ safe auto-patch tools, dead-code detectors, or lint/code-quality agents.
 
 ## Prompt
 
-ultracode
 
-Run `[TOOL_COMMAND]` in this repository and apply only safe, reviewable fixes for `[TOOL_FOCUS]`.
+Run `[TOOL_COMMAND]` in this repository and apply fixes for `[TOOL_FOCUS]`.
 
 CPU-heavy validation policy:
 
 - Do not run CPU-intensive tests or heavy validation locally.
-- Run CPU-heavy tests/checks on `[REMOTE_WORKER]` when available.
-- Lightweight local checks are allowed only when clearly quick/static.
-- If unsure whether a command is heavy, run it remotely or skip it with a clear note.
+- Lightweight local checks are allowed only when quick/static.
+- If required validation is prohibited or too heavy for the configured environment, skip it with a clear blocker and do not publish changes.
 
 Repository policy:
 
@@ -23,6 +21,8 @@ Repository policy:
 - Optional baseline command: `[TOOL_BASELINE_COMMAND]`.
 - Optional verification command: `[TOOL_VERIFY_COMMAND]`.
 - Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]`.
+- Never merge PRs, deploy, run live migrations, or write production data.
+- Never print tokens, secrets, `.env` contents, or environment file contents.
 
 Workflow:
 

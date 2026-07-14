@@ -1,25 +1,26 @@
 ---
 name: bundle-size-watchdog
-description: Monitor dependency and build artifact size drift
+description: Report dependency and artifact size drift without repository writes
 ---
 
-ultracode
+Run a read-only bundle and dependency size measurement for `[PROJECT]`.
 
-Check bundle, dependency, or build artifact size drift for `[PROJECT]`.
+Scope and authority:
+- Work only in `[REPO_PATH]` and `[GITHUB_REPO]`; do not inspect `[OUT_OF_SCOPE_PROJECTS]`.
+- Do not build, install dependencies, switch or pull branches, edit repo files, create branches, commit, push, open PRs, deploy, or run migrations.
+- Fetch/read fresh Git metadata only when it does not change the checkout. The only permitted write is the successful measurement baseline in `[STATE_FILE]`.
 
-Scope:
-- Work only in `[REPO_PATH]`.
-- Do not inspect, modify, summarize, or report on `[OUT_OF_SCOPE_PROJECTS]`.
+State and measurement:
+- Read the last successful baseline from `[STATE_FILE]`: source commit, measured timestamp, dependency directory size, top-level package count, and a size keyed by each configured artifact path.
+- Measure `[DEPENDENCY_DIR]`, package count, `[ARTIFACT_PATH_1]`, and `[ARTIFACT_PATH_2]` without generating missing artifacts.
+- Inspect recent dependency manifest and lockfile changes as read-only evidence.
+- If any configured target cannot be measured, report a partial/failed run and retain the prior baseline unchanged.
+- On a complete successful measurement only, replace the baseline with all fields above.
 
-Workflow:
-- Read local agent instructions.
-- Inspect existing package scripts and size-report tooling.
-- Run the lightest available size or dependency inspection command.
-- Do not install new dependencies unless the repo already requires it.
-- Do not run full production builds locally unless explicitly allowed.
-- Identify meaningful regressions, stale artifacts, or easy wins.
-- If a safe cleanup exists, open a small PR.
-- Otherwise report findings only.
+Thresholds and deltas:
+- Flag when `[DEPENDENCY_DIR]` exceeds `[MAX_DEPENDENCY_SIZE]`, package count exceeds `[MAX_PACKAGE_COUNT]`, or an artifact exceeds `[MAX_ARTIFACT_SIZE]`.
+- Report absolute values and deltas from the prior successful baseline. On the first complete run, report baseline initialization and no historical delta.
 
 Output:
-- Report commands run, size deltas/findings, safe fixes made, branch/PR if created, skipped heavy work, and next actions.
+- Report source commit, timestamp, dependency size/count, artifact sizes, prior-baseline deltas, recent dependency changes, threshold violations, missing targets, baseline update status, blockers, and residual risk.
+- If nothing violates a threshold and no regression exists, report the successful no-op.
