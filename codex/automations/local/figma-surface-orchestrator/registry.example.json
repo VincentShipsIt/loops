@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "timezone": "[FIGMA_TIMEZONE]",
+  "dailyReadBudget": "[FIGMA_DAILY_READ_BUDGET]",
+  "perRunCallBudget": "[FIGMA_PER_RUN_CALL_BUDGET]",
+  "minimumProbeInterval": "[FIGMA_MIN_PROBE_INTERVAL]",
+  "projects": [
+    {
+      "id": "[FIGMA_PROJECT_ID]",
+      "displayName": "[PROJECT]",
+      "enabled": true,
+      "priority": 100,
+      "sourceRoots": ["[REPO_PATH]"],
+      "manifests": ["[FIGMA_MANIFEST_PATH]"],
+      "files": [
+        {
+          "role": "product",
+          "fileKey": "[FIGMA_FILE_KEY]",
+          "allowReads": true,
+          "allowWrites": false
+        }
+      ],
+      "status": "incomplete",
+      "auditCadence": "weekly",
+      "nextPackage": {
+        "id": "read-only-certification",
+        "type": "certify",
+        "mutationBudget": 0,
+        "validationReserve": 2
+      },
+      "completionContract": {
+        "requireMissingZero": true,
+        "requireStructuralQa": true,
+        "requireVisualQa": true,
+        "pageAndPrototypeBackground": "#2B2B2B"
+      },
+      "deferredUntil": []
+    }
+  ]
+}

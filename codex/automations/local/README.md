@@ -21,6 +21,8 @@ These are clean templates, not raw exports. They intentionally do not include pr
 - `content-factory-maintenance/automation.toml` - improve a prompt, skill, template, docs, or evaluation pipeline.
 - `memory-review/automation.toml` - review repo memory against current source truth and open safe correction PRs.
 - `loop-discovery/automation.toml` - inspect a codebase for evidence-backed loop candidates without writing files.
+- `figma-surface-orchestrator/automation.toml` - advance allowlisted Figma products through deterministic, quota-aware implementation and verification packages.
+- `figma-surface-orchestrator/registry.example.json` - sanitized multi-project registry schema for the orchestrator.
 - `agent-configuration-audit/automation.toml` - audit global and per-repository agent configuration without modifying files.
 - `memory-template/memory.md` - support file for Codex automation state, not a runnable automation.
 
@@ -59,6 +61,15 @@ The issue-implementation prompt is authored once in `../../../shared/local/codex
 - `[SENTRY_OBSERVATION_RULE]` - post-deployment window or event-sample rule required before resolving a Sentry issue.
 - `[ALLOW_LOCAL_E2E]` - boolean opt-in; unresolved or false keeps E2E execution in CI/nightly.
 - `[LOCAL_E2E_RESOURCE_CONTRACT]` - project-defined local E2E command scope, services, resource/time limits, timeout, and cleanup.
+- `[FIGMA_REGISTRY_FILE]` - absolute path to the private, validated allowlist of managed Figma projects, files, source roots, manifests, and next packages.
+- `[FIGMA_STATE_FILE]` - absolute path to the orchestrator's atomic durable quota and project checkpoint state.
+- `[FIGMA_TIMEZONE]` - IANA timezone used only for reporting; it never defines quota reset.
+- `[FIGMA_DAILY_READ_BUDGET]` - conservative configured daily read ceiling for the authenticated Figma seat.
+- `[FIGMA_PER_RUN_CALL_BUDGET]` - hard ceiling for all quota-limited Figma calls attempted in one run.
+- `[FIGMA_MIN_PROBE_INTERVAL]` - minimum cooldown after a quota failure when the server provides no retry timestamp.
+- `[FIGMA_PROJECT_ID]`, `[FIGMA_FILE_KEY]` - allowlisted Figma project and file identifiers in the private registry.
+- `[FIGMA_MANIFEST_PATH]` - absolute path to a deterministic source matrix, checkpoint, or execution package.
+- `[OUT_OF_SCOPE_FIGMA_PROJECTS]` - Figma projects and files the orchestrator must never inspect or mutate.
 
 ## Tool Fix Presets
 
