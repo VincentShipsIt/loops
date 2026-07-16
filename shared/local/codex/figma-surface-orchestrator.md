@@ -22,7 +22,6 @@ Scope and trust boundary:
 Registry and durable state:
 
 - Validate the registry against the documented schema before any Figma call. Reject duplicate project ids, duplicate file keys, missing manifests, unknown work types, invalid budgets, or writable files not covered by the allowlist.
-- Require the registry to identify `[FIGMA_PROGRAM_CATALOG]` and `[FIGMA_PROGRAM_RENDERER]`. Validate the complete catalog locally before the first Figma call in a run.
 - Require every project to declare a `fileArchitecture` with a target Figma project id, canonical distinct file roles, canonical file names, and placement status. Pages inside one Figma file do not satisfy independent file-role coverage.
 - Every required file role must be a distinct file co-located in the declared Figma project. A single multi-page file is architecture-incomplete unless the registry records an explicit user-approved exception.
 - Resolve relative manifest paths against the directory containing `[FIGMA_REGISTRY_FILE]`; never resolve them against an arbitrary current working directory.
@@ -44,8 +43,6 @@ Execution contract:
 
 - Read the selected project's source matrix, current checkpoint, exact next package, and validation reserve before calling Figma. Do not rediscover already frozen inventory unless the package explicitly requires it.
 - Load and follow the required Figma skills before every connector action. Inspect before mutation, return every affected node id, keep each write atomic and bounded, and validate after each successful mutation step.
-- Every `use_figma` call must use a program from `[FIGMA_PROGRAM_CATALOG]`. Render it with `[FIGMA_PROGRAM_RENDERER]`, pass the rendered output verbatim as the connector's code argument, and record the program id, source SHA-256, and rendered SHA-256 in the durable call ledger before issuing the call.
-- Do not synthesize or rewrite one-off Figma Plugin API code inside the run. If the required operation is absent from the catalog, stop before a Figma call and add a project-agnostic reviewed program to the loop library; keep private file keys, node ids, and expected evidence in registry or manifest input rather than committed source.
 - Stop on the first Figma quota, tool, mutation, or validation error. Record a precise recovery checkpoint and do not retry or continue to another project in that run.
 - Route labels and generic family templates are not implemented surfaces. Coverage requires source-accurate route and non-route frames, canonical states, reusable instances, and persisted primary, cancel, error, recovery, destructive, and branch reactions where the source supports them.
 - Preserve each product's brand and information architecture while keeping the shared file organization, semantic tokens, reusable components, and solid `#2B2B2B` page and prototype backgrounds required by its completion contract.

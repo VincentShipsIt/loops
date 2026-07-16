@@ -52,7 +52,6 @@ if [ -n "$model_residue" ]; then
 fi
 
 python3 scripts/sync-codex-implementation-template.py --check || fail=1
-python3 scripts/render-figma-program.py --check || fail=1
 
 # 3) Canonical artifact inventory + safety-critical semantic invariants.
 # Platform syntax may differ, so these checks intentionally target contract
@@ -128,13 +127,7 @@ shared/local/codex/loop-discovery.md
 codex/automations/local/loop-discovery/automation.toml
 shared/local/codex/figma-surface-orchestrator.md
 codex/automations/local/figma-surface-orchestrator/automation.toml
-codex/automations/local/figma-surface-orchestrator/registry.example.json
-figma/surface-orchestrator/README.md
-figma/surface-orchestrator/programs.json
-figma/surface-orchestrator/programs/certify-reaction-graph.js
-figma/surface-orchestrator/programs/initialize-role-file.js
-figma/surface-orchestrator/programs/inspect-node-text.js
-scripts/render-figma-program.py'
+codex/automations/local/figma-surface-orchestrator/registry.example.json'
 
 for f in $mapped_artifacts; do
   [ -f "$f" ] || err "canonical artifact map references missing file: $f"
@@ -214,13 +207,6 @@ require_all 'Never infer quota reset from local midnight' \
 require_all 'Stop on the first Figma quota, tool, mutation, or validation error' \
   shared/local/codex/figma-surface-orchestrator.md \
   codex/automations/local/figma-surface-orchestrator/automation.toml
-require_all 'Every `use_figma` call must use a program from' \
-  shared/local/codex/figma-surface-orchestrator.md
-require_all 'Every use_figma call must use a program from' \
-  codex/automations/local/figma-surface-orchestrator/automation.toml
-require_all 'source SHA-256, and rendered SHA-256' \
-  shared/local/codex/figma-surface-orchestrator.md \
-  codex/automations/local/figma-surface-orchestrator/automation.toml
 require_all 'Route labels and generic family templates are not implemented surfaces.' \
   shared/local/codex/figma-surface-orchestrator.md \
   codex/automations/local/figma-surface-orchestrator/automation.toml
@@ -240,8 +226,6 @@ require_all '"validationReserve": 2' \
 require_all '"singleFileExceptionApproved": false' \
   codex/automations/local/figma-surface-orchestrator/registry.example.json
 require_all '"requireDistinctRequiredRoleFiles": true' \
-  codex/automations/local/figma-surface-orchestrator/registry.example.json
-require_all '"requireCatalogProgramForUseFigma": true' \
   codex/automations/local/figma-surface-orchestrator/registry.example.json
 
 write_capable_prompts='shared/local/codex/github-issue-implementation.prompt.md

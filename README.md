@@ -94,7 +94,6 @@ This repo is organized by platform and execution surface:
    - Codex weekly memory review: `codex/automations/local/memory-review/automation.toml`
    - Codex loop discovery: `codex/automations/local/loop-discovery/automation.toml`
    - Codex Figma surface orchestration: `codex/automations/local/figma-surface-orchestrator/automation.toml`
-   - Versioned Figma Plugin API programs: `figma/surface-orchestrator/`
    - Codex agent configuration audit: `codex/automations/local/agent-configuration-audit/automation.toml`
    - Claude local GitHub issue work: `claude/routines/local/github-issue-implementation/SKILL.md`
    - Claude recent commit review/fix: `claude/routines/local/recent-commit-review/SKILL.md`
@@ -116,7 +115,7 @@ This repo is organized by platform and execution surface:
    - `[VALIDATION_COMMANDS]` if used
    - `[WEEKLY_MILESTONE_PATTERN]` if used
    - `[OUT_OF_SCOPE_PROJECTS]`
-   - `[FIGMA_REGISTRY_FILE]`, `[FIGMA_STATE_FILE]`, `[FIGMA_PROGRAM_CATALOG]`, `[FIGMA_PROGRAM_RENDERER]`, and Figma quota placeholders when using the Figma orchestrator
+   - `[FIGMA_REGISTRY_FILE]`, `[FIGMA_STATE_FILE]`, and Figma quota placeholders when using the Figma orchestrator
 
    Full placeholder reference: `claude/routines/local/README.md` and `shared/local/claude/README.md` Placeholder Keys.
 
