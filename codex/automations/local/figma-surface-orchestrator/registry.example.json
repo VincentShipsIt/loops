@@ -4,6 +4,12 @@
   "dailyReadBudget": "[FIGMA_DAILY_READ_BUDGET]",
   "perRunCallBudget": "[FIGMA_PER_RUN_CALL_BUDGET]",
   "minimumProbeInterval": "[FIGMA_MIN_PROBE_INTERVAL]",
+  "programCatalog": {
+    "catalogPath": "[FIGMA_PROGRAM_CATALOG]",
+    "rendererPath": "[FIGMA_PROGRAM_RENDERER]",
+    "requireCatalogProgramForUseFigma": true,
+    "recordProgramHashes": true
+  },
   "projects": [
     {
       "id": "[FIGMA_PROJECT_ID]",

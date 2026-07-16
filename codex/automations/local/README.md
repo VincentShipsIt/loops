@@ -67,6 +67,8 @@ The issue-implementation prompt is authored once in `../../../shared/local/codex
 - `[FIGMA_DAILY_READ_BUDGET]` - conservative configured daily read ceiling for the authenticated Figma seat.
 - `[FIGMA_PER_RUN_CALL_BUDGET]` - hard ceiling for all quota-limited Figma calls attempted in one run.
 - `[FIGMA_MIN_PROBE_INTERVAL]` - minimum cooldown after a quota failure when the server provides no retry timestamp.
+- `[FIGMA_PROGRAM_CATALOG]` - absolute path to the versioned allowlist of reusable Figma Plugin API programs.
+- `[FIGMA_PROGRAM_RENDERER]` - absolute path to the local renderer that validates program input and emits code plus ledger hashes.
 - `[FIGMA_PROJECT_ID]`, `[FIGMA_FILE_KEY]` - allowlisted Figma project and file identifiers in the private registry.
 - `[FIGMA_MANIFEST_PATH]` - absolute path to a deterministic source matrix, checkpoint, or execution package.
 - `[OUT_OF_SCOPE_FIGMA_PROJECTS]` - Figma projects and files the orchestrator must never inspect or mutate.

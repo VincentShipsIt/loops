@@ -38,6 +38,7 @@ templates carry `<app-owned>` placeholders and never name a model.
 | File | Use when |
 | --- | --- |
 | `memory.md` | Keep run state short and dedupe-aware between recurring automation runs. This is not a runnable automation. |
+| `../../../figma/surface-orchestrator/` | Render versioned, project-agnostic Figma Plugin API programs for cataloged `use_figma` calls. |
 
 ## Common Guardrails
 
@@ -90,6 +91,7 @@ templates carry `<app-owned>` placeholders and never name a model.
 - `[FIGMA_TIMEZONE]` - IANA reporting timezone; never a quota-reset assumption.
 - `[FIGMA_DAILY_READ_BUDGET]`, `[FIGMA_PER_RUN_CALL_BUDGET]` - conservative authenticated-seat and hard per-run call ceilings.
 - `[FIGMA_MIN_PROBE_INTERVAL]` - minimum cooldown after a quota failure without a server retry timestamp.
+- `[FIGMA_PROGRAM_CATALOG]`, `[FIGMA_PROGRAM_RENDERER]` - versioned Figma program allowlist and its validating local renderer.
 - `[FIGMA_PROJECT_ID]`, `[FIGMA_FILE_KEY]`, `[FIGMA_MANIFEST_PATH]` - registry identifiers and deterministic package path.
 - `[OUT_OF_SCOPE_FIGMA_PROJECTS]` - Figma projects and files the orchestrator must never inspect or mutate.
 
