@@ -11,6 +11,11 @@ Scheduler lifecycle preflight:
 - If the `Backlog` count is greater than zero, continue normally. If the board query fails, is incomplete, or cannot identify the exact target project, report blocked and stop without pausing the automation or synchronizing the repository.
 - Never pause merely because `Backlog` is nonzero but no item passes milestone, scope, dedupe, access, or other eligibility gates.
 
+Next-24h flow gate:
+- If a `Next 24h Queue Planner` automation is configured, read its latest successful memory after the Backlog preflight and before repository synchronization or issue selection.
+- Honor `hold_new_implementation: true` only when it names this exact repository and its planner timestamp is less than 24 hours old. Report the planner's open-PR/conflict evidence and stop without claiming, project mutation, repository synchronization, branch creation, or code writes.
+- A hold is a run-level no-op, never a scheduler pause. Missing, stale, blocked, or ambiguous planner memory has no hold authority; continue with the normal eligibility gates.
+
 Scope and synchronize:
 - Work only on `[PROJECT]` in the isolated Codex automation worktree. Treat `[REPO_PATH]` as the source checkout and never edit, commit, stash, reset, switch, or pull there.
 - Discover the default branch directly from `origin` with `git ls-remote --symref origin HEAD`. Accept only one symbolic `ref: refs/heads/<default-branch> HEAD` result; record `<default-branch>` as `default_branch`, and stop if it is missing, ambiguous, or not under `refs/heads/`.

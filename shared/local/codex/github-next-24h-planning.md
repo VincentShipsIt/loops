@@ -12,7 +12,7 @@ State/dedupe:
 
 - Store the run timestamp, per-repository input snapshot, queue calculation, `fleet:ready` issue set, integration directives, writes, skips, and stop conditions in automation memory or `[STATE_FILE]`.
 - Read the prior successful planner memory before acting. A same-day rerun replaces only conclusions based on changed source evidence.
-- Resolve each exact GitHub Project and request the numeric field IDs required for Status, Priority, Milestone, Start date, Target date, and Work type. Missing or incomplete field projections are blockers, not empty values.
+- Resolve each exact GitHub Project from `/orgs/{owner}/projectsV2` or `/users/{owner}/projectsV2`, then use the owner-scoped `/orgs|users/{owner}/projectsV2/{project-number}/fields` and `/items?fields=<numeric-ids>` routes. Never substitute the numeric project database id into `/projects/{id}`. Request the numeric field IDs required for Status, Priority, Milestone, Start date, Target date, and Work type. Missing or incomplete field projections are blockers, not empty values.
 - Before creating or updating an issue, search issue URL, title and normalized slug, parent/subissue links, open and recently closed PRs, remote branches, worktrees, and prior planner fingerprints.
 - Never count a PR, issue, merge, or implementation run more than once in the seven-day throughput window.
 
@@ -20,7 +20,7 @@ Planning model:
 
 - For each repository, calculate `slots_24h` from the configured implementation schedule.
 - Calculate `throughput_factor = min(1, merged_agent_prs_7d_daily_average / max(1, opened_agent_prs_7d_daily_average))`.
-- Calculate `ready_target = clamp(ceil(slots_24h * throughput_factor), 1, slots_24h)`.
+- Calculate `ready_target = clamp(min(ceil(slots_24h * throughput_factor), ceil(merged_agent_prs_7d / 7) + 1), 1, slots_24h)`.
 - `ready_deficit = max(0, ready_target - existing_actionable_ready_backlog)`.
 - Force issue creation to zero when open unmerged agent PRs are at least `min(10, ceil(1.5 * slots_24h))`, when at least three PRs conflict, when required project fields are unavailable, or when merge throughput is zero.
 - Apply `[PER_REPO_CREATION_CAP]` and `[FLEET_CREATION_CAP]` after every repository gate. `[PLANNER_DRY_RUN]` forces every write count to zero.
@@ -28,6 +28,7 @@ Planning model:
 Selection:
 
 - Classify Backlog issues from current evidence as actionable-ready, broad, already covered, blocked, provider-dependent, research/decision work, manual-only, or duplicate.
+- Exclude expired milestones unless repository evidence explicitly carries them forward. Treat an issue with incomplete subissues as an epic, not a ready implementation unit. Treat provider credentials, paid APIs, production data, asset generation, physical-device access, user interviews, and product decisions as unavailable unless current automation memory proves the required access exists.
 - Prefer integration recovery, correctness, security, failing CI, conflicted PRs, unavailable review verdicts, and existing actionable issues before net-new feature decomposition.
 - Rank actionable-ready issues by concrete active milestone, dependency satisfaction, Priority, target/start date, and bounded acceptance/verification criteria.
 - Mark no more than `ready_target` issues per repository with the planner-owned `fleet:ready` label. Remove that label when an issue is no longer Backlog or no longer actionable-ready.
@@ -56,6 +57,7 @@ Integration directives:
 - Record conflicted PRs, failing current-head checks, unavailable review verdicts, exact-head PASS PRs awaiting merge, dependency ordering, and human-owned gates.
 - Directives are report-ready telemetry for Fleet Review and Daily Loop Report. They do not grant either loop broader write authority.
 - When integration pressure closes the creation gate, prefer a smaller ready queue and say which implementation slots should remain unused.
+- Record `hold_new_implementation: true` for a repository when its open-PR or conflict WIP gate is closed. Implementation loops consume only a planner run less than 24 hours old and stop before claiming new work; the hold never pauses their schedule. Clear the hold explicitly when the gate reopens.
 
 Output:
 

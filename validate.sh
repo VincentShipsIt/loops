@@ -205,6 +205,11 @@ require_all 'fleet:ready' \
   codex/automations/local/github-next-24h-planning/automation.toml \
   shared/local/codex/github-issue-implementation.prompt.md \
   codex/automations/local/github-issue-implementation/automation.toml
+require_all 'hold_new_implementation: true' \
+  shared/local/codex/github-next-24h-planning.md \
+  codex/automations/local/github-next-24h-planning/automation.toml \
+  shared/local/codex/github-issue-implementation.prompt.md \
+  codex/automations/local/github-issue-implementation/automation.toml
 require_all 'Never move' \
   shared/local/codex/github-next-24h-planning.md \
   codex/automations/local/github-next-24h-planning/automation.toml

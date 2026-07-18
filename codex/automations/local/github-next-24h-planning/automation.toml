@@ -7,24 +7,26 @@ Prepare a bounded, integration-aware GitHub Backlog queue for the next 24 hours 
 
 Scope and evidence:
 - Use GitHub Projects v2 REST API version 2026-03-10 through gh api, GitHub issue/PR/check REST endpoints, the current and prior Daily Loop Reports, and configured automation definitions and memories.
-- Resolve every exact target project and request numeric field IDs for Status, Priority, Milestone, Start date, Target date, and Work type. Missing or incomplete projections are blockers, not empty values.
+- Resolve each exact project from /orgs/{owner}/projectsV2 or /users/{owner}/projectsV2, then use the owner-scoped /orgs|users/{owner}/projectsV2/{project-number}/fields and /items?fields=<numeric-ids> routes. Never substitute the numeric project database id into /projects/{id}. Request numeric field IDs for Status, Priority, Milestone, Start date, Target date, and Work type. Missing or incomplete projections are blockers, not empty values.
 - Work only on [PLANNING_TARGETS]. Do not inspect or report on [OUT_OF_SCOPE_PROJECTS].
 - Store the run timestamp, bounded source snapshot, queue calculations, fleet:ready issue set, integration directives, writes, skips, and stop conditions in automation memory or [STATE_FILE].
 
 Queue calculation:
 - For each repository, derive slots_24h from [IMPLEMENTATION_SCHEDULES].
 - Calculate throughput_factor = min(1, merged agent PR seven-day daily average / max(1, opened agent PR seven-day daily average)).
-- Calculate ready_target = clamp(ceil(slots_24h * throughput_factor), 1, slots_24h).
+- Calculate ready_target = clamp(min(ceil(slots_24h * throughput_factor), ceil(merged agent PRs over seven days / 7) + 1), 1, slots_24h).
 - Calculate ready_deficit = max(0, ready_target - existing actionable-ready Backlog count).
 - Force issue creation to zero when open unmerged agent PRs are at least min(10, ceil(1.5 * slots_24h)), at least three PRs conflict, required project fields are unavailable, merge throughput is zero, [PLANNER_DRY_RUN] is true, or either creation cap is zero.
 - Apply [PER_REPO_CREATION_CAP] and [FLEET_CREATION_CAP] after all gates.
 
 Plan:
 - Classify Backlog issues as actionable-ready, broad, already covered, blocked, provider-dependent, research/decision work, manual-only, or duplicate.
+- Exclude expired milestones unless repository evidence explicitly carries them forward. Treat incomplete-subissue parents as epics. Treat provider credentials, paid APIs, production data, asset generation, physical-device access, user interviews, and product decisions as unavailable unless current automation memory proves the required access exists.
 - Prefer integration recovery, correctness, security, failing CI, conflicted PRs, unavailable review verdicts, and existing actionable issues before net-new decomposition.
 - Rank actionable-ready issues by active milestone, dependency satisfaction, Priority, target/start date, and bounded acceptance and verification criteria.
 - Add the planner-owned fleet:ready label to no more than ready_target exact-project Backlog issues. Remove it when an issue is no longer Backlog or no longer actionable-ready.
 - The label is a preference signal only. Never claim work, assign an agent, or move project Status.
+- Record hold_new_implementation: true when a repository's open-PR or conflict WIP gate is closed. Implementation loops may consume only a planner run less than 24 hours old and stop before claiming; the hold never pauses their schedule. Clear it explicitly when the gate reopens.
 
 Safe writes:
 - Create the fleet:ready repository label when missing with a consistent planner-owned description.
