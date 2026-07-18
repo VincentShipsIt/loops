@@ -18,7 +18,9 @@ Select one issue:
 - `claude:routines` is a stale plural variant, not a canonical queue label. Use `claude:routine` unless a target repo explicitly documents the plural label.
 - `shipcode:agent:codex` and `shipcode:agent:claude` are ShipCode routing only. Do not treat either as a generic intake signal outside ShipCode-specific logic.
 - An issue is eligible only when its target-project status is exactly `Backlog`, it belongs to a concrete active release milestone, its body and acceptance criteria are bounded enough to complete and verify in one run, and no open pull request, remote branch, or worktree already covers it.
-- Rank eligible issues in this order: queue label (`codex:automation`), milestone, target/release/start date, project Priority, then readiness (acceptance criteria, verification scope, and confidence).
+- `fleet:ready` is a planner-owned next-24h preference signal, not a claim. Re-check every labeled issue against all eligibility and dedupe gates before selecting it.
+- Rank eligible issues in this order: planner readiness (`fleet:ready`), queue label (`codex:automation`), milestone, target/release/start date, project Priority, then readiness (acceptance criteria, verification scope, and confidence).
+- Prefer eligible `fleet:ready` issues before the general Backlog, but fall back to the existing ranking when none remains eligible.
 - Prefer ready `codex:automation` issues before unlabeled/non-automation work.
 - Do not give `shipcode:agent:codex` or `shipcode:agent:claude` any selection weight unless this run is explicitly scoped to ShipCode.
 - Do not give stale `claude:routines` any selection weight unless target repo policy explicitly documents that plural label.
@@ -46,5 +48,6 @@ Publish for review:
 - If a non-ShipCode issue or PR has stale `shipcode:agent:codex` or `shipcode:agent:claude`, or any issue or PR has stale plural `claude:routines`, remove it only when the correct queue label is present or can be added with clear evidence; otherwise report it as uncertain.
 - Link the issue, summarize the implementation, and list verification results and residual blockers. Use `Closes #<number>` only when the issue is fully resolved.
 - Leave the project item `In Progress`. Do not change its project status again, describe or assume a later project transition, or merge the pull request.
+- Treat opening the ready pull request as consumption of the planner signal. Do not remove `fleet:ready`; the next planner run removes stale labels after observing the non-Backlog status.
 
 Report the selected issue, milestone and priority, discovered default branch and recorded base commit, issue branch, commit, pull request URL, verification results, skipped checks, blockers, and residual risk.

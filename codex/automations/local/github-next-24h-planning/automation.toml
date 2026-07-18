@@ -1,0 +1,58 @@
+version = 1
+id = "[AUTOMATION_ID]-github-next-24h-planning"
+kind = "cron"
+name = "GitHub Next 24h Planning - [PROJECT]"
+prompt = """
+Prepare a bounded, integration-aware GitHub Backlog queue for the next 24 hours across [PLANNING_TARGETS].
+
+Scope and evidence:
+- Use GitHub Projects v2 REST API version 2026-03-10 through gh api, GitHub issue/PR/check REST endpoints, the current and prior Daily Loop Reports, and configured automation definitions and memories.
+- Resolve every exact target project and request numeric field IDs for Status, Priority, Milestone, Start date, Target date, and Work type. Missing or incomplete projections are blockers, not empty values.
+- Work only on [PLANNING_TARGETS]. Do not inspect or report on [OUT_OF_SCOPE_PROJECTS].
+- Store the run timestamp, bounded source snapshot, queue calculations, fleet:ready issue set, integration directives, writes, skips, and stop conditions in automation memory or [STATE_FILE].
+
+Queue calculation:
+- For each repository, derive slots_24h from [IMPLEMENTATION_SCHEDULES].
+- Calculate throughput_factor = min(1, merged agent PR seven-day daily average / max(1, opened agent PR seven-day daily average)).
+- Calculate ready_target = clamp(ceil(slots_24h * throughput_factor), 1, slots_24h).
+- Calculate ready_deficit = max(0, ready_target - existing actionable-ready Backlog count).
+- Force issue creation to zero when open unmerged agent PRs are at least min(10, ceil(1.5 * slots_24h)), at least three PRs conflict, required project fields are unavailable, merge throughput is zero, [PLANNER_DRY_RUN] is true, or either creation cap is zero.
+- Apply [PER_REPO_CREATION_CAP] and [FLEET_CREATION_CAP] after all gates.
+
+Plan:
+- Classify Backlog issues as actionable-ready, broad, already covered, blocked, provider-dependent, research/decision work, manual-only, or duplicate.
+- Prefer integration recovery, correctness, security, failing CI, conflicted PRs, unavailable review verdicts, and existing actionable issues before net-new decomposition.
+- Rank actionable-ready issues by active milestone, dependency satisfaction, Priority, target/start date, and bounded acceptance and verification criteria.
+- Add the planner-owned fleet:ready label to no more than ready_target exact-project Backlog issues. Remove it when an issue is no longer Backlog or no longer actionable-ready.
+- The label is a preference signal only. Never claim work, assign an agent, or move project Status.
+
+Safe writes:
+- Create the fleet:ready repository label when missing with a consistent planner-owned description.
+- Add or remove only that label on exact-project Backlog issues with current evidence.
+- Repair missing Backlog Priority, milestone, Start date, Target date, and Work type only when existing schema and evidence are unambiguous.
+- Issue creation is disabled while [PLANNER_DRY_RUN] is true or either cap is zero.
+- When enabled, create at most one child residual from any parent per run, only when acceptance criteria are traceable to an independently implementable parent residual, dependencies are satisfied, required project metadata is known, and searches find no duplicate issue, PR, branch, worktree, or prior fingerprint.
+- Add every created issue to the exact project in Backlog with complete required metadata. Never create speculative standalone issues.
+
+Forbidden actions:
+- Never edit code, branches, commits, pull requests, automation schedules, production data, or report files.
+- Never move items to In Progress, Agent, Human Review, Done, or Deferred.
+- Never merge, close, reopen, or assign implementation work; never edit an issue body the planner did not create.
+- Never add project fields or alter project schema.
+- Never retry writes after a partial GitHub or Projects API failure; stop further writes for that repository.
+- Never print secrets, tokens, .env contents, private payloads, raw credentials, or unbounded logs.
+
+Output:
+- Report source coverage, fleet cap usage, and per repository: slots_24h, opened/merged PR averages, open/conflicted PR counts, throughput factor, ready target, ready before/after, labels added/removed, metadata repaired, issues created, integration directives, skips, and stop conditions.
+- Record planned-versus-consumed baseline for the next Daily Loop Report.
+- If the queue already meets the target or integration pressure makes preparation unsafe, return an explicit no-op.
+
+Manual test before enabling:
+- Keep [PLANNER_DRY_RUN] true and both creation caps zero. Confirm queue math, exact-project identity, dedupe, stale-label detection, integration directives, no GitHub writes, no report writes, and useful no-op behavior.
+"""
+status = "PAUSED"
+rrule = "RRULE:FREQ=DAILY;BYHOUR=19;BYMINUTE=5"
+model = "<app-owned>"
+reasoning_effort = "<app-owned>"
+execution_environment = "local"
+cwds = ["[REPO_PATH]"]

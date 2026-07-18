@@ -35,6 +35,7 @@ Required report sections:
 5. Tool health: GitHub, MeterBar, Claude profiles, quota freshness, and filesystem/tool failures.
 6. Trend versus the prior report: regressions, improvements, and unchanged risks.
 7. Three or fewer prioritized flow improvements, each with evidence, owner loop, and measurable success signal.
+8. Next-24h plan versus actual: planner ready targets, issues prepared, prepared issues consumed, integration directives resolved, unused implementation slots, and creation gates.
 
 Failure mode: If a source is unavailable, record `unknown` with the exact source and failure class. Do not fabricate counts or rewrite the report as healthy. If atomic publication fails, leave the prior report intact and report the blocker.
 

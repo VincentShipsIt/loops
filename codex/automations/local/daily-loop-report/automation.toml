@@ -21,7 +21,8 @@ Collection:
 Report contract:
 - Use UTC date key reports/YYYY-MM-DD.md.
 - Read an existing same-day report before writing and preserve prior evidence while replacing only the current run section.
-- Include inventory, per-loop performance, fleet outcomes, tool health, prior-day trend, and at most three evidence-backed improvement actions with an owner loop and measurable success signal.
+- Include inventory, per-loop performance, fleet outcomes, tool health, prior-day trend, next-24h planner plan versus actual, and at most three evidence-backed improvement actions with an owner loop and measurable success signal.
+- For the planner section, report ready targets, issues prepared, prepared issues consumed, integration directives resolved, unused implementation slots, and issue-creation gates. Missing planner memory is unknown, not a zero.
 - Record unavailable evidence as unknown with its failure class. Never fabricate healthy counts.
 
 Output:

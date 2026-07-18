@@ -22,6 +22,7 @@ These are clean templates, not raw exports. They intentionally do not include pr
 - `memory-review/automation.toml` - review repo memory against current source truth and open safe correction PRs.
 - `loop-discovery/automation.toml` - inspect a codebase for evidence-backed loop candidates without writing files.
 - `agent-configuration-audit/automation.toml` - audit global and per-repository agent configuration without modifying files.
+- `github-next-24h-planning/automation.toml` - prepare an integration-aware Backlog queue without claiming implementation work.
 - `memory-template/memory.md` - support file for Codex automation state, not a runnable automation.
 
 Daily performance reports are written by the live Daily Fleet Digest to the
@@ -59,6 +60,10 @@ The issue-implementation prompt is authored once in `../../../shared/local/codex
 - `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]` - effective global agent configuration roots.
 - `[MODEL_ROUTING_POLICY]` - explicit allowlisted model/effort/routing tuples, written positively rather than as a denylist.
 - `[LOCAL_VERIFICATION_POLICY]` - configured policy for local tests, typechecks, lint, builds, and hooks.
+- `[PLANNING_TARGETS]` - exact repositories and GitHub Projects included in a planning run.
+- `[IMPLEMENTATION_SCHEDULES]` - configured per-repository implementation opportunities used to derive next-24h capacity.
+- `[PLANNER_DRY_RUN]` - boolean gate that forces every planner write count to zero.
+- `[PER_REPO_CREATION_CAP]`, `[FLEET_CREATION_CAP]` - issue-creation limits applied after throughput and WIP gates.
 - `[EXCLUDED_PATH_PATTERNS]` - explicit discovery exclusions for the multi-repo audit.
 - `[SENTRY_OBSERVATION_RULE]` - post-deployment window or event-sample rule required before resolving a Sentry issue.
 - `[ALLOW_LOCAL_E2E]` - boolean opt-in; unresolved or false keeps E2E execution in CI/nightly.
