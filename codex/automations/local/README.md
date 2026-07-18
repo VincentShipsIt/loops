@@ -24,6 +24,10 @@ These are clean templates, not raw exports. They intentionally do not include pr
 - `agent-configuration-audit/automation.toml` - audit global and per-repository agent configuration without modifying files.
 - `memory-template/memory.md` - support file for Codex automation state, not a runnable automation.
 
+Daily performance reports are written by the live Daily Fleet Digest to the
+project-local ignored `reports/YYYY-MM-DD.md` path. The reusable reporting
+contract is `shared/local/codex/daily-loop-report.md`.
+
 ## Placeholder Key
 
 The issue-implementation prompt is authored once in `../../../shared/local/codex/github-issue-implementation.prompt.md`; run `python3 scripts/sync-codex-implementation-template.py` from the repository root after editing it. Model and reasoning effort are set in the app UI when the automation is created; templates carry `<app-owned>` placeholders and never name a model.

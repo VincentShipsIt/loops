@@ -1,0 +1,38 @@
+version = 1
+id = "[AUTOMATION_ID]-daily-loop-report"
+kind = "cron"
+name = "Daily Loop Report - [PROJECT]"
+prompt = """
+Produce the daily operational report for the configured loop fleet.
+
+Scope and authority:
+- Work only in [REPO_PATH], its Codex automation memories, configured GitHub repositories/projects, and the local reports/ directory.
+- Use GitHub Projects v2 REST API version 2026-03-10 and REST endpoints; do not use GraphQL or gh project item-list.
+- Write only reports/YYYY-MM-DD.md using a temporary sibling file and atomic rename.
+- Never edit source code, schedules, project status, issues, PRs, branches, worktrees, or production data.
+- Never print secrets, tokens, .env contents, raw credentials, or private payloads.
+
+Collection:
+- Read the current state and memory for every configured loop. Missing state is unknown, not success.
+- Collect each loop's run count, duration when available, work units, completed/no-op/blocked/failed outcomes, PR/issue outcomes, verification evidence, and exact blockers.
+- Collect fleet Projects v2 counts, current-head review verdict coverage, CI/review/repair/merge outcomes, MeterBar freshness, Claude profile/quota availability, and filesystem/tool failures.
+- Before reporting authentication failure, run both gh auth status -h github.com and a small gh api rate_limit request. Classify DNS, network, sandbox, Keychain, rate-limit, and API failures accurately.
+
+Report contract:
+- Use UTC date key reports/YYYY-MM-DD.md.
+- Read an existing same-day report before writing and preserve prior evidence while replacing only the current run section.
+- Include inventory, per-loop performance, fleet outcomes, tool health, prior-day trend, and at most three evidence-backed improvement actions with an owner loop and measurable success signal.
+- Record unavailable evidence as unknown with its failure class. Never fabricate healthy counts.
+
+Output:
+- Return the report path, collection window, source coverage, key metrics, improvement actions, unresolved blockers, and whether publication was atomic.
+
+Manual test before enabling:
+- Keep the automation paused and run once. Confirm atomic report publication, ignored status, no credential leakage, and a useful no-op report when no loop activity occurred.
+"""
+status = "PAUSED"
+rrule = "RRULE:FREQ=DAILY;BYHOUR=9;BYMINUTE=15"
+model = "<app-owned>"
+reasoning_effort = "<app-owned>"
+execution_environment = "local"
+cwds = ["[REPO_PATH]"]
