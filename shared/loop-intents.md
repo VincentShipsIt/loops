@@ -49,6 +49,7 @@ that exists, use `local-validation` and report missing environment as blocked.
 | `agent-content-maintenance` | Improve a repo whose product is prompts, skills, templates, docs, rubrics, or evaluation fixtures. This is not a general app-maintenance loop. | Weekly or monthly, and only for content/template-heavy repos. | Codex `content-factory-maintenance`. |
 | `agent-configuration-audit` | Audit effective global and per-repository Claude/Codex instructions, routing, permissions, hooks, symlinks, and drift without modifying configuration. | Monthly, and manually after major agent-tool or routing changes. | Codex local `agent-configuration-audit`; Claude local `agent-configuration-audit`. |
 | `figma-surface-orchestrator` | Advance an allowlisted multi-product Figma registry one deterministic package at a time with quota probes, exact source coverage, and evidence-backed completion. | Hourly with cooldown-aware no-ops; manual before first enablement. | Codex local `figma-surface-orchestrator`. |
+| `github-next-24h-planning` | Convert recent implementation and integration evidence into a bounded, prepared Backlog queue without claiming work. | Daily after roadmap hygiene and before overnight implementation. | Codex local `github-next-24h-planning`. |
 
 ## Canonical Artifact Map
 
@@ -70,6 +71,7 @@ The shared column is authored source material; the installable column is the art
 | `nightly-e2e-expansion` | `shared/local/codex/nightly-e2e-expansion.md`; `shared/local/claude/nightly-e2e-expansion.md` | `codex/automations/local/nightly-e2e-expansion/automation.toml`; `claude/routines/local/nightly-e2e-expansion/SKILL.md` |
 | `agent-content-maintenance` | `shared/local/codex/content-factory-maintenance.md` | `codex/automations/local/content-factory-maintenance/automation.toml`; intentionally Codex-only |
 | `figma-surface-orchestrator` | `shared/local/codex/figma-surface-orchestrator.md` | `codex/automations/local/figma-surface-orchestrator/automation.toml`; registry schema in `codex/automations/local/figma-surface-orchestrator/registry.example.json`; intentionally Codex-only because it requires the Figma connector and local durable state |
+| `github-next-24h-planning` | `shared/local/codex/github-next-24h-planning.md` | `codex/automations/local/github-next-24h-planning/automation.toml`; intentionally Codex-only |
 
 Runnable platform-only catalog entries are explicit: `memory-review` maps to `shared/local/{codex,claude}/memory-review.md` and both installable local artifacts; `loop-discovery` maps to `shared/local/codex/loop-discovery.md` and its Codex TOML only; `figma-surface-orchestrator` maps to its shared Codex prompt, Codex TOML, and registry schema. `memory`, `memory-template`, and `scheduled-task-base` are support artifacts rather than runnable canonical intents.
 
@@ -93,6 +95,7 @@ Platform syntax and app settings may differ. The following semantic fields may n
 | `nightly-e2e-expansion` | Add one project-native E2E coverage unit for CI/nightly execution. | One isolated test branch/PR. | Discover repo conventions, active-work dedupe, local-execution opt-in/resource contract. | Static-check failure blocks publish; local E2E remains off unless explicitly contracted. |
 | `agent-content-maintenance` | Improve one bounded agent-content artifact. | One isolated branch/PR. | Content-repo fit, active-work dedupe, project-specific evaluation rules. | Failed content validation blocks publish; no safe improvement is a no-op. |
 | `figma-surface-orchestrator` | Certify or advance one Figma project package and retain exact fleet state. | Allowlisted Figma nodes plus atomic registry state; one project/package per run. | Valid registry, conservative call ledger, one eligible probe, package fingerprint, retained cursor, validation reserve. | First quota/tool/mutation/validation error stops the run; no exact visual and structural proof means no cursor advance or completion. |
+| `github-next-24h-planning` | Prepare an integration-aware actionable Backlog queue for the next 24 hours. | Planner-owned readiness label, evidence-backed Backlog metadata, and capped child issues only. | Exact project identity, seven-day throughput and WIP gates, multi-surface duplicate checks, durable planner memory. | Missing fields or stale evidence stops writes; integration pressure closes issue creation; no deficit is a no-op. |
 
 Any exception must name the affected artifact, the broadened or narrowed invariant, and why the platform requires it. `validate.sh` enforces the currently safety-critical cross-surface invariants and the artifact inventory above.
 

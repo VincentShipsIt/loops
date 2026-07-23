@@ -32,6 +32,7 @@ templates carry `<app-owned>` placeholders and never name a model.
 | `loop-discovery.md` | Find evidence-backed loop candidates in a target codebase | `local` |
 | `figma-surface-orchestrator.md` | Advance allowlisted Figma products with quota-aware probes and deterministic packages | `local` |
 | `agent-configuration-audit.md` | Audit effective global and per-repository agent configuration | `local` |
+| `github-next-24h-planning.md` | Prepare an integration-aware Backlog queue for the next 24 hours | `local` |
 
 ## Support Files
 
@@ -92,6 +93,8 @@ templates carry `<app-owned>` placeholders and never name a model.
 - `[FIGMA_MIN_PROBE_INTERVAL]` - minimum cooldown after a quota failure without a server retry timestamp.
 - `[FIGMA_PROJECT_ID]`, `[FIGMA_FILE_KEY]`, `[FIGMA_MANIFEST_PATH]` - registry identifiers and deterministic package path.
 - `[OUT_OF_SCOPE_FIGMA_PROJECTS]` - Figma projects and files the orchestrator must never inspect or mutate.
+- `[PLANNING_TARGETS]`, `[IMPLEMENTATION_SCHEDULES]` - exact fleet scope and per-repository next-24h implementation capacity.
+- `[PLANNER_DRY_RUN]`, `[PER_REPO_CREATION_CAP]`, `[FLEET_CREATION_CAP]` - planner write and issue-creation gates.
 
 ## Tool Fix Presets
 

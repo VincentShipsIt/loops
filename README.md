@@ -95,6 +95,7 @@ This repo is organized by platform and execution surface:
    - Codex loop discovery: `codex/automations/local/loop-discovery/automation.toml`
    - Codex Figma surface orchestration: `codex/automations/local/figma-surface-orchestrator/automation.toml`
    - Codex agent configuration audit: `codex/automations/local/agent-configuration-audit/automation.toml`
+   - Codex next-24h GitHub planning: `codex/automations/local/github-next-24h-planning/automation.toml`
    - Claude local GitHub issue work: `claude/routines/local/github-issue-implementation/SKILL.md`
    - Claude recent commit review/fix: `claude/routines/local/recent-commit-review/SKILL.md`
    - Claude Sentry fix loop: `claude/routines/local/sentry-hotfix/SKILL.md`
