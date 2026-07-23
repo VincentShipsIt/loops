@@ -8,6 +8,7 @@ Produce the daily operational report for the configured loop fleet.
 Scope and authority:
 - Work only in [REPO_PATH], its Codex automation memories, configured GitHub repositories/projects, and the local reports/ directory.
 - Use GitHub Projects v2 REST API version 2026-03-10 and REST endpoints; do not use GraphQL or gh project item-list.
+- Mandatory route correctness: organization boards use `/orgs/{owner}/projectsV2`; user boards use `/users/{owner}/projectsV2`. Fields and items use the owner-scoped project number under `projectsV2`. Never use `/projects` (Projects Classic), `/repos/.../projects`, or a database ID in place of the project number. Self-test one known board first and require HTTP 200 plus an exact title match; a 404 from an invalid route is an implementation error, not an external blocker.
 - Write only reports/YYYY-MM-DD.md using a temporary sibling file and atomic rename.
 - Never edit source code, schedules, project status, issues, PRs, branches, worktrees, or production data.
 - Never print secrets, tokens, .env contents, raw credentials, or private payloads.

@@ -6,6 +6,13 @@ Trigger: Once daily after the fleet's scheduled loops have had their reporting w
 
 Connectors/tools: Codex automation state and memories, GitHub Projects v2 REST API version 2026-03-10 through `gh api`, GitHub PR/check REST endpoints, MeterBar, connected Claude CLI profiles, and local filesystem access to `reports/`.
 
+Projects v2 route contract (mandatory):
+
+- Organization boards: `/orgs/{owner}/projectsV2`; user boards: `/users/{owner}/projectsV2`.
+- Project detail, fields, and items remain owner-scoped: `/orgs|users/{owner}/projectsV2/{project_number}/fields` and `/orgs|users/{owner}/projectsV2/{project_number}/items`.
+- Never call `/orgs/{owner}/projects`, `/users/{owner}/projects`, `/repos/{owner}/{repo}/projects`, or substitute the numeric project database ID into the owner-scoped project-number route; those are Projects Classic/invalid routes for this monitor.
+- Before collecting counts, perform a route self-test against one known configured board and require HTTP 200 plus an exact title match. A 404 from a Classic/invalid route is an implementation error and must be corrected before reporting an external blocker.
+
 State/dedupe:
 
 - Use the UTC date as the report key: `reports/YYYY-MM-DD.md`.
