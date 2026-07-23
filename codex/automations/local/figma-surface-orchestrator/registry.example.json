@@ -1,0 +1,67 @@
+{
+  "version": 2,
+  "timezone": "[FIGMA_TIMEZONE]",
+  "dailyReadBudget": "[FIGMA_DAILY_READ_BUDGET]",
+  "perRunCallBudget": "[FIGMA_PER_RUN_CALL_BUDGET]",
+  "minimumProbeInterval": "[FIGMA_MIN_PROBE_INTERVAL]",
+  "projects": [
+    {
+      "id": "[FIGMA_PROJECT_ID]",
+      "displayName": "[PROJECT]",
+      "enabled": true,
+      "priority": 100,
+      "sourceRoots": ["[REPO_PATH]"],
+      "manifests": ["[FIGMA_MANIFEST_PATH]"],
+      "fileArchitecture": {
+        "targetProjectId": "[FIGMA_PROJECT_ID]",
+        "targetProjectName": "[FIGMA_PROJECT_NAME]",
+        "singleFileExceptionApproved": false,
+        "placementStatus": "unverified",
+        "requiredRoles": [
+          {"role": "design-tokens", "canonicalName": "[PROJECT] — Design Tokens"},
+          {"role": "foundations", "canonicalName": "[PROJECT] — Foundations"},
+          {"role": "components", "canonicalName": "[PROJECT] — Components"},
+          {"role": "product-surfaces", "canonicalName": "[PROJECT] — Product Surfaces"},
+          {"role": "flows", "canonicalName": "[PROJECT] — Flows"},
+          {"role": "experiments", "canonicalName": "[PROJECT] — Experiments"}
+        ]
+      },
+      "files": [
+        {
+          "role": "design-tokens",
+          "canonicalName": "[PROJECT] — Design Tokens",
+          "fileKey": "[FIGMA_DESIGN_TOKENS_FILE_KEY]",
+          "projectPlacementVerified": false,
+          "allowReads": true,
+          "allowWrites": false
+        },
+        {
+          "role": "foundations",
+          "canonicalName": "[PROJECT] — Foundations",
+          "fileKey": "[FIGMA_FOUNDATIONS_FILE_KEY]",
+          "projectPlacementVerified": false,
+          "allowReads": true,
+          "allowWrites": false
+        }
+      ],
+      "status": "incomplete",
+      "auditCadence": "weekly",
+      "nextPackage": {
+        "id": "read-only-certification",
+        "type": "certify",
+        "mutationBudget": 0,
+        "validationReserve": 2
+      },
+      "completionContract": {
+        "requireFileArchitectureComplete": true,
+        "requireDistinctRequiredRoleFiles": true,
+        "requireTargetProjectColocation": true,
+        "requireMissingZero": true,
+        "requireStructuralQa": true,
+        "requireVisualQa": true,
+        "pageAndPrototypeBackground": "#2B2B2B"
+      },
+      "deferredUntil": []
+    }
+  ]
+}

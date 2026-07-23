@@ -21,6 +21,7 @@ Use `../shared/local/codex/` for clean shared templates derived from working Cod
 - `../shared/local/codex/content-factory-maintenance.md`
 - `../shared/local/codex/memory-review.md`
 - `../shared/local/codex/loop-discovery.md`
+- `../shared/local/codex/figma-surface-orchestrator.md`
 - `../shared/local/codex/memory.md`
 - `../shared/local/codex/agent-configuration-audit.md`
 - `../shared/local/codex/github-next-24h-planning.md`
@@ -55,6 +56,7 @@ The template set includes:
 - Content factory maintenance for prompt, skill, template, docs, or evaluation repos
 - Memory template
 - Read-only global and per-repository agent configuration audit
+- Registry-driven Figma surface and flow orchestration with quota-aware probes
 - Integration-aware GitHub next-24h queue planning
 
 ## Included Upstreams

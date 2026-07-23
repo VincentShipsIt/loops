@@ -125,6 +125,9 @@ codex/automations/local/memory-review/automation.toml
 claude/routines/local/memory-review/SKILL.md
 shared/local/codex/loop-discovery.md
 codex/automations/local/loop-discovery/automation.toml
+shared/local/codex/figma-surface-orchestrator.md
+codex/automations/local/figma-surface-orchestrator/automation.toml
+codex/automations/local/figma-surface-orchestrator/registry.example.json
 shared/local/codex/github-next-24h-planning.md
 codex/automations/local/github-next-24h-planning/automation.toml'
 
@@ -200,6 +203,32 @@ require_all 'target-project status is exactly `Backlog`' \
   shared/local/claude/github-issue-implementation.md \
   claude/routines/local/github-issue-implementation/SKILL.md
 
+require_all 'Never infer quota reset from local midnight' \
+  shared/local/codex/figma-surface-orchestrator.md \
+  codex/automations/local/figma-surface-orchestrator/automation.toml
+require_all 'Stop on the first Figma quota, tool, mutation, or validation error' \
+  shared/local/codex/figma-surface-orchestrator.md \
+  codex/automations/local/figma-surface-orchestrator/automation.toml
+require_all 'Route labels and generic family templates are not implemented surfaces.' \
+  shared/local/codex/figma-surface-orchestrator.md \
+  codex/automations/local/figma-surface-orchestrator/automation.toml
+require_all 'Pages inside one Figma file do not satisfy independent file-role coverage.' \
+  shared/local/codex/figma-surface-orchestrator.md \
+  codex/automations/local/figma-surface-orchestrator/automation.toml
+require_all 'Every required file role must be a distinct file co-located in the declared Figma project.' \
+  shared/local/codex/figma-surface-orchestrator.md \
+  codex/automations/local/figma-surface-orchestrator/automation.toml
+require_all '#2B2B2B' \
+  shared/local/codex/figma-surface-orchestrator.md \
+  codex/automations/local/figma-surface-orchestrator/automation.toml
+require_all '"allowWrites": false' \
+  codex/automations/local/figma-surface-orchestrator/registry.example.json
+require_all '"validationReserve": 2' \
+  codex/automations/local/figma-surface-orchestrator/registry.example.json
+require_all '"singleFileExceptionApproved": false' \
+  codex/automations/local/figma-surface-orchestrator/registry.example.json
+require_all '"requireDistinctRequiredRoleFiles": true' \
+  codex/automations/local/figma-surface-orchestrator/registry.example.json
 require_all 'fleet:ready' \
   shared/local/codex/github-next-24h-planning.md \
   codex/automations/local/github-next-24h-planning/automation.toml \

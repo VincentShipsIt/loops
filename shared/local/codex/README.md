@@ -30,6 +30,7 @@ templates carry `<app-owned>` placeholders and never name a model.
 | `content-factory-maintenance.md` | Improve a prompt, skill, template, docs, or evaluation pipeline | `worktree` |
 | `memory-review.md` | Refresh repo memory against current source truth | `worktree` |
 | `loop-discovery.md` | Find evidence-backed loop candidates in a target codebase | `local` |
+| `figma-surface-orchestrator.md` | Advance allowlisted Figma products with quota-aware probes and deterministic packages | `local` |
 | `agent-configuration-audit.md` | Audit effective global and per-repository agent configuration | `local` |
 | `github-next-24h-planning.md` | Prepare an integration-aware Backlog queue for the next 24 hours | `local` |
 
@@ -85,6 +86,13 @@ templates carry `<app-owned>` placeholders and never name a model.
 - `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]` - global configuration roots for agent-configuration-audit.
 - `[MODEL_ROUTING_POLICY]` - explicit allowlisted model/effort/routing tuples, written positively rather than as a denylist.
 - `[LOCAL_VERIFICATION_POLICY]`, `[EXCLUDED_PATH_PATTERNS]` - verification and discovery policy inputs for agent-configuration-audit.
+- `[FIGMA_REGISTRY_FILE]` - absolute path to the private, validated allowlist of managed Figma projects, files, source roots, manifests, and next packages.
+- `[FIGMA_STATE_FILE]` - absolute path to atomic durable quota and per-project checkpoint state.
+- `[FIGMA_TIMEZONE]` - IANA reporting timezone; never a quota-reset assumption.
+- `[FIGMA_DAILY_READ_BUDGET]`, `[FIGMA_PER_RUN_CALL_BUDGET]` - conservative authenticated-seat and hard per-run call ceilings.
+- `[FIGMA_MIN_PROBE_INTERVAL]` - minimum cooldown after a quota failure without a server retry timestamp.
+- `[FIGMA_PROJECT_ID]`, `[FIGMA_FILE_KEY]`, `[FIGMA_MANIFEST_PATH]` - registry identifiers and deterministic package path.
+- `[OUT_OF_SCOPE_FIGMA_PROJECTS]` - Figma projects and files the orchestrator must never inspect or mutate.
 - `[PLANNING_TARGETS]`, `[IMPLEMENTATION_SCHEDULES]` - exact fleet scope and per-repository next-24h implementation capacity.
 - `[PLANNER_DRY_RUN]`, `[PER_REPO_CREATION_CAP]`, `[FLEET_CREATION_CAP]` - planner write and issue-creation gates.
 
