@@ -8,6 +8,13 @@ Connectors/tools: GitHub Projects v2 REST API version 2026-03-10 through `gh api
 
 Outcome: Prepare a bounded, integration-aware Backlog queue for the next 24 hours without claiming implementation work.
 
+Canonical snapshot contract:
+
+- When the target project supplies a read-only Projects v2 snapshot helper, run that helper before any queue decision. Do not hand-write alternate `gh api` pagination or field-projection loops.
+- The helper must use the owner-scoped `/orgs|users/{owner}/projectsV2/{project_number}` routes, validate exact title/owner/repository identity, request numeric field IDs, paginate without `--jq`/`--slurp` conflicts, and return structured JSON with `ok`, `projects`, `field_ids`, status counts, and errors.
+- A missing field in one response is `field_projection_incomplete`, not proof that the project schema is missing the field. Never create, rename, or delete a project field from the planner. Do not retry a write based on a projection anomaly.
+- A nonzero helper exit or `ok: false` is a blocker for that repository. Preserve unknown values and record the helper error verbatim but bounded.
+
 State/dedupe:
 
 - Store the run timestamp, per-repository input snapshot, queue calculation, `fleet:ready` issue set, integration directives, writes, skips, and stop conditions in automation memory or `[STATE_FILE]`.
