@@ -124,7 +124,9 @@ shared/local/claude/memory-review.md
 codex/automations/local/memory-review/automation.toml
 claude/routines/local/memory-review/SKILL.md
 shared/local/codex/loop-discovery.md
-codex/automations/local/loop-discovery/automation.toml'
+codex/automations/local/loop-discovery/automation.toml
+shared/local/codex/github-next-24h-planning.md
+codex/automations/local/github-next-24h-planning/automation.toml'
 
 for f in $mapped_artifacts; do
   [ -f "$f" ] || err "canonical artifact map references missing file: $f"
@@ -197,6 +199,20 @@ require_all 'target-project status is exactly `Backlog`' \
   codex/automations/local/github-issue-implementation/automation.toml \
   shared/local/claude/github-issue-implementation.md \
   claude/routines/local/github-issue-implementation/SKILL.md
+
+require_all 'fleet:ready' \
+  shared/local/codex/github-next-24h-planning.md \
+  codex/automations/local/github-next-24h-planning/automation.toml \
+  shared/local/codex/github-issue-implementation.prompt.md \
+  codex/automations/local/github-issue-implementation/automation.toml
+require_all 'hold_new_implementation: true' \
+  shared/local/codex/github-next-24h-planning.md \
+  codex/automations/local/github-next-24h-planning/automation.toml \
+  shared/local/codex/github-issue-implementation.prompt.md \
+  codex/automations/local/github-issue-implementation/automation.toml
+require_all 'Never move' \
+  shared/local/codex/github-next-24h-planning.md \
+  codex/automations/local/github-next-24h-planning/automation.toml
 
 write_capable_prompts='shared/local/codex/github-issue-implementation.prompt.md
 codex/automations/local/github-issue-implementation/automation.toml
@@ -341,7 +357,8 @@ rm -f "$tmp_used" "$tmp_doc" "$tmp_used_files" "$tmp_doc_files"
 # 5) GitHub queue label policy checks
 codex_issue_files="codex/automations/local/github-issue-implementation/automation.toml shared/local/codex/github-issue-implementation.prompt.md"
 for f in $codex_issue_files; do
-  contains "$f" "Rank eligible issues in this order: queue label (\`codex:automation\`), milestone, target/release/start date, project Priority, then readiness (acceptance criteria, verification scope, and confidence)."
+  contains "$f" "Rank eligible issues in this order: planner readiness (\`fleet:ready\`), queue label (\`codex:automation\`), milestone, target/release/start date, project Priority, then readiness (acceptance criteria, verification scope, and confidence)."
+  contains "$f" "Prefer eligible \`fleet:ready\` issues before the general Backlog, but fall back to the existing ranking when none remains eligible."
   contains "$f" "Prefer ready \`codex:automation\` issues before unlabeled/non-automation work."
 done
 

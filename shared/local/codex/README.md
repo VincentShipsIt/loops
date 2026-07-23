@@ -31,6 +31,7 @@ templates carry `<app-owned>` placeholders and never name a model.
 | `memory-review.md` | Refresh repo memory against current source truth | `worktree` |
 | `loop-discovery.md` | Find evidence-backed loop candidates in a target codebase | `local` |
 | `agent-configuration-audit.md` | Audit effective global and per-repository agent configuration | `local` |
+| `github-next-24h-planning.md` | Prepare an integration-aware Backlog queue for the next 24 hours | `local` |
 
 ## Support Files
 
@@ -84,6 +85,8 @@ templates carry `<app-owned>` placeholders and never name a model.
 - `[GLOBAL_AGENTS_DIR]`, `[GLOBAL_CLAUDE_DIR]`, `[GLOBAL_CODEX_DIR]` - global configuration roots for agent-configuration-audit.
 - `[MODEL_ROUTING_POLICY]` - explicit allowlisted model/effort/routing tuples, written positively rather than as a denylist.
 - `[LOCAL_VERIFICATION_POLICY]`, `[EXCLUDED_PATH_PATTERNS]` - verification and discovery policy inputs for agent-configuration-audit.
+- `[PLANNING_TARGETS]`, `[IMPLEMENTATION_SCHEDULES]` - exact fleet scope and per-repository next-24h implementation capacity.
+- `[PLANNER_DRY_RUN]`, `[PER_REPO_CREATION_CAP]`, `[FLEET_CREATION_CAP]` - planner write and issue-creation gates.
 
 ## Tool Fix Presets
 

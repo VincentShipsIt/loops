@@ -48,6 +48,7 @@ that exists, use `local-validation` and report missing environment as blocked.
 | `nightly-e2e-expansion` | Add exactly one high-value nightly e2e spec and update runner lists. | Nightly or weekly. | Codex `nightly-e2e-expansion`; Claude `nightly-e2e-expansion`. |
 | `agent-content-maintenance` | Improve a repo whose product is prompts, skills, templates, docs, rubrics, or evaluation fixtures. This is not a general app-maintenance loop. | Weekly or monthly, and only for content/template-heavy repos. | Codex `content-factory-maintenance`. |
 | `agent-configuration-audit` | Audit effective global and per-repository Claude/Codex instructions, routing, permissions, hooks, symlinks, and drift without modifying configuration. | Monthly, and manually after major agent-tool or routing changes. | Codex local `agent-configuration-audit`; Claude local `agent-configuration-audit`. |
+| `github-next-24h-planning` | Convert recent implementation and integration evidence into a bounded, prepared Backlog queue without claiming work. | Daily after roadmap hygiene and before overnight implementation. | Codex local `github-next-24h-planning`. |
 
 ## Canonical Artifact Map
 
@@ -68,6 +69,7 @@ The shared column is authored source material; the installable column is the art
 | `bundle-size-watchdog` | `shared/local/codex/bundle-size-watchdog.md`; `shared/local/claude/bundle-size-watchdog.md` | `codex/automations/local/bundle-size-watchdog/automation.toml`; `claude/routines/local/bundle-size-watchdog/SKILL.md` |
 | `nightly-e2e-expansion` | `shared/local/codex/nightly-e2e-expansion.md`; `shared/local/claude/nightly-e2e-expansion.md` | `codex/automations/local/nightly-e2e-expansion/automation.toml`; `claude/routines/local/nightly-e2e-expansion/SKILL.md` |
 | `agent-content-maintenance` | `shared/local/codex/content-factory-maintenance.md` | `codex/automations/local/content-factory-maintenance/automation.toml`; intentionally Codex-only |
+| `github-next-24h-planning` | `shared/local/codex/github-next-24h-planning.md` | `codex/automations/local/github-next-24h-planning/automation.toml`; intentionally Codex-only |
 
 Runnable platform-only catalog entries are explicit: `memory-review` maps to `shared/local/{codex,claude}/memory-review.md` and both installable local artifacts; `loop-discovery` maps to `shared/local/codex/loop-discovery.md` and its Codex TOML only. `memory`, `memory-template`, and `scheduled-task-base` are support artifacts rather than runnable canonical intents.
 
@@ -90,6 +92,7 @@ Platform syntax and app settings may differ. The following semantic fields may n
 | `bundle-size-watchdog` | Report absolute thresholds and deltas from the last complete measurement. | Repo read-only; baseline state only. | Complete baseline fields keyed to source commit and configured targets. | Partial measurement retains prior baseline; no regression is a reported no-op. |
 | `nightly-e2e-expansion` | Add one project-native E2E coverage unit for CI/nightly execution. | One isolated test branch/PR. | Discover repo conventions, active-work dedupe, local-execution opt-in/resource contract. | Static-check failure blocks publish; local E2E remains off unless explicitly contracted. |
 | `agent-content-maintenance` | Improve one bounded agent-content artifact. | One isolated branch/PR. | Content-repo fit, active-work dedupe, project-specific evaluation rules. | Failed content validation blocks publish; no safe improvement is a no-op. |
+| `github-next-24h-planning` | Prepare an integration-aware actionable Backlog queue for the next 24 hours. | Planner-owned readiness label, evidence-backed Backlog metadata, and capped child issues only. | Exact project identity, seven-day throughput and WIP gates, multi-surface duplicate checks, durable planner memory. | Missing fields or stale evidence stops writes; integration pressure closes issue creation; no deficit is a no-op. |
 
 Any exception must name the affected artifact, the broadened or narrowed invariant, and why the platform requires it. `validate.sh` enforces the currently safety-critical cross-surface invariants and the artifact inventory above.
 
