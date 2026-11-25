@@ -53,7 +53,7 @@ Safe writes:
 Forbidden actions:
 
 - Never edit source code, branches, commits, pull requests, automation schedules, production data, or report files.
-- Never move an item to `In Progress`, `Agent`, `Human Review`, `Done`, or `Deferred`; implementation loops retain exclusive claim authority.
+- Never move an item to `In Progress`, `Agent`, `Review`, `Done`, or `Deferred`; implementation loops retain exclusive claim authority.
 - Never assign an implementation agent, merge or close work, edit an issue body the planner did not create, or change issue/PR state.
 - Never create a new project field or alter the canonical project schema.
 - Never retry writes after a partial GitHub or Projects API failure. Record the partial state and stop further writes for that repository.
